@@ -21,7 +21,6 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
     .skip((page - 1) * page_size)
     .getManyAndCount();
   return res.json({ total, data });
-  return res.json("Get success")
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
