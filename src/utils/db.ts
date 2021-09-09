@@ -13,7 +13,7 @@ function createDbConnection(): Promise<Connection> {
         username: DB_USER,
         password: DB_PASSWORD,
         port: DB_PORT || 5432,
-        entities: [User, Product],
+        entities: [User],
       };
 
       const db: Connection = await createConnection(config);
