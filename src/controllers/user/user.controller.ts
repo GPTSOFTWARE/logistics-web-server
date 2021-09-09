@@ -52,23 +52,23 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   return res.json(results);
 };
 
-const postLogin = async (req: Request, res: Response): Promise<Response> => {
-  const username = req.body.username;
-  const password = req.body.password;
+// const postLogin = async (req: Request, res: Response): Promise<Response> => {
+//   const username = req.body.username;
+//   const password = req.body.password;
 
-  const user = await getRepository(User).findOne({ username });
+//   const user = await getRepository(User).findOne({ username });
 
-  if (!user) {
-    return res.status(404).send("Email is not found");
-  }
+//   if (!user) {
+//     return res.status(404).send("Email is not found");
+//   }
 
-  const validPassword = await comparePassword(user.password, password);
+//   const validPassword = await comparePassword(user.password, password);
 
-  if (!validPassword) {
-    return res.status(404).json({ code: 404, message: 'login false' });
-  }
-  const token = await generatorToken(user);
-  res.status(200).json({ code: 200, token: token, message: 'login successful' });
-};
+//   if (!validPassword) {
+//     return res.status(404).json({ code: 404, message: 'login false' });
+//   }
+//   const token = await generatorToken(user);
+//   res.status(200).json({ code: 200, token: token, message: 'login successful' });
+// };
 
 export { getUsers };

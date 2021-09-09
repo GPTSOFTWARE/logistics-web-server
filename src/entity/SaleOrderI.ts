@@ -10,7 +10,7 @@ export class SaleOrderI extends BaseEntity {
     address: string;
 
     @Column()
-    totalPrice: bigint;
+    totalPrice: number;
 
     @Column()
     totalQuantity: number;

@@ -12,7 +12,7 @@ export class SaleOrderHeader extends BaseEntity {
     idSOI: number;
 
     @Column()
-    price: bigint;
+    price: number;
 
     @Column()
     quantity: number;

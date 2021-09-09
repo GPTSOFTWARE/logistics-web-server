@@ -12,7 +12,12 @@ function createDbConnection(): Promise<Connection> {
         username: DB_USER,
         password: DB_PASSWORD,
         port: DB_PORT || 5432,
-        entities: [User],
+        entities: ['src/entity/*.ts'],
+        migrations:['src/migration/*.ts'],
+        cli:{
+          "entitiesDir": "src/entity",
+          "migrationsDir": "src/migration",
+        }
       };
 
       const db: Connection = await createConnection(config);
