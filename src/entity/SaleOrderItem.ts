@@ -4,8 +4,14 @@ import { Product } from './Product';
 
 @Entity()
 export class SaleOrderItem extends BaseEntity {
+
     @PrimaryGeneratedColumn()
-    id: number;
+    @OneToMany(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.SOI_SOH, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    SOHs: Array<SaleOrderHeader>
+
+    @PrimaryGeneratedColumn()
+    @OneToMany(() => Product, (SOH: Product) => SOH.SOI_Product, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    Products: Array<Product>
 
     @Column()
     totalPrice: number;
@@ -13,9 +19,4 @@ export class SaleOrderItem extends BaseEntity {
     @Column()
     quantity: number;
 
-    @OneToMany(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.SOI_SOH, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    SOHs: Array<SaleOrderHeader>
-
-    @OneToMany(() => Product, (SOH: Product) => SOH.SOI_Product, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    Products: Array<Product>
 }
