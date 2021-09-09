@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from "typeorm";
-import { SaleOrderHeader } from "./SaleOrderHeader";
+import { SaleOrderItem } from './SaleOrderItem';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -21,6 +21,6 @@ export class Product extends BaseEntity {
     @Column()
     description: string;
 
-    @ManyToOne(() => SaleOrderHeader, SOH => SOH.idProduct)
-    SOHs: SaleOrderHeader[];
+    @ManyToOne(() => SaleOrderItem, (SOI: SaleOrderItem) => SOI.Products)
+    SOI_Product: SaleOrderItem
 }
