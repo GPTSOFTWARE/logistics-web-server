@@ -1,7 +1,7 @@
 // const User = require('../entity/User');
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { User } from "../../entity/User";
+import { User } from "../../entity/Users";
 import db from "../../utils/db";
 import {
   comparePassword,
