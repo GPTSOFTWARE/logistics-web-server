@@ -1,22 +1,25 @@
 {
-    "type": "postgres",
-    "host": "hldb.cirubvkt6eb3.us-east-2.rds.amazonaws.com",
-    "port": 5432,
-    "username": "hung",
-    "password": "Hung1234",
-    "database": "db_logistics",
-    "synchronize": true,
-    "logging": false,
-    "entities": [
-       "src/entity/**/*.ts"
-    ],
-    "migrations": [
-       "src/migration/**/*.ts"
-    ],
-    "subscribers": [
-       "src/subscriber/**/*.ts"
-    ],
-    "cli": {
-        "migrationsDir": "src/migration"
-    }
- }
+   "type": "postgres",
+   "host": "ec2-44-196-170-156.compute-1.amazonaws.com",
+   "port": 5432,
+   "username": "ynblqglylsxflb",
+   "password": "307dcd0897acaf179f843db6aa33f7ec560ce32d9dca1a7142f73058599cf869",
+   "database": "d1o578fn62m7tg",
+   "synchronize": true,
+   "logging": false,
+   "ssl": {
+      "rejectUnauthorized": false
+   },
+   "entities": [
+      "src/entity/**/*.ts"
+   ],
+   "migrations": [
+      "src/migration/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ],
+   "cli": {
+      "migrationsDir": "src/migration"
+   }
+}
