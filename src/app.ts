@@ -6,11 +6,13 @@ import morgan = require("morgan");
 import usersRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";
 
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(usersRoute);
+// app.use(Connection());
 // app.use(authRoute);
 
 app.use(async (err: any, req: any, res: any, next: any) => {
