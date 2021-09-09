@@ -44,12 +44,4 @@ export class User extends BaseEntity {
     // one user can have multiple sale_order_header
     @OneToMany(() => SaleOrderHeader, order => order.user)
     orders: SaleOrderHeader[];
-
-
-
-
-
-
-
-
 }
