@@ -6,7 +6,7 @@ import {
     JoinColumn,
     ManyToOne,
 } from 'typeorm';
-import { User } from './Users';
+import { Account } from './Users';
 import { Chats } from './Chats';
 
 
@@ -21,9 +21,9 @@ export class Message extends BaseEntity {
     @Column({ default: false })
     public see: boolean
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => Account)
     @JoinColumn({ name: 'sender_id' })
-    public sender: User
+    public sender: Account;
 
     @ManyToOne(() => Chats)
     @JoinColumn({ name: 'chat_id' })

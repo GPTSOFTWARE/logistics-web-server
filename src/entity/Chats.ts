@@ -5,19 +5,19 @@ import {
     ManyToOne,
 } from 'typeorm';
 import { AbstractBase } from './Base';
-import { User } from './Users';
+import { Account } from './Users';
 
 @Entity()
 export class Chats extends AbstractBase {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => Account)
     @JoinColumn({ name: 'user1_id' })
-    public user1: User
+    public user1: Account;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => Account)
     @JoinColumn({ name: 'user2_id' })
-    public user2: User
+    public user2: Account
 
 }

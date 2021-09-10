@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { SaleOrderItem } from './SaleOrderItem';
-import { User } from "./Users";
+import { Account } from "./Users";
 
 @Entity()
 export class SaleOrderHeader extends BaseEntity {
@@ -16,12 +16,11 @@ export class SaleOrderHeader extends BaseEntity {
     @Column()
     totalQuantity: number;
 
-    @ManyToOne(() => SaleOrderItem, (SOI: SaleOrderItem) => SOI.SOHs)
-    @JoinColumn({ name: 'SOI_id' })
-    SOI_SOH: SaleOrderItem
+    @OneToMany(() => SaleOrderItem, SaleOrderItem => SaleOrderItem.orderId)
+    SOI: SaleOrderItem[] ;
 
-    @ManyToOne(() => User, user => user.orders)
+    @ManyToOne(() => Account, user => user.orders)
     @JoinColumn({ name: 'User_id' })
-    user: User;
+    user: Account;
 
 }
