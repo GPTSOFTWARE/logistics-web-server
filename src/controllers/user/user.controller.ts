@@ -1,7 +1,7 @@
 // const User = require('../entity/User');
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { UserAccount } from "../../entity/Users";
+import { Account } from "../../entity/Users";
 import db from "../../utils/db";
 import {
   comparePassword,
@@ -15,33 +15,32 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const [data, total] = await (
     await db
   )
-    .getRepository(UserAccount)
+    .getRepository(Account)
     .createQueryBuilder("user")
     .take(page_size)
     .skip((page - 1) * page_size)
     .getManyAndCount();
   return res.json({ total, data });
-  return res.json("Get success")
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(UserAccount).findOne(req.params.id);
+  const user = await getRepository(Account).findOne(req.params.id);
   return res.json(user);
 };
 
-const createUser = async (req: Request, res: Response): Promise<Response> => {
-  const userData = req.body;
-  userData.password = await hashPassword(userData.password);
-  const newUser = await getRepository(UserAccount).create(userData);
-  const result = await getRepository(UserAccount).save(newUser);
-  return res.json(result);
-};
+// const createUser = async (req: Request, res: Response): Promise<Response> => {
+//   const userData = req.body;
+//   userData.password = await hashPassword(userData.password);
+//   const newUser = await getRepository(Account).create(userData);
+//   const result = await getRepository(Account).save(newUser);
+//   return res.json(result);
+// };
 
 const updateUser = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(UserAccount).findOne(req.params.id);
+  const user = await getRepository(Account).findOne(req.params.id);
   if (user) {
-    getRepository(UserAccount).merge(user, req.body); //get body request
-    const result = await getRepository(UserAccount).save(user);
+    getRepository(Account).merge(user, req.body); //get body request
+    const result = await getRepository(Account).save(user);
     return res.json(result);
   }
 
@@ -49,27 +48,9 @@ const updateUser = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
-  const results = await getRepository(UserAccount).delete(req.params.id);
+  const results = await getRepository(Account).delete(req.params.id);
   return res.json(results);
 };
 
-// const postLogin = async (req: Request, res: Response): Promise<Response> => {
-//   const username = req.body.username;
-//   const password = req.body.password;
 
-//   const user = await getRepository(User).findOne({ username });
-
-//   if (!user) {
-//     return res.status(404).send("Email is not found");
-//   }
-
-//   const validPassword = await comparePassword(user.password, password);
-
-//   if (!validPassword) {
-//     return res.status(404).json({ code: 404, message: 'login false' });
-//   }
-//   const token = await generatorToken(user);
-//   res.status(200).json({ code: 200, token: token, message: 'login successful' });
-// };
-
-export { getUsers };
+export { getUsers , updateUser, deleteUser, getUserById};

@@ -3,20 +3,22 @@ import { BeforeInsert, BeforeUpdate, Column } from "typeorm";
 export abstract class AbstractBase {
     @Column({
         type: 'timestamp',
-        nullable: true
+        nullable: true,
+        default:Date.now
     })
     public updatedAt: number;
 
     @Column({
         type: 'timestamp',
-        nullable: true
+        nullable: true,
+        default:Date.now
     })
     public createdAt: number;
 
     @Column({ nullable: true })
     public updatedBy: number;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     public createdBy: number;
 
     @BeforeUpdate()

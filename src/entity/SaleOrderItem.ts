@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { SaleOrderHeader } from "./SaleOrderHeader";
 import { Product } from './Product';
 
@@ -6,17 +6,20 @@ import { Product } from './Product';
 export class SaleOrderItem extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    @OneToMany(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.SOI_SOH, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    SOHs: Array<SaleOrderHeader>
-
-    @PrimaryGeneratedColumn()
-    @OneToMany(() => Product, (SOH: Product) => SOH.SOI_Product, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    Products: Array<Product>
+    id:number;
 
     @Column()
     totalPrice: number;
 
     @Column()
     quantity: number;
+
+    @ManyToOne(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.SOI, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @JoinColumn({name: "SOH_id"})
+    orderId: SaleOrderHeader;
+
+    @ManyToOne(() => Product, product => product.orderItem, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @JoinColumn({name: "productId"})
+    productId: Product;
 
 }

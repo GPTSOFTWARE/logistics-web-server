@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany } from "typeorm";
 import { SaleOrderItem } from './SaleOrderItem';
 import { AbstractBase } from './Base';
 
@@ -7,22 +7,35 @@ export class Product extends AbstractBase {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ 
+        type:"varchar",
+        length:"255",
+        nullable: false,
+    })
     name: string;
 
-    @Column()
+    @Column("decimal")
     price: number;
 
-    @Column()
+    @Column({ 
+        nullable: true,
+    })
     quantity: number;
 
-    @Column()
+    @Column({ 
+        type:"varchar",
+        length:"255",
+        nullable: true,
+    })
     thumbnails: string;
 
-    @Column()
+    @Column({ 
+        type:"text",
+        nullable: true,
+    })
     description: string;
 
 
-    @ManyToOne(() => SaleOrderItem, (SOI: SaleOrderItem) => SOI.Products)
-    SOI_Product: SaleOrderItem
+    @OneToMany(() => SaleOrderItem, saleOrderItem => saleOrderItem.productId)
+    orderItem: SaleOrderItem[];
 }

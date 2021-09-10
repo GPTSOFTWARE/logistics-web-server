@@ -13,9 +13,10 @@ function createDbConnection(): Promise<Connection> {
         username: DB_USER,
         password: DB_PASSWORD,
         port: DB_PORT || 5432,
+        ssl: { rejectUnauthorized: false },
         entities: ['src/entity/*.ts'],
-        migrations:['src/migration/*.ts'],
-        cli:{
+        migrations: ['src/migration/*.ts'],
+        cli: {
           "entitiesDir": "src/entity",
           "migrationsDir": "src/migration",
         }

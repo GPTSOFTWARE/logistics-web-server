@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && node ./build/app.js",
+    "start": "ts-node src/app.ts",
     "dev": "nodemon ./src/app.ts",
     "build": "tsc",
     "ts-node": "ts-node",
@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "heroku": "^7.59.0",
     "typescript": "^4.4.2"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.2.1",
+    "tsc": "^2.0.3",
     "typeorm": "^0.2.37"
   }
 }
