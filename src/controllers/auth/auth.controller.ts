@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import { getRepository } from "typeorm";
+import { getRepository, TreeRepositoryNotSupportedError } from "typeorm";
 import { Account } from "../../entity/Users";
 import db from "../../utils/db";
 import {
@@ -7,6 +7,7 @@ import {
     generatorToken,
     hashPassword,
 } from "../../utils/helpers";
+import { getProducts } from "../product/product.controller";
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
 
@@ -40,12 +41,11 @@ export const register = async (req: Request, res: Response):Promise<Response> =>
     }
 
 
-    // hash password
     userData.password = await hashPassword(userData.password);
     const newUser = await getRepository(Account).create(userData);
     const saveUser = await getRepository(Account).save(newUser);
-    return res.json(saveUser);
-}
+    return res.status(200).json(saveUser);
+};
 
 export const changePassword = async (req: Request, res: Response) =>{
 }

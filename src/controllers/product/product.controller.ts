@@ -46,22 +46,34 @@ const updateProduct = async (req: Request, res: Response): Promise<Response> => 
 
 //soft delete product
 const removeProduct = async (req: Request, res: Response): Promise<Response> => {
-
-    const softDelete = await getRepository(Product)
-                            .createQueryBuilder()
-                            .where("id =:id",{id:req.params.id})
-                            .softDelete();
-    return res.json(softDelete);
+    try{
+                         await getRepository(Product)
+                            .createQueryBuilder("product")
+                            .where("product.id =:id",{id:req.params.id})
+                            .softDelete();  
+             return res.status(200).send('success');                
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).send('Internal Server Error');
+    }
+   
 }
 
 //restore product
 const restoreProduct = async (req: Request, res: Response): Promise<Response> => {
 
-    const restore = await getRepository(Product)
-                            .createQueryBuilder()
-                            .where("id =:id",{id:req.params.id})
-                            .restore();
-    return res.json(restore);
+    try{
+                    await getRepository(Product)
+                    .createQueryBuilder()
+                    .where("id =:id",{id:req.params.id})
+                    .restore();
+            return res.status(200).send('restored successful!');
+    }   
+    catch(err){
+        console.log(err);
+        return res.status(500).send('Internal Server Error');
+    }
 }
 
 const deleteProduct = async (req: Request, res: Response): Promise<Response> => {
@@ -69,4 +81,4 @@ const deleteProduct = async (req: Request, res: Response): Promise<Response> => 
     return res.json(results);
 };
   
-export { getProducts, createProduct , getProductById, updateProduct, deleteProduct}
+export { getProducts, createProduct , getProductById, updateProduct, deleteProduct, removeProduct, restoreProduct}

@@ -1,19 +1,19 @@
-import { BeforeInsert, BeforeUpdate, Column } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, DeleteDateColumn } from "typeorm";
 
-export abstract class AbstractBase {
+export class AbstractBase {
     @Column({
         type: 'timestamp',
         nullable: true,
         default:Date.now
     })
-    public updatedAt: number;
+    public updatedAt: Date;
 
     @Column({
         type: 'timestamp',
         nullable: true,
         default:Date.now
     })
-    public createdAt: number;
+    public createdAt: Date;
 
     @Column({ nullable: true })
     public updatedBy: number;
@@ -23,13 +23,16 @@ export abstract class AbstractBase {
 
     @BeforeUpdate()
     public setUpdatedAt() {
-        this.updatedAt = Math.floor(Date.now() / 1000);
+        this.updatedAt = new Date();
     }
 
     @BeforeInsert()
     public updateDates() {
-        const time = Math.floor(Date.now() / 1000);
-        this.createdAt = time;
-        this.updatedAt = time;
+        // const time = Math.floor(Date.now() / 1000);
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
+
+    @DeleteDateColumn()
+    deletedAt?: Date;
 }
