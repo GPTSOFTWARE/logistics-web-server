@@ -1,5 +1,5 @@
 import { Connection, createConnection } from "typeorm";
-import { User } from "../entity/Users";
+// import { UserAccount } from "../entity/Users";
 import { Product } from "../entity/Product";
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from "./constant";
 
@@ -13,7 +13,12 @@ function createDbConnection(): Promise<Connection> {
         username: DB_USER,
         password: DB_PASSWORD,
         port: DB_PORT || 5432,
-        entities: [User],
+        entities: ['src/entity/*.ts'],
+        migrations:['src/migration/*.ts'],
+        cli:{
+          "entitiesDir": "src/entity",
+          "migrationsDir": "src/migration",
+        }
       };
 
       const db: Connection = await createConnection(config);
