@@ -14,12 +14,12 @@ export class SaleOrderItem extends BaseEntity {
     @Column()
     quantity: number;
 
-    @ManyToOne(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.SOI, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(() => SaleOrderHeader, (SOH: SaleOrderHeader) => SOH.soi, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     @JoinColumn({name: "SOH_id"})
     orderId: SaleOrderHeader;
 
     @ManyToOne(() => Product, product => product.orderItem, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    @JoinColumn({name: "productId"})
+    @JoinColumn({name: "productid"})
     productId: Product;
 
 }

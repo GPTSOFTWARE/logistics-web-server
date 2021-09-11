@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { SaleOrderHeader } from "../../entity/SaleOrderHeader";
 import db from "../../utils/db";
@@ -14,6 +14,26 @@ const getSaleOrderHeaders = async (req: Request, res: Response): Promise<Respons
         .getManyAndCount();
     return res.json({ total, data });
 };
+
+const createOrder= async (req: Request, res: Response , next: NextFunction): Promise<Response> => {
+
+    
+    return res.send('');
+}
+
+const getOrderById = async (req: Request, res: Response , next: NextFunction): Promise<Response> =>{
+
+    const order = await getRepository(SaleOrderHeader).findOne(req.params.id);
+
+    if(order){
+       return   res.status(200).json(order);
+    }
+
+    return res.status(404).send('Order Not Found');
+}
+
+
+
 
 
 export { getSaleOrderHeaders }

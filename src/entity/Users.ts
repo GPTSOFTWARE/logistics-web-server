@@ -1,12 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, Unique } from "typeorm";
 import { SaleOrderHeader } from "./SaleOrderHeader";
 
-export enum UserRole {
+export enum Role {
     ADMIN = "admin",
     USER = "user"
 }
 
 @Entity()
+@Unique(['phone'])
 export class Account extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -14,6 +15,7 @@ export class Account extends BaseEntity {
     @Column({
         type: "varchar",
         length: "255",
+        nullable: true
     })
     email: string;
 
@@ -36,10 +38,10 @@ export class Account extends BaseEntity {
 
     @Column({
         type: "enum",
-        enum: UserRole,
-        default: UserRole.USER
+        enum: Role,
+        default: Role.USER
     })
-    role: UserRole;
+    role: Role;
 
     // one user can have multiple sale_order_header
     @OneToMany(() => SaleOrderHeader, order => order.user)

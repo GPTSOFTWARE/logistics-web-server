@@ -3,7 +3,7 @@ import { SaleOrderItem } from './SaleOrderItem';
 import { AbstractBase } from './Base';
 
 @Entity()
-export class Product extends AbstractBase {
+export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

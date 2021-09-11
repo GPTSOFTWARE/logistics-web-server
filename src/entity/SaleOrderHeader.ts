@@ -2,6 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColu
 import { SaleOrderItem } from './SaleOrderItem';
 import { Account } from "./Users";
 
+export enum typeShip {
+    FAST = 'giao hàng nhanh',
+    STANDARD = 'giao hàng tiêu chuẩn'
+}
+
 @Entity()
 export class SaleOrderHeader extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -16,11 +21,22 @@ export class SaleOrderHeader extends BaseEntity {
     @Column()
     totalQuantity: number;
 
+    @Column({ 
+        type:"enum",
+        enum: typeShip,
+        default:typeShip.STANDARD
+    })
+    type: typeShip;
+
+    @Column({
+    })
+    pickDate: Date;
+
     @OneToMany(() => SaleOrderItem, SaleOrderItem => SaleOrderItem.orderId)
-    SOI: SaleOrderItem[] ;
+    soi: SaleOrderItem[] ;
 
     @ManyToOne(() => Account, user => user.orders)
-    @JoinColumn({ name: 'User_id' })
+    @JoinColumn({ name: 'user_id' })
     user: Account;
 
 }
