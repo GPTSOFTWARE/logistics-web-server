@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany } from "typeorm";
-import { SaleOrderItem } from './SaleOrderItem';
-import { AbstractBase } from './Base';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 
+import { AbstractBase } from './Base';
+import { Category } from "./Category";
+import { SaleOrder } from "./OrderDetails";
 @Entity()
-export class Product extends AbstractBase {
+export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number; 
 
     @Column({ 
         type:"varchar",
@@ -13,6 +14,9 @@ export class Product extends AbstractBase {
         nullable: false,
     })
     name: string;
+
+    @Column("decimal")
+    weight: number;
 
     @Column("decimal")
     price: number;
@@ -23,19 +27,17 @@ export class Product extends AbstractBase {
     quantity: number;
 
     @Column({ 
-        type:"varchar",
-        length:"255",
-        nullable: true,
-    })
-    thumbnails: string;
-
-    @Column({ 
         type:"text",
         nullable: true,
     })
     description: string;
 
+    @ManyToOne(() => Category, category => category.products)
+    @JoinColumn({name: 'category'})
+    category: Category;
 
-    @OneToMany(() => SaleOrderItem, saleOrderItem => saleOrderItem.productId)
-    orderItem: SaleOrderItem[];
+    @ManyToOne(() => SaleOrder, ordertail => ordertail.products)
+    @JoinColumn({name: 'order_id'})
+    orderId: SaleOrder;
+    
 }

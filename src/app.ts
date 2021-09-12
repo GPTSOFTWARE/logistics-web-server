@@ -2,10 +2,12 @@ import * as express from "express";
 import * as cors from "cors";
 import { PORT } from "./utils/constant";
 import morgan = require("morgan");
-
+import bodyParser = require('body-parser')
 import usersRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";
 import productRoute from "./routes/product.route";
+import orderRoute from "./routes/saleOrder.route";
+
 
 
 
@@ -14,9 +16,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
+app.use(bodyParser.json());
 app.use(usersRoute);
 app.use(authRoute);
 app.use(productRoute);
+app.use(orderRoute);
+
 
 
 app.use(async (err: any, req: any, res: any, next: any) => {

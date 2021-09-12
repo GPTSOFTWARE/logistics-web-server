@@ -1,6 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { SaleOrderItem } from './SaleOrderItem';
 import { Account } from "./Users";
+
+export enum typeShip {
+    FAST = 'giao hàng nhanh',
+    STANDARD = 'giao hàng tiêu chuẩn'
+}
 
 @Entity()
 export class SaleOrderHeader extends BaseEntity {
@@ -8,19 +13,7 @@ export class SaleOrderHeader extends BaseEntity {
     id: number;
 
     @Column()
-    address: string;
+    note: string;
 
-    @Column()
-    totalPrice: number;
-
-    @Column()
-    totalQuantity: number;
-
-    @OneToMany(() => SaleOrderItem, SaleOrderItem => SaleOrderItem.orderId)
-    SOI: SaleOrderItem[] ;
-
-    @ManyToOne(() => Account, user => user.orders)
-    @JoinColumn({ name: 'User_id' })
-    user: Account;
 
 }

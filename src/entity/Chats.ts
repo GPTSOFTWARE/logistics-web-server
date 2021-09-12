@@ -13,11 +13,11 @@ export class Chats extends AbstractBase {
     public id: number;
 
     @ManyToOne(() => Account)
-    @JoinColumn({ name: 'user1_id' })
+    @JoinColumn({ name: 'account1_id' })
     public user1: Account;
 
     @ManyToOne(() => Account)
-    @JoinColumn({ name: 'user2_id' })
+    @JoinColumn({ name: 'account2_id' })
     public user2: Account
 
 }
