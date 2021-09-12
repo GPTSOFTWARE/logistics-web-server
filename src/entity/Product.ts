@@ -1,26 +1,43 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from "typeorm";
-import { SaleOrderHeader } from "./SaleOrderHeader";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 
+import { AbstractBase } from './Base';
+import { Category } from "./Category";
+import { SaleOrder } from "./OrderDetails";
 @Entity()
 export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number; 
 
-    @Column()
+    @Column({ 
+        type:"varchar",
+        length:"255",
+        nullable: false,
+    })
     name: string;
 
-    @Column()
+    @Column("decimal")
+    weight: number;
+
+    @Column("decimal")
     price: number;
 
-    @Column()
+    @Column({ 
+        nullable: true,
+    })
     quantity: number;
 
-    @Column()
-    thumbnails: string;
-
-    @Column()
+    @Column({ 
+        type:"text",
+        nullable: true,
+    })
     description: string;
 
-    @ManyToOne(() => SaleOrderHeader, SOH => SOH.idProduct)
-    SOHs: SaleOrderHeader[];
+    @ManyToOne(() => Category, category => category.products)
+    @JoinColumn({name: 'category'})
+    category: Category;
+
+    @ManyToOne(() => SaleOrder, ordertail => ordertail.products)
+    @JoinColumn({name: 'order_id'})
+    orderId: SaleOrder;
+    
 }

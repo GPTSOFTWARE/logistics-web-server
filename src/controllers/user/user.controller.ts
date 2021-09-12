@@ -1,7 +1,7 @@
 // const User = require('../entity/User');
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { User } from "../../entity/User";
+import { Account } from "../../entity/Users";
 import db from "../../utils/db";
 import {
   comparePassword,
@@ -15,7 +15,7 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const [data, total] = await (
     await db
   )
-    .getRepository(User)
+    .getRepository(Account)
     .createQueryBuilder("user")
     .take(page_size)
     .skip((page - 1) * page_size)
@@ -24,23 +24,23 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(User).findOne(req.params.id);
+  const user = await getRepository(Account).findOne(req.params.id);
   return res.json(user);
 };
 
-const createUser = async (req: Request, res: Response): Promise<Response> => {
-  const userData = req.body;
-  userData.password = await hashPassword(userData.password);
-  const newUser = await getRepository(User).create(userData);
-  const result = await getRepository(User).save(newUser);
-  return res.json(result);
-};
+// const createUser = async (req: Request, res: Response): Promise<Response> => {
+//   const userData = req.body;
+//   userData.password = await hashPassword(userData.password);
+//   const newUser = await getRepository(Account).create(userData);
+//   const result = await getRepository(Account).save(newUser);
+//   return res.json(result);
+// };
 
 const updateUser = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(User).findOne(req.params.id);
+  const user = await getRepository(Account).findOne(req.params.id);
   if (user) {
-    getRepository(User).merge(user, req.body); //get body request
-    const result = await getRepository(User).save(user);
+    getRepository(Account).merge(user, req.body); //get body request
+    const result = await getRepository(Account).save(user);
     return res.json(result);
   }
 
@@ -48,10 +48,14 @@ const updateUser = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
-  const results = await getRepository(User).delete(req.params.id);
+  const results = await getRepository(Account).delete(req.params.id);
   return res.json(results);
 };
 
 
+<<<<<<< HEAD
 
 export { getUsers , createUser, getUserById, updateUser, deleteUser};
+=======
+export { getUsers , updateUser, deleteUser, getUserById};
+>>>>>>> d7101d74a8ea1c1130e7f0189340daa0228df289
