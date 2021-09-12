@@ -36,6 +36,9 @@ export class Account extends BaseEntity {
     })
     phone: string;
 
+    @Column({ type: "varchar", nullable: true})
+    imgUrl: string;
+
     @Column({
         type: "enum",
         enum: Role,
@@ -44,6 +47,6 @@ export class Account extends BaseEntity {
     role: Role;
 
     // one user can have multiple sale_order_header
-    @OneToMany(() => SaleOrderHeader, order => order.user)
-    orders: SaleOrderHeader[];
+    // @OneToMany(() => SaleOrderHeader, order => order.user)
+    // orders: SaleOrderHeader[];
 }

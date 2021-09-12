@@ -19,8 +19,6 @@ const getProducts = async (req: Request, res: Response): Promise<Response> => {
 const createProduct = async (req: Request, res: Response): Promise<Response> => {
 
     const productData = req.body;
-    productData.createdAt = Date.now;
-    productData.UpdatedAt = Date.now;
     const newProduct = await getRepository(Product).create(productData);
     const result = await getRepository(Product).save(newProduct);
     return res.json(result);

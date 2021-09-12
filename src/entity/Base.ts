@@ -2,16 +2,16 @@ import { BeforeInsert, BeforeUpdate, Column, DeleteDateColumn } from "typeorm";
 
 export class AbstractBase {
     @Column({
-        type: 'timestamp',
+        type: "timestamp with time zone",
         nullable: true,
-        default:Date.now
+        default: () => "CURRENT_TIMESTAMP" // Pass prop datatype require is String Boolean Number
     })
     public updatedAt: Date;
 
     @Column({
-        type: 'timestamp',
+        type: "timestamp with time zone",
         nullable: true,
-        default:Date.now
+        default: () => "CURRENT_TIMESTAMP" // Pass prop datatype require is String Boolean Number
     })
     public createdAt: Date;
 

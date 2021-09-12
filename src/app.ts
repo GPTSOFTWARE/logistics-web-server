@@ -6,6 +6,8 @@ import bodyParser = require('body-parser')
 import usersRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";
 import productRoute from "./routes/product.route";
+import orderRoute from "./routes/saleOrder.route";
+
 
 
 
@@ -18,6 +20,8 @@ app.use(bodyParser.json());
 app.use(usersRoute);
 app.use(authRoute);
 app.use(productRoute);
+app.use(orderRoute);
+
 
 
 app.use(async (err: any, req: any, res: any, next: any) => {
