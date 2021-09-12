@@ -53,4 +53,9 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
 };
 
 
+<<<<<<< HEAD
+
+export { getUsers , createUser, getUserById, updateUser, deleteUser};
+=======
 export { getUsers , updateUser, deleteUser, getUserById};
+>>>>>>> d7101d74a8ea1c1130e7f0189340daa0228df289

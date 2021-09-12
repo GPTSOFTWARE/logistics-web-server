@@ -17,6 +17,7 @@ const getSaleOrderHeaders = async (req: Request, res: Response): Promise<Respons
     return res.json({ total, data });
 };
 
+
 // const createOrder =  async(req: Request, res: Response): Promise<Response> => {
 
 //     const data = req.body;
@@ -57,3 +58,4 @@ const getOrderByUserId = async (req: Request, res: Response , next: NextFunction
 
 }
 export { getSaleOrderHeaders, getOrderByUserId }
+
