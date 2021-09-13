@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AbstractBase } from "./Base";
 import { Product } from "./Product";
+import { SaleOrderItem } from "./SaleOrderItem";
 
 
 export enum typeShip {
@@ -49,8 +50,8 @@ export class SaleOrder extends AbstractBase {
     })
     order_value:number ;
 
-    @OneToMany(() => Product, product => product.orderId)
-    products: Product[];
+    @OneToMany(() => SaleOrderItem, saleOrderItem => saleOrderItem.orderId)
+    items:SaleOrderItem[] ;
 
 
 }

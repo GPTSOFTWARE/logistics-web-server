@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMan
 import { AbstractBase } from './Base';
 import { Category } from "./Category";
 import { SaleOrder } from "./OrderDetails";
+import { SaleOrderItem } from "./SaleOrderItem";
 @Entity()
 export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -36,8 +37,8 @@ export class Product extends BaseEntity {
     @JoinColumn({name: 'category'})
     category: Category;
 
-    @ManyToOne(() => SaleOrder, ordertail => ordertail.products)
+    @ManyToOne(() => SaleOrderItem, ordertail => ordertail.products)
     @JoinColumn({name: 'order_id'})
-    orderId: SaleOrder;
+    orderId: SaleOrderItem;
     
 }
