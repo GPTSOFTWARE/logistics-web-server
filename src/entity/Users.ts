@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, Unique } from "typeorm";
-import { SaleOrderHeader } from "./SaleOrderHeader";
+import { SaleOrder } from "./SaleOrder";
 
 export enum Role {
     ADMIN = "admin",
@@ -36,7 +36,7 @@ export class Account extends BaseEntity {
     })
     phone: string;
 
-    @Column({ type: "varchar", nullable: true})
+    @Column({ type: "varchar", nullable: true })
     imgUrl: string;
 
     @Column({
