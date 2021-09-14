@@ -52,10 +52,48 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   return res.json(results);
 };
 
+const login = async (req: Request, res: Response): Promise<Response> => {
 
-<<<<<<< HEAD
+  const phone = req.body.phone;
+  const password = req.body.password;
 
-export { getUsers , createUser, getUserById, updateUser, deleteUser};
-=======
-export { getUsers , updateUser, deleteUser, getUserById};
->>>>>>> d7101d74a8ea1c1130e7f0189340daa0228df289
+  const user = await getRepository(Account).findOne({ phone });
+
+    if (!user) {
+      return res.status(404).send("Phone number is not found");
+    }
+  
+    const validPassword = await comparePassword(user.password, password);
+  
+    if (!validPassword) {
+      return res.status(404).json({ code: 404, message: 'login false' });
+    }
+    const token = await generatorToken(user);
+    res.status(200).json({ code: 200, token: token, message: 'login successful' });
+
+}
+
+
+const register = async (req: Request, res: Response):Promise<Response> => {
+
+  const userData = req.body;
+  
+
+  var checkPhone = await getRepository(Account).findOne({phone: userData.phone});
+  
+  if(checkPhone){
+      return res.status(400).send('Phone number already exists!');
+  }
+
+
+  userData.password = await hashPassword(userData.password);
+  const newUser = await getRepository(Account).create(userData);
+  const saveUser = await getRepository(Account).save(newUser);
+  return res.status(200).json(saveUser);
+};
+
+export const changePassword = async (req: Request, res: Response) =>{
+}
+
+
+export { getUsers , updateUser, deleteUser, getUserById, login, register};
