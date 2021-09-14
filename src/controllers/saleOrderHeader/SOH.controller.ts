@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
+import { Product } from "../../entity/Product";
 import { SaleOrder } from "../../entity/SaleOrder";
 import { Account } from "../../entity/Users";
 import db from "../../utils/db";
@@ -17,70 +18,34 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
     return res.json({ total, data });
 };
 
+const mapData = async (req:Request, res:Response) =>{
+    
+}
 
-// const createOrder =  async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
+const createOrder = async (req: Request, res: Response): Promise<Response> => {
 
-//     const data = req.body.order;
-//     //create order object
-//     const order = await getRepository(SaleOrder).create(data);
-//     const createOder = await getRepository(SaleOrder).save(order);
+    const getProduct =  getRepository(Product);
+    const getOrder = getRepository(SaleOrder);
 
-//     //create orderDetails
-//     if(!createOder){
-//         return res.status(404).send('Not found');
-//     }
-
-//     try{
-//         const orderItem = new SaleOrderItem();
-//         orderItem.orderId = req.body.order.id;
-//         const createOrderDetail = await getRepository(SaleOrderItem).create(orderItem);
-//         if(createOrderDetail){
-//             const dataProduct = req.body.product;
-//             dataProduct.orderId = orderItem.id;
-//             const createProduct = await getRepository(Product).create(dataProduct);
-//                                 await getRepository(Product).save(createProduct);
-//         }
-
-//     }
-//     catch(err){
-//         console.log(err);
-//     }
+    const dataProduct = req.body.product;
+    //create product 
+    const product = await getProduct.create(dataProduct);
+                    await getProduct.save(product);
 
 
-// const dataProduct = req.body.product;
-// const orderItem =[];
-// try{
-//     const product = await getRepository(Product).create(dataProduct);
-//     orderItem.push(product);
-//     await getRepository(Product).save(product);
+    //create order 
+    const dataOrder = req.body.order;
+    const order = await getOrder.create(dataOrder);
+    const saveOrder = await getOrder.save(order);
 
-//     if(orderItem.length > 0){
-//         const newOrder = new SaleOrder();
-//         newOrder.id = data.id;
-//         newOrder.from_name = data.from_name;
-//         newOrder.from_address = data.from_address;
-//         newOrder.from_phone = data.from_phone;
-//         // const createOrder = await getRepository(SaleOrder).create(data);
-//         // const newOrder = await getRepository(SaleOrder).save(createOrder);
-//         if(newOrder){
-//             const newList = await getRepository(SaleOrderItem)
-//                                 .createQueryBuilder()
-//                                 .insert()
-//                                 .values({
-//                                     orderId: newOrder.id.toString,
-//                                     products:orderItem
-//                                 }).execute();
-//         }
-//         await getRepository(SaleOrder).save(newOrder);            
-//     }
+    console.log(product);
+    console.log(saveOrder);
+    return res.status(200);
 
-// }
-// catch(error){
-//     console.log(dataProduct);
-//     return res.send(error);
-// }
 
-// }
+}
+
+
 const getOrderById = async (req: Request, res: Response): Promise<Response> => {
 
     const id = req.params.id;
@@ -119,5 +84,5 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 
 // }
 
-export { getSaleOrder, getOrderByUserId, getOrderById }
+export { getSaleOrder, getOrderByUserId, getOrderById , createOrder}
 

@@ -1,6 +1,8 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ProductCollectionDTO, productDTO } from "../DTO/productDTO";
 import { AbstractBase } from "./Base";
 import { DeliveryOrderItem } from "./DeliveryOrderItem";
+import { Product } from "./Product";
 export enum typeShip {
     FAST = 'giao hàng nhanh',
     STANDARD = 'giao hàng tiêu chuẩn'
@@ -14,23 +16,23 @@ export class SaleOrder extends AbstractBase {
 
     // sender information
     @Column()
-    from_name: string;
+    fromName: string;
 
     @Column()
-    from_phone: string;
+    fromPhone: string;
 
     @Column()
-    from_address: string;
+    fromAddress: string;
 
     // receiver information
     @Column()
-    to_name: string;
+    toName: string;
 
     @Column()
-    to_phone: string;
+    toPhone: string;
 
     @Column()
-    to_address: string;
+    toAddress: string;
 
     @Column({
         type: "enum",
@@ -50,5 +52,6 @@ export class SaleOrder extends AbstractBase {
     @ManyToOne(() => DeliveryOrderItem, DOI => DOI.orderId)
     orders: DeliveryOrderItem[];
 
-
+    @Column()
+    listProduct:string ; 
 }
