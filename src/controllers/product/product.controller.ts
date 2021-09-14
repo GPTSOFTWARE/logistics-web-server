@@ -34,41 +34,41 @@ const updateProduct = async (req: Request, res: Response): Promise<Response> => 
 
     const product = await getRepository(Product).findOne(req.params.id);
     if (product) {
-    getRepository(Product).merge(product, req.body); //get body request
-    const result = await getRepository(Product).save(product);
-    return res.json(result);
-  }
+        getRepository(Product).merge(product, req.body); //get body request
+        const result = await getRepository(Product).save(product);
+        return res.json(result);
+    }
 
-  return res.status(404).json({ message: "Product Not Found" });
+    return res.status(404).json({ message: "Product Not Found" });
 }
 
 //soft delete product
 const removeProduct = async (req: Request, res: Response): Promise<Response> => {
-    try{
-                         await getRepository(Product)
-                            .createQueryBuilder("product")
-                            .where("product.id =:id",{id:req.params.id})
-                            .softDelete();  
-             return res.status(200).send('success');                
+    try {
+        await getRepository(Product)
+            .createQueryBuilder("product")
+            .where("product.id =:id", { id: req.params.id })
+            .softDelete();
+        return res.status(200).send('success');
     }
-    catch(err){
+    catch (err) {
         console.log(err);
         return res.status(500).send('Internal Server Error');
     }
-   
+
 }
 
 //restore product
 const restoreProduct = async (req: Request, res: Response): Promise<Response> => {
 
-    try{
-                    await getRepository(Product)
-                    .createQueryBuilder()
-                    .where("id =:id",{id:req.params.id})
-                    .restore();
-            return res.status(200).send('restored successful!');
-    }   
-    catch(err){
+    try {
+        await getRepository(Product)
+            .createQueryBuilder()
+            .where("id =:id", { id: req.params.id })
+            .restore();
+        return res.status(200).send('restored successful!');
+    }
+    catch (err) {
         console.log(err);
         return res.status(500).send('Internal Server Error');
     }
@@ -78,5 +78,5 @@ const deleteProduct = async (req: Request, res: Response): Promise<Response> => 
     const results = await getRepository(Product).delete(req.params.id);
     return res.json(results);
 };
-  
-export { getProducts, createProduct , getProductById, updateProduct, deleteProduct, removeProduct, restoreProduct}
+
+export { getProducts, createProduct, getProductById, updateProduct, deleteProduct, removeProduct, restoreProduct }

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
+import { Product } from "../../entity/Product";
 import { SaleOrder } from "../../entity/SaleOrder";
 import { Account } from "../../entity/Users";
 import db from "../../utils/db";
@@ -11,6 +12,7 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await (await db)
         .getRepository(SaleOrder)
         .createQueryBuilder("saleOrder")
+        .leftJoinAndSelect("saleOrder.products", "product")
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();
@@ -18,69 +20,32 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
 };
 
 
-// const createOrder =  async(req: Request, res: Response, next: NextFunction): Promise<Response> => {
+const createOrder = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
 
-//     const data = req.body.order;
-//     //create order object
-//     const order = await getRepository(SaleOrder).create(data);
-//     const createOder = await getRepository(SaleOrder).save(order);
-
-//     //create orderDetails
-//     if(!createOder){
-//         return res.status(404).send('Not found');
-//     }
-
-//     try{
-//         const orderItem = new SaleOrderItem();
-//         orderItem.orderId = req.body.order.id;
-//         const createOrderDetail = await getRepository(SaleOrderItem).create(orderItem);
-//         if(createOrderDetail){
-//             const dataProduct = req.body.product;
-//             dataProduct.orderId = orderItem.id;
-//             const createProduct = await getRepository(Product).create(dataProduct);
-//                                 await getRepository(Product).save(createProduct);
-//         }
-
-//     }
-//     catch(err){
-//         console.log(err);
-//     }
-
-
-// const dataProduct = req.body.product;
-// const orderItem =[];
-// try{
-//     const product = await getRepository(Product).create(dataProduct);
-//     orderItem.push(product);
-//     await getRepository(Product).save(product);
-
-//     if(orderItem.length > 0){
-//         const newOrder = new SaleOrder();
-//         newOrder.id = data.id;
-//         newOrder.from_name = data.from_name;
-//         newOrder.from_address = data.from_address;
-//         newOrder.from_phone = data.from_phone;
-//         // const createOrder = await getRepository(SaleOrder).create(data);
-//         // const newOrder = await getRepository(SaleOrder).save(createOrder);
-//         if(newOrder){
-//             const newList = await getRepository(SaleOrderItem)
-//                                 .createQueryBuilder()
-//                                 .insert()
-//                                 .values({
-//                                     orderId: newOrder.id.toString,
-//                                     products:orderItem
-//                                 }).execute();
-//         }
-//         await getRepository(SaleOrder).save(newOrder);            
-//     }
-
-// }
-// catch(error){
-//     console.log(dataProduct);
-//     return res.send(error);
-// }
-
-// }
+    const data = req.body.order;
+    // const order = await getRepository(SaleOrder).create(data);
+    let order = new SaleOrder();
+    // create order object
+    order = data;
+    if (data.products.length > 0) {
+        data.products.forEach(async (item: Product) => {
+            const product = await getRepository(Product).create(item);
+            if (product) {
+                // data.products.push(product)
+                order.products.push(product);
+            }
+        });
+        const createOder = await getRepository(SaleOrder).save(order);
+        if (!createOder) {
+            return res.status(404).send('Not found');
+        } else {
+            return res.status(201).send(order);
+        }
+    } else {
+        return res.status(404).send('Product not allow empty');
+    }
+    //create orderDetails
+}
 const getOrderById = async (req: Request, res: Response): Promise<Response> => {
 
     const id = req.params.id;
@@ -119,5 +84,5 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 
 // }
 
-export { getSaleOrder, getOrderByUserId, getOrderById }
+export { getSaleOrder, getOrderByUserId, getOrderById, createOrder }
 

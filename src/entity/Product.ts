@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { AbstractBase } from './Base';
 import { Category } from "./Category";
+import { SaleOrder } from "./SaleOrder";
 @Entity()
 export class Product extends AbstractBase {
     @PrimaryGeneratedColumn()
@@ -34,6 +35,7 @@ export class Product extends AbstractBase {
     @JoinColumn({ name: 'category' })
     category: Category;
 
-
+    @ManyToOne(() => SaleOrder, SO => SO.products)
+    orderId: SaleOrder[];
 
 }
