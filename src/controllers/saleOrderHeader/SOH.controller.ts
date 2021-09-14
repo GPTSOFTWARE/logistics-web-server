@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository  } from "typeorm";
-import { SaleOrder } from "../../entity/OrderDetails";
+import { SaleOrder } from "../../entity/SaleOrderHeader";
 import { Product } from "../../entity/Product";
-import { SaleOrderHeader } from "../../entity/SaleOrderHeader";
+// import { SaleOrderHeader } from "../../entity/SaleOrderHeader";
 import { SaleOrderItem } from "../../entity/SaleOrderItem";
 import { Account } from "../../entity/Users";
 import db from "../../utils/db";
@@ -101,7 +101,7 @@ const getOrderByUserId = async (req: Request, res: Response , next: NextFunction
 
     const userId = await getRepository(Account).findOne(req.params.id);
 
-    const listOrder = await getRepository(SaleOrderHeader)
+    const listOrder = await getRepository(SaleOrder)
                             .createQueryBuilder("order")
                             .where("order.user_id = :id",{id : userId})
                             .getManyAndCount();
