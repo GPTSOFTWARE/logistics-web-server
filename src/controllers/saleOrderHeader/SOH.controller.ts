@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
+import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { Product } from "../../entity/Product";
-import { SaleOrder } from "../../entity/SaleOrder";
+import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
 import { Account } from "../../entity/Users";
 import { comparePassword } from "../../utils/helpers";
+import { updateProduct } from "../product/product.controller";
 import { ICreateOrderDTO } from "./SOH.interface";
 
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
@@ -47,9 +49,19 @@ const createOrder = async (
                 .into(Product)
                 .values(productOrder)
                 .execute();
-                res.status(200).json({message:'Success'});
-        console.log(data);        
+        console.log(data);    
 
+        //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
+        await createQueryBuilder('delivery')
+                    .insert()
+                    .into(DeliveryOrder)
+                    .values({ 
+                        saleOrderId: order_id,
+                        deliveryId:1
+                    }) 
+                    .execute();
+                    res.status(200).json({message:'Success'});
+        
     }catch (err) {
         console.log(err);
     } 
@@ -90,11 +102,66 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 
 }
 
-const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
-     
+
+const updateOrder = async (req: Request<any, any, ISaleOrder, any>, res: Response, next: NextFunction) => {
+    try{
+        const data = req.body;
+        const updateProduct = await createQueryBuilder()
+                                    .update(SaleOrder)
+                                    .set(data)
+                                    .where("id = :id", {id: req.params.id})
+                                    .execute();
+        res.status(200).send(updateProduct);
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const softDelete = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const softDelete = await getRepository(SaleOrder)
+                                .createQueryBuilder('product')
+                                .where('id = :id', {id: req.params.id})
+                                .softDelete();
+        res.json({message: "success"});
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const restoreOrder = async (req: Request, res: Response, next: NextFunction) =>{
+    try{
+        const softDelete = await getRepository(SaleOrder)
+                                .createQueryBuilder('product')
+                                .where('id = :id', {id: req.params.id})
+                                .restore();
+        res.json({message: "success"});
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
+
+    try{
+        const deleteOrder = await createQueryBuilder()
+                                    .delete()
+                                    .from(SaleOrder)
+                                    .where("id = :id", {id: req.params.id})
+                                    .execute();
+            res.json({message: "success"});
+    }
+    catch (err) {
+        console.log(err);
+    }
+
 }
 
 
-export { getSaleOrder,  getOrderByUserId, getOrderById, createOrder }
+
+export { getSaleOrder,  getOrderByUserId, getOrderById, createOrder , updateOrder, removeOrder, softDelete, restoreOrder}
 
 

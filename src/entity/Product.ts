@@ -1,6 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { AbstractBase } from './Base';
-import { Category } from "./Category";
 import { SaleOrder } from "./SaleOrder";
 
 export interface IProduct{
@@ -34,9 +33,6 @@ export class Product extends BaseEntity implements IProduct{
     })
     quantity: number;
 
-    @ManyToOne(() => Category, category => category.products)
-    @JoinColumn({ name: 'category' })
-    category: Category;
 
     @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.products)
     @JoinColumn({ name: 'order_id'})

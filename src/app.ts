@@ -7,6 +7,7 @@ import usersRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";
 import productRoute from "./routes/product.route";
 import orderRoute from "./routes/saleOrder.route";
+import changeDelivery from "./routes/changeDelivery.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
 
@@ -23,6 +24,7 @@ app.use(usersRoute);
 app.use(authRoute);
 app.use(productRoute);
 app.use(orderRoute);
+app.use(changeDelivery);
 
 
 
