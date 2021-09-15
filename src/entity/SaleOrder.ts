@@ -1,11 +1,23 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ProductCollectionDTO, productDTO } from "../DTO/productDTO";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
 import { AbstractBase } from "./Base";
 import { DeliveryOrderItem } from "./DeliveryOrderItem";
 import { Product } from "./Product";
 export enum typeShip {
     FAST = 'giao hàng nhanh',
     STANDARD = 'giao hàng tiêu chuẩn'
+}
+
+export interface ISaleOrder{
+    id: number;
+    from_name: string;
+    from_address:string;
+    from_phone:string;
+    to_name: string;
+    to_address:string
+    to_phone:string;
+    typeShip: string;
+    isFreeShip: boolean;
 }
 
 @Entity()
@@ -16,23 +28,23 @@ export class SaleOrder extends AbstractBase {
 
     // sender information
     @Column()
-    fromName: string;
+    from_name: string;
 
     @Column()
-    fromPhone: string;
+    from_phone: string;
 
     @Column()
-    fromAddress: string;
+    from_address: string;
 
     // receiver information
     @Column()
-    toName: string;
+    to_name: string;
 
     @Column()
-    toPhone: string;
+    to_phone: string;
 
     @Column()
-    toAddress: string;
+    to_address: string;
 
     @Column({
         type: "enum",
@@ -44,14 +56,15 @@ export class SaleOrder extends AbstractBase {
     @Column()
     isFreeShip: boolean;
 
-    @Column({
-        nullable: true
-    })
-    order_value: number;
+    // @Column({
+    //     nullable: true
+    // })
+    // order_value: number;
 
-    @ManyToOne(() => DeliveryOrderItem, DOI => DOI.orderId)
-    orders: DeliveryOrderItem[];
+    // @ManyToOne(() => DeliveryOrderItem, DOI => DOI.orderId)
+    // orders: DeliveryOrderItem[];
 
-    @Column()
-    listProduct:string ; 
+    @OneToMany(() => Product, (product:Product) =>product.saleOrder)
+    products: Product[];
+
 }

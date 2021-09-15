@@ -9,10 +9,10 @@ export class DeliveryOrderItem extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToMany(() => SaleOrder, SO => SO.orders)
-    orderId: SaleOrder;
+    // @OneToMany(() => SaleOrder, SO => SO.orders)
+    // orderId: SaleOrder;
 
-    @OneToMany(() => DeliveryOrderHeader, DOI => DOI.deliveries)
-    deliveryId: DeliveryOrderHeader[];
+    // @OneToMany(() => DeliveryOrderHeader, DOI => DOI.deliveries)
+    // deliveryId: DeliveryOrderHeader[];
 
 }

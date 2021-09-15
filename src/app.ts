@@ -7,6 +7,8 @@ import usersRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";
 import productRoute from "./routes/product.route";
 import orderRoute from "./routes/saleOrder.route";
+import { createConnection } from "typeorm";
+import { dbConfig } from "./utils/db";
 
 
 
@@ -40,4 +42,12 @@ app.get("/ping", async (req, res, next) => {
   res.json({ code: 200, message: "ping" });
 });
 
-app.listen(PORT, () => console.log(`Server ready at http://localhost:${PORT}`));
+createConnection(dbConfig)
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(`app listen on http://localhost:${PORT}`)
+    );
+  })
+  .catch((err) => {
+    console.log(err);
+  });

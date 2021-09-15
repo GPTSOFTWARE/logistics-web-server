@@ -51,8 +51,8 @@ export class DeliveryOrderHeader extends AbstractBase {
     })
     status: Boolean; //True (Deliveried) && False (Not Deliveried)
 
-    @ManyToOne(() => DeliveryOrderItem, DO => DO.orderId)
-    deliveries: DeliveryOrderItem[];
+    // @ManyToOne(() => DeliveryOrderItem, DO => DO.orderId)
+    // deliveries: DeliveryOrderItem[];
 
 
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import { getOrderByUserId, getSaleOrder, getOrderById, createOrder } from "../controllers/saleOrderHeader/SOH.controller"
+import { getOrderByUserId, getOrderById, createOrder, getSaleOrder } from "../controllers/saleOrderHeader/SOH.controller"
 
 router.get("/order", getSaleOrder)
 router.get("/order/:id", getOrderById)
