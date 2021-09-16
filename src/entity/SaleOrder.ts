@@ -5,6 +5,7 @@ import { Category } from "./Category";
 import { Delivery } from "./Delivery";
 import { DeliveryOrder } from "./DeliveryOrder";
 import { Driver } from "./Driver";
+import { PaymentMethod } from "./payment";
 import { Product } from "./Product";
 export enum typeShip {
     FAST = 'giao hàng nhanh',
@@ -13,44 +14,45 @@ export enum typeShip {
 
 export interface ISaleOrder{
     id: number;
-    from_name: string;
-    from_address:string;
-    from_phone:string;
-    to_name: string;
-    to_address:string
-    to_phone:string;
+    customerName: string;
+    customerAddress:string;
+    customerPhone:string;
+    receiverName: string;
+    receiverAddress:string
+    receiverPhone:string;
     typeShip: string;
     isFreeShip: boolean;
     totalPrice: number;
     notes:string;
     type?:number;
+    payment?:number
 }
 
 @Entity()
-export class SaleOrder extends AbstractBase {
+export class SaleOrder extends AbstractBase implements ISaleOrder{
 
     @PrimaryGeneratedColumn()
     id: number;
 
     // sender information
     @Column()
-    from_name: string;
+    customerName: string;
 
     @Column()
-    from_phone: string;
+    customerAddress: string;
 
     @Column()
-    from_address: string;
+    customerPhone: string;
 
     // receiver information
     @Column()
-    to_name: string;
+    receiverName: string;
 
     @Column()
-    to_phone: string;
+    receiverAddress: string;
 
     @Column()
-    to_address: string;
+    receiverPhone: string;
 
     @Column({
         type: "enum",
@@ -71,6 +73,10 @@ export class SaleOrder extends AbstractBase {
     @ManyToOne(() => Category, (category:Category) => category.saleOrder)
     @JoinColumn({name:'type'})
     categories: Category;
+
+    @ManyToOne(() => PaymentMethod, (paymentMethod:PaymentMethod) => paymentMethod.saleOrders)
+    @JoinColumn({name:'payment'})
+    paymentMethod: PaymentMethod;
 
     @OneToMany(() => Product, (product:Product) =>product.saleOrder)
     products: Product[];

@@ -1,17 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { AbstractBase } from './Base';
+import { Unit } from "./categoryProduct";
 import { SaleOrder } from "./SaleOrder";
 
 export interface IProduct{
     id: number;
     name: string;
-    weight:number;
-    price:number;
     quantity: number;
     order_id?:number;
+    unit_id?:number;
 }
 @Entity()
 export class Product extends BaseEntity implements IProduct{
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -22,12 +23,6 @@ export class Product extends BaseEntity implements IProduct{
     })
     name: string;
 
-    @Column("decimal")
-    weight: number;
-
-    @Column("decimal")
-    price: number;
-
     @Column({
         nullable: true,
     })
@@ -37,5 +32,9 @@ export class Product extends BaseEntity implements IProduct{
     @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.products)
     @JoinColumn({ name: 'order_id'})
     saleOrder!: SaleOrder;
+
+    @ManyToOne(() => Unit, (unit: Unit)=> unit.products)
+    @JoinColumn({ name: 'unit_id'})
+    unit!: Unit;
 
 }

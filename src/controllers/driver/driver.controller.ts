@@ -31,9 +31,5 @@ const createDriver = async (
     }
 }
 
-// const updateDriver = async (req: Request, res: Response, next: NextFunction) =>{
-
-//     try
-// }
-
+//  
 export {getDrivers, createDriver }
