@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
 import { Product } from "../../entity/Product";
-import db from "../../utils/db";
 import { getRepository } from 'typeorm';
 import { Account } from "../../entity/Users";
 
 const getProducts = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
     const page_size = +req?.query?.page_size || 10;
-    const [data, total] = await (await db)
-        .getRepository(Product)
+    const [data, total] = await  getRepository(Product)
         .createQueryBuilder("product")
         .take(page_size)
         .skip((page - 1) * page_size)

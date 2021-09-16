@@ -2,7 +2,6 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { Account } from "../../entity/Users";
-import db from "../../utils/db";
 import {
   comparePassword,
   generatorToken,
@@ -12,14 +11,11 @@ import {
 const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const page = +req?.query?.page || 1;
   const page_size = +req?.query?.page_size || 10;
-  const [data, total] = await (
-    await db
-  )
-    .getRepository(Account)
-    .createQueryBuilder("user")
-    .take(page_size)
-    .skip((page - 1) * page_size)
-    .getManyAndCount();
+  const [data, total] = await getRepository(Account)
+              .createQueryBuilder("user")
+              .take(page_size)
+              .skip((page - 1) * page_size)
+              .getManyAndCount();
   return res.json({ total, data });
 };
 
@@ -96,4 +92,4 @@ export const changePassword = async (req: Request, res: Response) =>{
 }
 
 
-export { getUsers , updateUser, deleteUser, getUserById, login, register};
+export { getUsers, updateUser, deleteUser, getUserById, login, register};

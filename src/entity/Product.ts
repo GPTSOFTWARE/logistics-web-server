@@ -1,9 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { AbstractBase } from './Base';
-import { Category } from "./Category";
 import { SaleOrder } from "./SaleOrder";
+
+export interface IProduct{
+    id: number;
+    name: string;
+    weight:number;
+    price:number;
+    quantity: number;
+    order_id?:number;
+}
 @Entity()
-export class Product extends AbstractBase {
+export class Product extends BaseEntity implements IProduct{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -25,17 +33,9 @@ export class Product extends AbstractBase {
     })
     quantity: number;
 
-    @Column({
-        type: "text",
-        nullable: true,
-    })
-    description: string;
 
-    @ManyToOne(() => Category, category => category.products)
-    @JoinColumn({ name: 'category' })
-    category: Category;
-
-    @ManyToOne(() => SaleOrder, SO => SO.products)
-    orderId: SaleOrder[];
+    @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.products)
+    @JoinColumn({ name: 'order_id'})
+    saleOrder!: SaleOrder;
 
 }
