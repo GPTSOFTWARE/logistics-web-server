@@ -11,15 +11,12 @@ export class Delivery extends BaseEntity {
     id: number;
 
     @Column({ nullable: false })
-    code:string;
+    code: string;
 
     @Column()
-    name:string;
-    
-    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.delivery)
+    name: string;
+
+    @ManyToOne(() => DeliveryOrder, deliveryOrder => deliveryOrder.delivery)
     deliveryOrders!: DeliveryOrder[];
-  
-
-
 
 }

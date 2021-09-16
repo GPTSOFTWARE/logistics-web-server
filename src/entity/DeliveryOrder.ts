@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Delivery } from "./Delivery";
 import { SaleOrder } from "./SaleOrder";
 
@@ -7,13 +7,13 @@ import { SaleOrder } from "./SaleOrder";
 export class DeliveryOrder extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    id!:number;
-    
-    @Column()
-    saleOrderId!:number;
+    id!: number;
 
     @Column()
-    deliveryId!:number;
+    saleOrderId!: number;
+
+    @Column()
+    deliveryId!: number;
 
     @Column({
         type: "timestamp with time zone",
@@ -27,13 +27,13 @@ export class DeliveryOrder extends BaseEntity {
         this.createdAt = new Date();
     }
 
-    @ManyToOne(() =>SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders)
+    @OneToMany(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders)
     saleOrder!: SaleOrder;
 
-    @ManyToOne(() =>Delivery, (delivery: Delivery) => delivery.deliveryOrders)
+    @OneToMany(() => Delivery, (delivery: Delivery) => delivery.deliveryOrders)
     delivery!: Delivery;
 
 
-    
-    
+
+
 }
