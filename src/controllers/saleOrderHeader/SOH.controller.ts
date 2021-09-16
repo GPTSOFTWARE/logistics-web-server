@@ -72,6 +72,7 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
     const order = await getRepository(SaleOrder)
                         .createQueryBuilder('order')
                         .leftJoinAndSelect('order.products', 'product')
+                        .leftJoinAndSelect('order.driver', 'driver')
                         .where('order.id = :id',{id : id})
                         .getOne();
     if (order) {

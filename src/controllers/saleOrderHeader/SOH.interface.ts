@@ -9,8 +9,7 @@ export interface ICreateOrderDTO extends ISaleOrder{
 export interface OrderProduct {
 
     name: string;
-    weight:string;
-    price:number;
     quantity: number;
     order_id?:number;
+    unit_id?:number
 }
