@@ -27,10 +27,10 @@ export class DeliveryOrder extends BaseEntity {
         this.createdAt = new Date();
     }
 
-    @OneToMany(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders)
+    @ManyToOne(() =>SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders)
     saleOrder!: SaleOrder;
 
-    @OneToMany(() => Delivery, (delivery: Delivery) => delivery.deliveryOrders)
+    @ManyToOne(() =>Delivery, (delivery: Delivery) => delivery.deliveryOrders)
     delivery!: Delivery;
 
 

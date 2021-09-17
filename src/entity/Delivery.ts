@@ -16,7 +16,6 @@ export class Delivery extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => DeliveryOrder, deliveryOrder => deliveryOrder.delivery)
+    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.delivery)
     deliveryOrders!: DeliveryOrder[];
-
 }
