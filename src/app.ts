@@ -1,5 +1,5 @@
-import * as express from "express";
-import * as cors from "cors";
+import express from "express";
+import cors from "cors";
 import { PORT } from "./utils/constant";
 import morgan = require("morgan");
 import bodyParser = require('body-parser')
@@ -10,7 +10,8 @@ import orderRoute from "./routes/saleOrder.route";
 import changeDelivery from "./routes/changeDelivery.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
-
+import swagger from 'swagger-ui-express'
+import * as swaggerConfig from './swagger/configSwagger.json';
 
 
 
@@ -44,11 +45,12 @@ app.get("/ping", async (req, res, next) => {
   res.json({ code: 200, message: "ping" });
 });
 
+app.use("/swagger", swagger.serve, swagger.setup(swaggerConfig));
+// app.get("/swagger", swagger.serve, swagger.setup(swaggerConfig));
+
 createConnection(dbConfig)
   .then(() => {
-    app.listen(PORT, () =>
-      console.log(`app listen on http://localhost:${PORT}`)
-    );
+    app.listen(PORT, () => console.log(`app listen on http://localhost:${PORT}`));
   })
   .catch((err) => {
     console.log(err);
