@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOn
 
 import { AbstractBase } from "./Base";
 import { Category } from "./Category";
-import { Unit } from "./categoryProduct";
+import { Unit } from "./Unit";
 import { Delivery } from "./Delivery";
 import { DeliveryOrder } from "./DeliveryOrder";
 import { Driver } from "./Driver";

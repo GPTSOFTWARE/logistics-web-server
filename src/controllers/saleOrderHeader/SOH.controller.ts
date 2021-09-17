@@ -91,6 +91,7 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
         .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
         .leftJoinAndSelect('saleOrder.categories', 'Category')
         .leftJoinAndSelect('saleOrder.unit', 'unit')
+        .leftJoinAndSelect('saleOrder.deliveryOrders','deliveryOrder')
         .where('saleOrder.id = :id', { id: id })
         .getOne();
     if (order) {
@@ -141,9 +142,10 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const softDelete = await getRepository(SaleOrder)
             .createQueryBuilder('order')
-            .where('order.id = :id', { id: req.params.id })
-            .softDelete();
-        res.json({ message: "success" });
+            .softDelete()
+            .where('order.id = :id', { id: req.params.id });
+
+      res.json({ message: "success" });
     }
     catch (err) {
         console.log(err);
@@ -151,9 +153,9 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
 }
 const restoreOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const softDelete = await getRepository(SaleOrder)
-            .createQueryBuilder('product')
-            .where('id = :id', { id: req.params.id })
+        const restoreOrder = await getRepository(SaleOrder)
+            .createQueryBuilder('order')
+            .where('order.id = :id', { id: req.params.id })
             .restore();
         res.json({ message: "success" });
     }

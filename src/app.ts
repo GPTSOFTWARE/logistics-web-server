@@ -8,6 +8,8 @@ import authRoute from "./routes/auth.route";
 import productRoute from "./routes/product.route";
 import orderRoute from "./routes/saleOrder.route";
 import changeDelivery from "./routes/changeDelivery.route";
+import unit from "./routes/unit.route";
+import city from "./routes/city.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
 import swagger from 'swagger-ui-express'
@@ -26,6 +28,9 @@ app.use(authRoute);
 app.use(productRoute);
 app.use(orderRoute);
 app.use(changeDelivery);
+app.use(city);
+app.use(unit);
+
 
 
 
