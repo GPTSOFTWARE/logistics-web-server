@@ -108,7 +108,7 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @JoinColumn({ name: 'driver_id' })
     driver!: Driver;
 
-    @ManyToOne(() => DeliveryOrder, DO => DO.saleOrder)
+    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.saleOrder)
     deliveryOrders!: DeliveryOrder[];
 
     @OneToMany(() => Product, (product: Product) => product.saleOrder)
