@@ -39,10 +39,21 @@ const createOrder = async (
             .createQueryBuilder('order')
             .insert()
             .into(SaleOrder)
-            .values([order])
+            .values(order)
             .execute();
 
         const order_id: number = result.identifiers[0].id;
+
+                     await createQueryBuilder()
+                                .update(SaleOrder)
+                                .set({
+                                    driver: data.driver_id,
+                                    paymentMethod: data.payment_id,
+                                    unit: data.unit_id,
+                                    categories: data.orderType,
+                                })
+                                .where("id = :id",{id: order_id})
+                                .execute();
 
         const productOrder = products.map((item: any) => {
             return { ...item, saleOrder: order_id };
@@ -155,6 +166,19 @@ const restoreOrder = async (req: Request, res: Response, next: NextFunction) => 
 const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
+
+        // const deleteOrderProduct = await createQueryBuilder()
+        //                             .delete()
+        //                             .from(Product)
+        //                             .where("order_id = :id",{id: req.params.id})
+        //                             .execute();
+        
+        //   const deleteOrderDelivery = await createQueryBuilder()
+        //                             .delete()
+        //                             .from(DeliveryOrder)
+        //                             .where("saleOrderId = :id",{id: req.params.id})
+        //                             .execute();
+
         const deleteOrder = await createQueryBuilder()
             .delete()
             .from(SaleOrder)

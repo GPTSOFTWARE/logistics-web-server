@@ -29,7 +29,7 @@ export class Product extends BaseEntity implements IProduct{
     quantity: number;
 
 
-    @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.products)
+    @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.products, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'order_id'})
     saleOrder!: SaleOrder;
 
