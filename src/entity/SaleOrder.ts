@@ -34,7 +34,7 @@ export interface ISaleOrder {
     notes: string;
     orderType?: number;
     quantity?: number;
-    payment?: number;
+    payment_id?: number;
     unit_id?: number;
     driver_id?: number;
 
@@ -97,7 +97,7 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     categories: Category;
 
     @ManyToOne(() => PaymentMethod, (paymentMethod: PaymentMethod) => paymentMethod.saleOrders)
-    @JoinColumn({ name: 'payment' })
+    @JoinColumn({ name: 'payment_id' })
     paymentMethod: PaymentMethod;
 
     @ManyToOne(() => Unit, (unit: Unit) => unit.orders)
