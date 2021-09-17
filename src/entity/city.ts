@@ -1,9 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn, BaseEntity, OneToMany} from "typeorm";
 import { District } from "./district";
 
+export interface ICity {
+    id:number;
+    cityName:string;
+}
 
 @Entity()
-export class City extends BaseEntity {
+export class City extends BaseEntity implements ICity {
 
     @PrimaryGeneratedColumn()
     id:number;
