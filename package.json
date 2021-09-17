@@ -17,6 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "heroku": "^7.59.0",
+    "swagger-ui-express": "^4.1.6",
     "typescript": "^4.4.2"
   },
   "dependencies": {

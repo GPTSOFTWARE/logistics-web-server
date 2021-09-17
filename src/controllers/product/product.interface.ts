@@ -11,8 +11,6 @@ export interface IProduct {
     thumbnails: string;
 
     description: string;
-    
-    // SOHs: SaleOrderHeader[];
 }
 
 export interface IPagingUserResponse {

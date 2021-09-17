@@ -1,0 +1,327 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Logistics Swagger",
+        "description": "Cấu trúc sử dụng RESTful API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Local host"
+        },
+        {
+            "url": "/api/",
+            "description": "Heroku"
+        }
+    ],
+    "tags": [
+        {
+            "name": "http://localhost:3000",
+            "description": "Các phương thức có thể sử dụng được :"
+        }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/orders": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách Sale Order"
+                ],
+                "summary": "GET tất các các order",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Orders"
+                        }
+                    }
+                }
+            }
+        },
+        "/order": {
+            "post": {
+                "tags": [
+                    "Tạo Sale Order"
+                ],
+                "summary": "Tạo Sale Order mới",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Order"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/order/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã hóa đơn",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Tìm một Sale Order "
+                ],
+                "summary": "GET một order với ID ",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Order có ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cập nhật hóa đơn có ID",
+                "tags": [
+                    "Cập nhật một Sale Order"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Order"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "ID Sale Order cần cập nhật",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "DELETE Hóa đơn với ID",
+                "tags": [
+                    "Xóa một Sale Order ( Xóa vĩnh viễn )"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "DELETE hóa đơn với ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/order/soft/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã hóa đơn",
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "tags": [
+                    "Xóa mềm một Sale Order ( Có thể Restore )"
+                ],
+                "summary": "Xóa Sale Order",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/restore/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã hóa đơn",
+                    "type": "string"
+                }
+            ],
+            "patch": {
+                "tags": [
+                    "Khôi phục một Sale Order"
+                ],
+                "summary": "Khôi phục Sale Order",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "id": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "Order": {
+            "type": "object",
+            "properties": {
+                "customerName": {
+                    "type": "string"
+                },
+                "customerAddress": {
+                    "type": "string"
+                },
+                "customerPhone": {
+                    "type": "string"
+                },
+                "receiverName": {
+                    "type": "string"
+                },
+                "receiverAddress": {
+                    "type": "string"
+                },
+                "receiverPhone": {
+                    "type": "string"
+                },
+                "isFreeShip": {
+                    "type": "string"
+                },
+                "totalPrice": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "orderType": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "unit_id": {
+                    "type": "string"
+                },
+                "payment_id": {
+                    "type": "string"
+                },
+                "driver_id": {
+                    "type": "string"
+                },
+                "products": {
+                    "items": {
+                        "$ref": "#/definitions/product"
+                    }
+                }
+            }
+        },
+        "Orders": {
+            "type": "array",
+            "properties": {
+                "orders": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Order"
+                    }
+                }
+            }
+        },
+        "product": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "unit_id": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

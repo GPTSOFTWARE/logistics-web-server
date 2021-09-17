@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { AbstractBase } from './Base';
-import { Unit } from "./categoryProduct";
+import { Unit } from "./Unit";
 import { SaleOrder } from "./SaleOrder";
 
 export interface IProduct{
