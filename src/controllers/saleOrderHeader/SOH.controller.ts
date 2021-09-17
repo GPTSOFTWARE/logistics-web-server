@@ -19,8 +19,8 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
             .leftJoinAndSelect('saleOrder.categories', 'Category')
             .leftJoinAndSelect('saleOrder.unit', 'unit')
-            .take(page_size)
-            .skip((page - 1) * page_size)
+            // .take(page_size)
+            // .skip((page - 1) * page_size)
             .getManyAndCount();
     return res.json({ total, data });
 };
@@ -44,16 +44,16 @@ const createOrder = async (
 
         const order_id: number = result.identifiers[0].id;
 
-                     await createQueryBuilder()
-                                .update(SaleOrder)
-                                .set({
-                                    driver: data.driver_id,
-                                    paymentMethod: data.payment_id,
-                                    unit: data.unit_id,
-                                    categories: data.orderType,
-                                })
-                                .where("id = :id",{id: order_id})
-                                .execute();
+        await createQueryBuilder()
+            .update(SaleOrder)
+            .set({
+                driver: data.driver_id,
+                paymentMethod: data.payment_id,
+                unit: data.unit_id,
+                categories: data.orderType,
+            })
+            .where("id = :id", { id: order_id })
+            .execute();
 
         const productOrder = products.map((item: any) => {
             return { ...item, saleOrder: order_id };
@@ -140,8 +140,8 @@ const updateOrder = async (req: Request<any, any, ISaleOrder, any>, res: Respons
 const softDelete = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const softDelete = await getRepository(SaleOrder)
-            .createQueryBuilder('product')
-            .where('id = :id', { id: req.params.id })
+            .createQueryBuilder('order')
+            .where('order.id = :id', { id: req.params.id })
             .softDelete();
         res.json({ message: "success" });
     }
@@ -149,7 +149,6 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
         console.log(err);
     }
 }
-
 const restoreOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const softDelete = await getRepository(SaleOrder)
@@ -172,7 +171,7 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
         //                             .from(Product)
         //                             .where("order_id = :id",{id: req.params.id})
         //                             .execute();
-        
+
         //   const deleteOrderDelivery = await createQueryBuilder()
         //                             .delete()
         //                             .from(DeliveryOrder)
