@@ -8,11 +8,6 @@ import { DeliveryOrder } from "./DeliveryOrder";
 import { Driver } from "./Driver";
 import { PaymentMethod } from "./payment";
 import { Product } from "./Product";
-export enum typeShip {
-    FAST = 'giao hàng nhanh',
-    STANDARD = 'giao hàng tiêu chuẩn'
-}
-
 
 export enum typeCustomer {
     KM = 'Khách Mối',
@@ -28,7 +23,6 @@ export interface ISaleOrder {
     receiverName: string;
     receiverAddress: string
     receiverPhone: string;
-    typeShip: string;
     isFreeShip: boolean;
     totalPrice: number;
     notes: string;
@@ -36,7 +30,6 @@ export interface ISaleOrder {
     quantity?: number;
     payment_id?: number;
     unit_id?: number;
-    driver_id?: number;
 
 }
 
@@ -66,12 +59,6 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @Column()
     receiverPhone: string;
 
-    @Column({
-        type: "enum",
-        enum: typeShip,
-        default: typeShip.STANDARD
-    })
-    typeShip: string;
 
     @Column({
         type: "enum",
@@ -103,10 +90,6 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @ManyToOne(() => Unit, (unit: Unit) => unit.orders)
     @JoinColumn({ name: 'unit_id' })
     unit: Unit;
-
-    @ManyToOne(() => Driver, (driver: Driver) => driver.saleOrders)
-    @JoinColumn({ name: 'driver_id' })
-    driver!: Driver;
 
     @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.saleOrder)
     deliveryOrders!: DeliveryOrder[];
