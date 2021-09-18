@@ -15,7 +15,6 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
         getRepository(SaleOrder)
             .createQueryBuilder("saleOrder")
             .leftJoinAndSelect('saleOrder.products', 'product')
-            .leftJoinAndSelect('saleOrder.driver', 'driver')
             .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
             .leftJoinAndSelect('saleOrder.categories', 'Category')
             .leftJoinAndSelect('saleOrder.unit', 'unit')
@@ -33,7 +32,7 @@ const createOrder = async (
 ) => {
     try {
         const data = req.body;
-        const { products, ...order } = data;
+        const { products, typeShip,...order } = data;
 
         const result = await getRepository(SaleOrder)
             .createQueryBuilder('order')
@@ -47,7 +46,6 @@ const createOrder = async (
         await createQueryBuilder()
             .update(SaleOrder)
             .set({
-                driver: data.driver_id,
                 paymentMethod: data.payment_id,
                 unit: data.unit_id,
                 categories: data.orderType,
@@ -72,7 +70,8 @@ const createOrder = async (
             .into(DeliveryOrder)
             .values({
                 saleOrderId: order_id,
-                deliveryId: 1
+                deliveryId: 1,
+                typeShip: typeShip, 
             })
             .execute();
         res.status(200).json({ message: 'Success' });
@@ -87,7 +86,6 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
     const order = await getRepository(SaleOrder)
         .createQueryBuilder('saleOrder')
         .leftJoinAndSelect('saleOrder.products', 'product')
-        .leftJoinAndSelect('saleOrder.driver', 'driver')
         .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
         .leftJoinAndSelect('saleOrder.categories', 'Category')
         .leftJoinAndSelect('saleOrder.unit', 'unit')

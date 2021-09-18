@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { StringLiteralLike } from "typescript";
+import { DeliveryOrder } from "./DeliveryOrder";
 import { SaleOrder } from "./SaleOrder";
 
 
@@ -30,6 +31,6 @@ export class Driver extends BaseEntity {
     @Column()
     age:number;
 
-    @OneToMany(() => SaleOrder, (saleOrder:SaleOrder) =>saleOrder.driver)
-    saleOrders: SaleOrder[];
+    @OneToMany(() => DeliveryOrder, (saleOrder:DeliveryOrder) =>saleOrder.driver)
+    deliveryOrders: DeliveryOrder[];
 }
