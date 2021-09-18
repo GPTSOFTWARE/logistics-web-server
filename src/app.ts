@@ -10,6 +10,7 @@ import orderRoute from "./routes/saleOrder.route";
 import changeDelivery from "./routes/changeDelivery.route";
 import unit from "./routes/unit.route";
 import city from "./routes/city.route";
+import payment from "./routes/payment.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
 import swagger from 'swagger-ui-express'
@@ -30,6 +31,7 @@ app.use(orderRoute);
 app.use(changeDelivery);
 app.use(city);
 app.use(unit);
+app.use(payment);
 
 
 

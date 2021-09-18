@@ -2,21 +2,21 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "t
 import { SaleOrder } from "./SaleOrder";
 
 export interface IPaymentMethod {
-    id:number;
-    codePayment:string;
-    namePayment:string;
+    id: number;
+    codePayment: string;
+    namePayment: string;
 }
 @Entity()
 export class PaymentMethod extends BaseEntity implements IPaymentMethod {
 
-   @PrimaryGeneratedColumn()
-    id:number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
     codePayment: string;
 
     @Column()
-    namePayment:string;
+    namePayment: string;
 
 
     @OneToMany(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.paymentMethod)
