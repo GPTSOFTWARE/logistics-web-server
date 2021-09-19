@@ -1,5 +1,5 @@
 import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Delivery } from "./Delivery";
+import { Status } from "./Status";
 import { Driver } from "./Driver";
 import { SaleOrder } from "./SaleOrder";
 
@@ -11,7 +11,7 @@ export enum typeShip {
 export interface IDeliveryOrder {
     id:number;
     saleOrderId:number;
-    deliveryId:number;
+    statusId:number;
     typeShip:string;
     plannedTime:Date;
 }
@@ -25,7 +25,7 @@ export class DeliveryOrder extends BaseEntity  implements IDeliveryOrder {
     saleOrderId!: number;
 
     @Column()
-    deliveryId!: number;
+    statusId!: number;
 
     @Column({
         type: "timestamp with time zone",
@@ -63,7 +63,7 @@ export class DeliveryOrder extends BaseEntity  implements IDeliveryOrder {
     @ManyToOne(() =>SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders, { onDelete: 'CASCADE' })
     saleOrder!: SaleOrder;
 
-    @ManyToOne(() =>Delivery, (delivery: Delivery) => delivery.deliveryOrders, { onDelete: 'CASCADE' })
-    delivery!: Delivery;
+    @ManyToOne(() =>Status, (status: Status) => status.deliveryOrders, { onDelete: 'CASCADE' })
+    status!: Status;
 
 }

@@ -1,9 +1,7 @@
 import { Router } from "express";
-import { confirmSaleOrder } from "../controllers/deliveryOrder/deliveryOrder.controller";
-import { addProductToDriver, changeDelivery } from "../controllers/saleOrderHeader/changeDelivery.controller";
+import { switchDelivery } from "../controllers/deliveryOrder/deliveryOrder.controller";
+
 const router = Router();
 
-router.post('/delivery/confirm', confirmSaleOrder);
-router.post("/driver/addproduct", addProductToDriver);
-router.post("/change-delivery/order/:id", changeDelivery);
+router.post('/delivery-switch', switchDelivery);
 export default router;
