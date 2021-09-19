@@ -10,7 +10,7 @@ import {
     softDelete,
     restoreOrder
 }
-    from "../controllers/saleOrderHeader/SOH.controller"
+    from "../controllers/SaleOrder/SOH.controller"
 import auth from "../middleware/auth.middleware";
 
 router.get("/orders", getSaleOrder)
