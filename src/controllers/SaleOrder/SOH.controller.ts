@@ -6,7 +6,7 @@ import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
 import { Account } from "../../entity/Users";
 import { comparePassword } from "../../utils/helpers";
 import { updateProduct } from "../product/product.controller";
-import { ICreateOrderDTO } from "./SOH.interface";
+import { ICreateOrderDTO, IUpdateOrderDTO } from "./SOH.interface";
 
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
@@ -121,15 +121,30 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 }
 
 
-const updateOrder = async (req: Request<any, any, ISaleOrder, any>, res: Response, next: NextFunction) => {
+const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Response, next: NextFunction) => {
     try {
         const data = req.body;
+        const { products,...order } = data;
         const updateProduct = await createQueryBuilder()
             .update(SaleOrder)
-            .set(data)
+            .set(order)
             .where("id = :id", { id: req.params.id })
             .execute();
-        res.status(200).send(updateProduct);
+        
+        const productOrder = products.map((item: any) => {
+                return { ...item, saleOrder: req.params.id };
+        });
+    
+        // await createQueryBuilder('product')
+        // .update()
+        // .set(productOrder)
+        // .execute();
+        // await createQueryBuilder()
+        //     .update(Product)
+        //     .set(products)
+        //     .where("order_id = :id", { id: req.params.id })
+        //     .execute();
+        res.status(200).json({message:"success"});
     }
     catch (err) {
         console.log(err);
@@ -161,19 +176,6 @@ const restoreOrder = async (req: Request, res: Response, next: NextFunction) => 
 const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-
-        // const deleteOrderProduct = await createQueryBuilder()
-        //                             .delete()
-        //                             .from(Product)
-        //                             .where("order_id = :id",{id: req.params.id})
-        //                             .execute();
-
-        //   const deleteOrderDelivery = await createQueryBuilder()
-        //                             .delete()
-        //                             .from(DeliveryOrder)
-        //                             .where("saleOrderId = :id",{id: req.params.id})
-        //                             .execute();
-
         const deleteOrder = await createQueryBuilder()
             .delete()
             .from(SaleOrder)

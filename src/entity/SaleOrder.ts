@@ -29,6 +29,7 @@ export interface ISaleOrder {
     quantity?: number;
     payment_id?: number;
     unit_id?: number;
+    orderName: string;
 
 }
 
@@ -58,6 +59,8 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @Column()
     receiverPhone: string;
 
+    @Column()
+    orderName:string;
 
     @Column({
         type: "enum",

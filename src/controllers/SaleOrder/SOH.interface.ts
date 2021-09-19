@@ -8,6 +8,10 @@ export interface ICreateOrderDTO extends ISaleOrder{
     
 }
 
+export interface IUpdateOrderDTO extends ISaleOrder{
+    products: UpdateProduct[];
+}
+
 export interface OrderProduct {
 
     name: string;
@@ -16,6 +20,10 @@ export interface OrderProduct {
     unit_id?:number
 }
 
-// export interface typeShip {
-//     typeship: string;
-// }
+export interface UpdateProduct{
+    id: number;
+    name: string;
+    quantity: number;
+    order_id?:number;
+    unit_id?:number
+}
