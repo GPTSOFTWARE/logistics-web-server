@@ -3,9 +3,14 @@ import { AbstractBase } from "./Base";
 import { DeliveryOrder } from "./DeliveryOrder";
 import { SaleOrder } from "./SaleOrder";
 
+export interface IStatus {
+    id:number;
+    code:string;
+    name:string;
+}
 
 @Entity()
-export class Delivery extends BaseEntity {
+export class Status extends BaseEntity implements IStatus{
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -16,6 +21,6 @@ export class Delivery extends BaseEntity {
     @Column()
     name: string;
 
-    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.delivery)
+    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.status)
     deliveryOrders!: DeliveryOrder[];
 }

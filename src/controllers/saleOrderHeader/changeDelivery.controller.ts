@@ -24,7 +24,7 @@ const addProductToDriver = async (req: Request, res: Response, next: NextFunctio
                             .into(DeliveryOrder)
                             .values({
                                 saleOrderId: data.order_id,
-                                deliveryId:2
+                                statusId:2
                             })
                             .execute();
 
@@ -50,7 +50,7 @@ const changeDelivery = async (req: Request, res: Response, next:NextFunction) =>
                                             .into(DeliveryOrder)
                                             .values({
                                                 saleOrderId: getSaleOrder.id,
-                                                deliveryId: data.deliveryId
+                                                statusId: data.deliveryId
                                             })
                                             .execute();
                 // const getDeleveryOrder = await getRepository(DeliveryOrder)

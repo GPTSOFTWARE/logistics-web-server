@@ -65,12 +65,12 @@ const createOrder = async (
         console.log(data);
 
         //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
-        await createQueryBuilder('delivery')
+        await createQueryBuilder()
             .insert()
             .into(DeliveryOrder)
             .values({
                 saleOrderId: order_id,
-                deliveryId: 1,
+                statusId: 1, 
                 typeShip: typeShip, 
             })
             .execute();
@@ -138,11 +138,9 @@ const updateOrder = async (req: Request<any, any, ISaleOrder, any>, res: Respons
 
 const softDelete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const softDelete = await getRepository(SaleOrder)
-            .createQueryBuilder('order')
-            .softDelete()
-            .where('order.id = :id', { id: req.params.id });
 
+        const deleteSoft = await getRepository(SaleOrder).softDelete(req.params.id);
+        console.log(deleteSoft);
       res.json({ message: "success" });
     }
     catch (err) {
@@ -151,10 +149,8 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
 }
 const restoreOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const restoreOrder = await getRepository(SaleOrder)
-            .createQueryBuilder('order')
-            .where('order.id = :id', { id: req.params.id })
-            .restore();
+
+        const restoreOrder  = await getRepository(SaleOrder).restore(req.params.id);
         res.json({ message: "success" });
     }
     catch (err) {
