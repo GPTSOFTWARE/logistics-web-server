@@ -8,7 +8,8 @@ import {
     updateOrder,
     removeOrder,
     softDelete,
-    restoreOrder
+    restoreOrder,
+    deleteMulti
 }
     from "../controllers/SaleOrder/SOH.controller"
 import auth from "../middleware/auth.middleware";
@@ -21,4 +22,5 @@ router.put("/order/:id", updateOrder);
 router.delete("/order/soft/:id", softDelete);
 router.patch("/order/restore/:id", restoreOrder);
 router.delete("/order/:id", removeOrder);
+router.delete("/delete/multi", deleteMulti);
 export default router;
