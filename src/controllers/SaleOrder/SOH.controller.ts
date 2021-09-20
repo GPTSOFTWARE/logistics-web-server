@@ -3,6 +3,7 @@ import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { IProduct, Product } from "../../entity/Product";
 import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
+import { Unit } from "../../entity/Unit";
 import { Account } from "../../entity/Users";
 import { comparePassword } from "../../utils/helpers";
 import { updateProduct } from "../product/product.controller";
@@ -54,10 +55,6 @@ const createOrder = async (
             .where("id = :id", { id: order_id })
             .execute();
 
-        // const unitProduct = products.map((item:any) => {
-        //         return item.unit_id;
-        // })
-        // console.log(unitProduct);
         const productOrder = products.map((item: any) => {
             return { saleOrder: order_id, ...item };
         });
@@ -93,10 +90,10 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
     const order = await getRepository(SaleOrder)
         .createQueryBuilder('saleOrder')
         .leftJoinAndSelect('saleOrder.products', 'product')
+        .leftJoinAndSelect('product.unit', 'unit_id')
         .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
         .leftJoinAndSelect('saleOrder.categories', 'Category')
         .leftJoinAndSelect('saleOrder.unit', 'unit')
-        .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrder')
         .where('saleOrder.id = :id', { id: id })
         .getOne();
     if (order) {
@@ -146,11 +143,20 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .set(order)
             .where("id = :id", { id: req.params.id })
             .execute();
+        console.log(products);
 
         for (let item of products) {
             if (item.id) {
                 for (let element of orderWithId.products) {
                     if (item.id === element.id) {
+                        console.log(item.unit_id);
+
+                        const unit = await getRepository(Unit)
+                            .createQueryBuilder('unit')
+                            .where('unit.id = :id', { id: item.unit_id })
+                            .getOne();
+                        console.log(unit);
+
                         await getRepository(Product)
                             .createQueryBuilder()
                             .update(Product)
@@ -158,6 +164,7 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
                                 {
                                     name: item.name,
                                     quantity: item.quantity,
+                                    unit: unit
                                 }
                             )
                             .where("id = :id", { id: item.id })
@@ -179,8 +186,6 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
                     .into(Product)
                     .values(product)
                     .execute();
-
-
             }
         }
         res.status(200).json({ message: "success" });
