@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
-import { Product } from "../../entity/Product";
+import { IProduct, Product } from "../../entity/Product";
 import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
 import { Account } from "../../entity/Users";
 import { comparePassword } from "../../utils/helpers";
@@ -53,18 +53,24 @@ const createOrder = async (
             .where("id = :id", { id: order_id })
             .execute();
 
-        const productOrder = products.map((item: any) => {
-            return { ...item, saleOrder: order_id };
+        // const unitProduct = products.map((item:any) => {
+        //         return item.unit_id;
+        // })
+        // console.log(unitProduct);
+        const productOrder = products.map((item:any) => {
+            return {   saleOrder: order_id,...item };
         });
+        console.log(productOrder);
 
-        await createQueryBuilder('product')
+
+        
+        const createProduct = await createQueryBuilder('product')
             .insert()
             .into(Product)
             .values(productOrder)
             .execute();
-        console.log(data);
 
-        //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
+        // //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
         await createQueryBuilder()
             .insert()
             .into(DeliveryOrder)
@@ -131,19 +137,33 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .where("id = :id", { id: req.params.id })
             .execute();
         
-        const productOrder = products.map((item: any) => {
-                return { ...item, saleOrder: req.params.id };
-        });
-    
-        // await createQueryBuilder('product')
-        // .update()
-        // .set(productOrder)
-        // .execute();
-        // await createQueryBuilder()
-        //     .update(Product)
-        //     .set(products)
-        //     .where("order_id = :id", { id: req.params.id })
-        //     .execute();
+        
+        for(let item of products) {
+            if(item.id){
+                await getRepository(Product)
+                    .createQueryBuilder()
+                    .update(Product)
+                    .set(
+                        {
+                            name: item.name,
+                            quantity: item.quantity,
+                        }
+                    )
+                    .where("id = :id", { id: item.id })
+                    .execute();
+            }
+            else{
+                const product = {...item, saleOrder: req.params.id};
+
+                await createQueryBuilder()
+                        .insert()
+                        .into(Product)
+                        .values(product)
+                        .execute();
+                
+                    
+            }
+        }
         res.status(200).json({message:"success"});
     }
     catch (err) {

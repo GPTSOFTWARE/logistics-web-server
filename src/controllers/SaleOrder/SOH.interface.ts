@@ -17,8 +17,9 @@ export interface OrderProduct {
     name: string;
     quantity: number;
     order_id?:number;
-    unit_id?:number
+    unit_id?:string;
 }
+
 
 export interface UpdateProduct{
     id: number;
