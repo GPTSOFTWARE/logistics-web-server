@@ -109,7 +109,33 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
 
 };
 
-export const changePassword = async (req: Request, res: Response) =>{
+export const changePassword = async (req: Request, res: Response, next: NextFunction) =>{
+
+  try{ 
+    
+      const id = req.params.id;
+      
+      //get parameters from body
+      const {oldPassword, newPassword} = req.body;
+      if(!(oldPassword && newPassword)){
+          res.status(400).send();
+      }
+
+      //find user by id
+      const user = await getRepository(Account).findOneOrFail(id);
+    
+      if(user){
+        const validPassword = await comparePassword(user.password, oldPassword);
+        if(validPassword){
+            user.password = await hashPassword(newPassword);
+                            await getRepository(Account).save(user);
+        }
+      }
+  }
+  catch(err) {
+    console.log(err);
+  }
+
 }
 
 
