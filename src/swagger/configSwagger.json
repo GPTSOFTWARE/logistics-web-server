@@ -5,13 +5,13 @@
         "title": "Logistics Swagger",
         "description": "Cấu trúc sử dụng RESTful API",
         "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
+            "name": "Made by Hoài Nhớ",
+            "url": "logistics-dev.tk"
         }
     },
     "servers": [
         {
-            "url": "/",
+            "url": "http://localhost:3000/",
             "description": "Local host"
         },
         {
@@ -61,6 +61,35 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/definitions/Order"
+                            },
+                            "example": {
+                                "customerName": "Anh Tony",
+                                "customerAddress": "TPHCM",
+                                "customerPhone": "0123444444",
+                                "receiverName": "Hoài Nhớ",
+                                "receiverAddress": "Cà Mau",
+                                "receiverPhone": "0113332222",
+                                "isFreeShip": true,
+                                "totalPrice": "99999",
+                                "notes": "Hàng việt nam chất lượng cao",
+                                "orderType": 1,
+                                "quantity": "12",
+                                "unit_id": 1,
+                                "payment_id": 1,
+                                "orderName": "Y Tế",
+                                "products": [
+                                    {
+                                        "name": "Thuốc",
+                                        "quantity": "1",
+                                        "unit": 1
+                                    },
+                                    {
+                                        "name": "Gạo",
+                                        "quantity": "1",
+                                        "unit": 1
+                                    }
+                                ],
+                                "typeShip": "giao hàng nhanh"
                             }
                         }
                     }
@@ -128,6 +157,35 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/definitions/Order"
+                            },
+                            "example": {
+                                "customerName": "Anh Tony",
+                                "customerAddress": "TPHCM",
+                                "customerPhone": "0123444444",
+                                "receiverName": "Hoài Nhớ",
+                                "receiverAddress": "Cà Mau",
+                                "receiverPhone": "0113332222",
+                                "isFreeShip": true,
+                                "totalPrice": "99999",
+                                "notes": "Hàng việt nam chất lượng cao nhất thế giới",
+                                "quantity": "12",
+                                "orderName": "Y Tế",
+                                "unit_id": "3",
+                                "orderType": "2",
+                                "payment_id": "1",
+                                "products": [
+                                    {
+                                        "id": 71,
+                                        "name": "Thuốc chích",
+                                        "quantity": 8,
+                                        "unit_id": 1
+                                    },
+                                    {
+                                        "name": "Thuốc Lắc cường độ mạnh",
+                                        "quantity": 1,
+                                        "unit_id": 2
+                                    }
+                                ]
                             }
                         }
                     }
@@ -187,20 +245,32 @@
                 }
             }
         },
-        "/order/soft/{id}": {
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "ID là mã hóa đơn",
-                    "type": "string"
-                }
-            ],
+        "/order/delete": {
             "delete": {
                 "tags": [
                     "Xóa mềm một Sale Order ( Có thể Restore )"
                 ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "example": {
+                                "idList": [
+                                    5,
+                                    7,
+                                    8
+                                ]
+                            }
+                        }
+                    }
+                },
                 "summary": "Xóa Sale Order",
                 "responses": {
                     "200": {
@@ -236,6 +306,231 @@
                     }
                 }
             }
+        },
+        "/jobs": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách công việc"
+                ],
+                "summary": "GET tất các các công việc",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Jobs"
+                        }
+                    }
+                }
+            }
+        },
+        "/job": {
+            "post": {
+                "tags": [
+                    "Tạo công việc"
+                ],
+                "summary": "Tạo công việc mới",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Job"
+                            },
+                            "example": {
+                                "nameJob": "Tiếp Viên Hàng Không",
+                                "salaryBefore": 1000000,
+                                "salaryAfter": 2000000,
+                                "degree": "Đại Học",
+                                "address": "TP HCM"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/jobs/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã hóa công việc",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Tìm một công việc "
+                ],
+                "summary": "GET một công việc với ID ",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Công việc có ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cập nhật công việc có ID",
+                "tags": [
+                    "Cập nhật một công việc"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Job"
+                            },
+                            "example": {
+                                "nameJob": "Designer",
+                                "salaryBefore": 500000,
+                                "salaryAfter": 800000,
+                                "degree": "Cao Đẳng",
+                                "address": "TP HCM"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "ID công việc cần cập nhật",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "DELETE Hóa đơn với ID",
+                "tags": [
+                    "Xóa một Jobs ( Xóa vĩnh viễn )"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "DELETE hóa đơn với ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/requests": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách yêu cầu đặt hàng"
+                ],
+                "summary": "GET tất các các yêu cầu đặt hàng",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Request"
+                        }
+                    }
+                }
+            }
+        },
+        "/request": {
+            "post": {
+                "tags": [
+                    "Tạo yêu cầu đặt hàng"
+                ],
+                "summary": "Tạo yêu cầu đặt hàng mới",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Request"
+                            },
+                            "example": {
+                                "fullname": "Long tóc xoăn",
+                                "email": "long@gmail.com",
+                                "phone": "0333333333",
+                                "address": "TP HCM",
+                                "typeProduct": "Thủy sản",
+                                "weight": 10,
+                                "fastShip": true,
+                                "note": "Hàng đông lạnh"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -256,7 +551,7 @@
                     "type": "string"
                 },
                 "customerPhone": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "receiverName": {
                     "type": "string"
@@ -265,31 +560,28 @@
                     "type": "string"
                 },
                 "receiverPhone": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "isFreeShip": {
-                    "type": "string"
+                    "type": "boolean"
                 },
                 "totalPrice": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "notes": {
                     "type": "string"
                 },
                 "orderType": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "quantity": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "unit_id": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "payment_id": {
-                    "type": "string"
-                },
-                "driver_id": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "products": {
                     "items": {
@@ -316,10 +608,81 @@
                     "type": "string"
                 },
                 "quantity": {
+                    "type": "number"
+                },
+                "unit": {
+                    "type": "number"
+                }
+            }
+        },
+        "Job": {
+            "type": "object",
+            "properties": {
+                "nameJob": {
                     "type": "string"
                 },
-                "unit_id": {
+                "salaryBefore": {
                     "type": "number"
+                },
+                "salaryAfter": {
+                    "type": "number"
+                },
+                "degree": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                }
+            }
+        },
+        "Jobs": {
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Job"
+                    }
+                }
+            }
+        },
+        "Request": {
+            "type": "object",
+            "properties": {
+                "fullname": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "number"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "typeProduct": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                },
+                "fastShip": {
+                    "type": "boolean"
+                },
+                "note": {
+                    "type": "string"
+                }
+            }
+        },
+        "Requests": {
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Request"
+                    }
                 }
             }
         }

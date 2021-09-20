@@ -22,5 +22,5 @@ router.put("/order/:id", updateOrder);
 router.delete("/order/soft/:id", softDelete);
 router.patch("/order/restore/:id", restoreOrder);
 router.delete("/order/:id", removeOrder);
-router.delete("/delete/multi", deleteMulti);
+router.delete("/order/delete", deleteMulti);
 export default router;

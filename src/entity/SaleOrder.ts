@@ -60,7 +60,7 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     receiverPhone: string;
 
     @Column()
-    orderName:string;
+    orderName: string;
 
     @Column({
         type: "enum",
@@ -93,7 +93,7 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @JoinColumn({ name: 'unit_id' })
     unit: Unit;
 
-    @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.saleOrder)
+    @OneToMany(() => DeliveryOrder, deliveryOrder => deliveryOrder.saleOrder)
     deliveryOrders!: DeliveryOrder[];
 
     @OneToMany(() => Product, (product: Product) => product.saleOrder)

@@ -18,10 +18,12 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .leftJoinAndSelect('saleOrder.products', 'product')
             .leftJoinAndSelect('product.unit', 'unit_id')
             .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
-            .leftJoinAndSelect('saleOrder.categories', 'Category')
+            .leftJoinAndSelect('saleOrder.categories', 'category')
             .leftJoinAndSelect('saleOrder.unit', 'unit')
-            // .take(page_size)
-            // .skip((page - 1) * page_size)
+            .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrders')
+            .leftJoinAndSelect('deliveryOrders.status', 'status')
+            .take(page_size)
+            .skip((page - 1) * page_size)
             .getManyAndCount();
     return res.json({ total, data });
 };
@@ -108,10 +110,10 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 
     const userId = await getRepository(Account).findOne(req.params.id);
     console.log(userId.phone);
-    
+
     const listOrder = await getRepository(SaleOrder)
         .createQueryBuilder("order")
-        .where("order.customerPhone = :phone", { phone: userId.phone})
+        .where("order.customerPhone = :phone", { phone: userId.phone })
         .getMany();
 
     if (!userId) {
@@ -243,17 +245,18 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const deleteMulti = async (req: Request, res: Response) => {
-    
-    try{
-        const id = req.body.id;
-        console.log(id);
-        const deleteSaleOrder = await 
-                                    createQueryBuilder()
-                                    .delete()
-                                    .from(SaleOrder)
-                                    .where("id IN(:...ids)", {ids: id})
-                                    .execute();
-                                    res.status(200).json({ message: "success" });
+
+    try {
+        const { idList } = req.body;
+        console.log(req.body);
+        // const deleteSoft = await getRepository(SaleOrder).softDelete(req.params.id);
+        const deleteSaleOrder = await
+            createQueryBuilder()
+                .softDelete()
+                .from(SaleOrder)
+                .where("id IN(:...ids)", { ids: idList })
+                .execute();
+        res.status(200).json({ message: "success" });
     }
     catch (err) {
         console.log(err);
