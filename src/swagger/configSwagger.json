@@ -448,9 +448,9 @@
                 }
             },
             "delete": {
-                "summary": "DELETE Hóa đơn với ID",
+                "summary": "DELETE công việc với ID",
                 "tags": [
-                    "Xóa một Jobs ( Xóa vĩnh viễn )"
+                    "Xóa một công việc ( Xóa vĩnh viễn )"
                 ],
                 "parameters": [
                     {
