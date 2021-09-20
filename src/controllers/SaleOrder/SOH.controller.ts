@@ -132,26 +132,44 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
     try {
         const data = req.body;
         const { products, ...order } = data;
+        const orderWithId = await getRepository(SaleOrder)
+            .createQueryBuilder('saleOrder')
+            .leftJoinAndSelect('saleOrder.products', 'product')
+            .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
+            .leftJoinAndSelect('saleOrder.categories', 'Category')
+            .leftJoinAndSelect('saleOrder.unit', 'unit')
+            .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrder')
+            .where('saleOrder.id = :id', { id: req.params.id })
+            .getOne();
         const updateProduct = await createQueryBuilder()
             .update(SaleOrder)
             .set(order)
             .where("id = :id", { id: req.params.id })
             .execute();
 
-
         for (let item of products) {
             if (item.id) {
-                await getRepository(Product)
-                    .createQueryBuilder()
-                    .update(Product)
-                    .set(
-                        {
-                            name: item.name,
-                            quantity: item.quantity,
-                        }
-                    )
-                    .where("id = :id", { id: item.id })
-                    .execute();
+                for (let element of orderWithId.products) {
+                    if (item.id === element.id) {
+                        await getRepository(Product)
+                            .createQueryBuilder()
+                            .update(Product)
+                            .set(
+                                {
+                                    name: item.name,
+                                    quantity: item.quantity,
+                                }
+                            )
+                            .where("id = :id", { id: item.id })
+                            .execute();
+                    } else {
+                        await getRepository(Product)
+                            .createQueryBuilder()
+                            .delete()
+                            .where("id = :id", { id: element.id })
+                            .execute();
+                    }
+                }
             }
             else {
                 const product = { ...item, saleOrder: req.params.id };
