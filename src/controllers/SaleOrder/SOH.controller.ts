@@ -15,6 +15,7 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
         getRepository(SaleOrder)
             .createQueryBuilder("saleOrder")
             .leftJoinAndSelect('saleOrder.products', 'product')
+            .leftJoinAndSelect('product.unit', 'unit_id')
             .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
             .leftJoinAndSelect('saleOrder.categories', 'Category')
             .leftJoinAndSelect('saleOrder.unit', 'unit')
@@ -32,7 +33,7 @@ const createOrder = async (
 ) => {
     try {
         const data = req.body;
-        const { products, typeShip,...order } = data;
+        const { products, typeShip, ...order } = data;
 
         const result = await getRepository(SaleOrder)
             .createQueryBuilder('order')
@@ -57,13 +58,13 @@ const createOrder = async (
         //         return item.unit_id;
         // })
         // console.log(unitProduct);
-        const productOrder = products.map((item:any) => {
-            return {   saleOrder: order_id,...item };
+        const productOrder = products.map((item: any) => {
+            return { saleOrder: order_id, ...item };
         });
         console.log(productOrder);
 
 
-        
+
         const createProduct = await createQueryBuilder('product')
             .insert()
             .into(Product)
@@ -76,8 +77,8 @@ const createOrder = async (
             .into(DeliveryOrder)
             .values({
                 saleOrderId: order_id,
-                statusId: 1, 
-                typeShip: typeShip, 
+                statusId: 1,
+                typeShip: typeShip,
             })
             .execute();
         res.status(200).json({ message: 'Success' });
@@ -95,7 +96,7 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
         .leftJoinAndSelect('saleOrder.paymentMethod', 'payment')
         .leftJoinAndSelect('saleOrder.categories', 'Category')
         .leftJoinAndSelect('saleOrder.unit', 'unit')
-        .leftJoinAndSelect('saleOrder.deliveryOrders','deliveryOrder')
+        .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrder')
         .where('saleOrder.id = :id', { id: id })
         .getOne();
     if (order) {
@@ -130,16 +131,16 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
 const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Response, next: NextFunction) => {
     try {
         const data = req.body;
-        const { products,...order } = data;
+        const { products, ...order } = data;
         const updateProduct = await createQueryBuilder()
             .update(SaleOrder)
             .set(order)
             .where("id = :id", { id: req.params.id })
             .execute();
-        
-        
-        for(let item of products) {
-            if(item.id){
+
+
+        for (let item of products) {
+            if (item.id) {
                 await getRepository(Product)
                     .createQueryBuilder()
                     .update(Product)
@@ -152,19 +153,19 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
                     .where("id = :id", { id: item.id })
                     .execute();
             }
-            else{
-                const product = {...item, saleOrder: req.params.id};
+            else {
+                const product = { ...item, saleOrder: req.params.id };
 
                 await createQueryBuilder()
-                        .insert()
-                        .into(Product)
-                        .values(product)
-                        .execute();
-                
-                    
+                    .insert()
+                    .into(Product)
+                    .values(product)
+                    .execute();
+
+
             }
         }
-        res.status(200).json({message:"success"});
+        res.status(200).json({ message: "success" });
     }
     catch (err) {
         console.log(err);
@@ -176,7 +177,7 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
 
         const deleteSoft = await getRepository(SaleOrder).softDelete(req.params.id);
         console.log(deleteSoft);
-      res.json({ message: "success" });
+        res.json({ message: "success" });
     }
     catch (err) {
         console.log(err);
@@ -185,7 +186,7 @@ const softDelete = async (req: Request, res: Response, next: NextFunction) => {
 const restoreOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const restoreOrder  = await getRepository(SaleOrder).restore(req.params.id);
+        const restoreOrder = await getRepository(SaleOrder).restore(req.params.id);
         res.json({ message: "success" });
     }
     catch (err) {

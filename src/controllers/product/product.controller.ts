@@ -6,8 +6,9 @@ import { Account } from "../../entity/Users";
 const getProducts = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
     const page_size = +req?.query?.page_size || 10;
-    const [data, total] = await  getRepository(Product)
+    const [data, total] = await getRepository(Product)
         .createQueryBuilder("product")
+        .leftJoinAndSelect('products.unit', 'unit_id')
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();
@@ -15,7 +16,6 @@ const getProducts = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const createProduct = async (req: Request, res: Response): Promise<Response> => {
-
     const productData = req.body;
     const newProduct = await getRepository(Product).create(productData);
     const result = await getRepository(Product).save(newProduct);
