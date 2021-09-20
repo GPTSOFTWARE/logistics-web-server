@@ -129,6 +129,15 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
     try {
         const data = req.body;
         const { products, ...order } = data;
+        const state = {
+            ...order,
+            unit: order.unit_id,
+            categories: order.orderType,
+            paymentMethod: order.payment_id
+        }
+        delete state.unit_id;
+        delete state.orderType;
+        delete state.payment_id;
         const orderWithId = await getRepository(SaleOrder)
             .createQueryBuilder('saleOrder')
             .leftJoinAndSelect('saleOrder.products', 'product')
@@ -140,16 +149,15 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .getOne();
         const updateProduct = await createQueryBuilder()
             .update(SaleOrder)
-            .set(order)
+            .set(state)
             .where("id = :id", { id: req.params.id })
             .execute();
-        console.log(products);
 
         for (let item of products) {
             if (item.id) {
                 for (let element of orderWithId.products) {
                     if (item.id === element.id) {
-                        console.log(item.unit_id);
+                        console.log(typeof item);
 
                         const unit = await getRepository(Unit)
                             .createQueryBuilder('unit')
