@@ -531,6 +531,126 @@
                     }
                 }
             }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách tài khoản"
+                ],
+                "summary": "GET tất các các tài khoản",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Đăng ký tài khoản"
+                ],
+                "summary": "Đăng ký tài khoản mới",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Account"
+                            },
+                            "example": {
+                                "email": "tester@gmail.com",
+                                "password": "123123",
+                                "fullname": "Tester",
+                                "phone": "0909090127"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Đăng nhập"
+                ],
+                "summary": "Đăng nhập",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Login"
+                            },
+                            "example": {
+                                "phone": "0909090127",
+                                "password": "123123"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/admin/dashboard": {
+            "post": {
+                "tags": [
+                    "Đăng nhập Dashboard"
+                ],
+                "summary": "Đăng nhập Dashboard",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Login"
+                            },
+                            "example": {
+                                "phone": "09090901215",
+                                "password": "123123"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -683,6 +803,45 @@
                     "additionalProperties": {
                         "$ref": "#/definitions/Request"
                     }
+                }
+            }
+        },
+        "Account": {
+            "type": "object",
+            "properties": {
+                "fullname": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "number"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "Accounts": {
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Account"
+                    }
+                }
+            }
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "phone": {
+                    "type": "number"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         }
