@@ -107,11 +107,12 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
 const getOrderByUserId = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
 
     const userId = await getRepository(Account).findOne(req.params.id);
-
+    console.log(userId.phone);
+    
     const listOrder = await getRepository(SaleOrder)
         .createQueryBuilder("order")
-        .where("order.user_id = :id", { id: userId })
-        .getManyAndCount();
+        .where("order.customerPhone = :phone", { phone: userId.phone})
+        .getMany();
 
     if (!userId) {
         return res.status(404).send("User Not Found");
@@ -233,8 +234,25 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 }
 
+const deleteMulti = async (req: Request, res: Response) => {
+    
+    try{
+        const id = req.body.id;
+        console.log(id);
+        const deleteSaleOrder = await 
+                                    createQueryBuilder()
+                                    .delete()
+                                    .from(SaleOrder)
+                                    .where("id IN(:...ids)", {ids: id})
+                                    .execute();
+                                    res.status(200).json({ message: "success" });
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
 
 
-export { getSaleOrder, getOrderByUserId, getOrderById, createOrder, updateOrder, removeOrder, softDelete, restoreOrder }
+export { getSaleOrder, getOrderByUserId, getOrderById, createOrder, updateOrder, removeOrder, softDelete, restoreOrder, deleteMulti }
 
 
