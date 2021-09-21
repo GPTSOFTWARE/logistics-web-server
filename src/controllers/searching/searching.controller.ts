@@ -9,10 +9,10 @@ export const searchingOrder = async (req: Request, res: Response) =>{
         const phone = req.query.customerPhone;
         const name = req.query.name;
         const date = req.query.date;
+
         const reqName = name.toString().toLowerCase();
         const parseDate = Date.parse(date.toString());
         const date2 = moment(parseDate).format("MMM Do YY");     
-        console.log(date2);
 
         const order = await getRepository(SaleOrder)
                             .createQueryBuilder('order')
@@ -34,8 +34,13 @@ export const searchingOrder = async (req: Request, res: Response) =>{
                     newArray.push(item);
                 }
             }
-            console.log(newArray);
-            res.status(200).json(newArray);
+            if(newArray.length > 0) {
+                console.log(newArray);
+                res.status(200).json(newArray);
+            }
+            else{
+                res.status(404).json({message: "Not Found"});
+            }
         }
         else{
             return res.status(404).json({message: "Not Found"});
