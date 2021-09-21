@@ -32,12 +32,28 @@
         "application/json"
     ],
     "paths": {
-        "/orders": {
+        "/orders/{PAGE}/{PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách Sale Order"
                 ],
                 "summary": "GET tất các các order",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số phần tử cần lấy",
+                        "type": "number"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -307,12 +323,28 @@
                 }
             }
         },
-        "/jobs": {
+        "/jobs/{PAGE}/{PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách công việc"
                 ],
                 "summary": "GET tất các các công việc",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số phần tử cần lấy",
+                        "type": "number"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -476,12 +508,28 @@
                 }
             }
         },
-        "/requests": {
+        "/requests/{PAGE}/{PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách yêu cầu đặt hàng"
                 ],
                 "summary": "GET tất các các yêu cầu đặt hàng",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số phần tử cần lấy",
+                        "type": "number"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -532,12 +580,28 @@
                 }
             }
         },
-        "/users": {
+        "/users/{PAGE}/{PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách tài khoản"
                 ],
                 "summary": "GET tất các các tài khoản",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số phần tử cần lấy",
+                        "type": "number"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
