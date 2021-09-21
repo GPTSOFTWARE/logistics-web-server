@@ -132,6 +132,8 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
     try {
         const data = req.body;
         const { products, ...order } = data;
+        console.log({ data });
+
         const state = {
             ...order,
             unit: order.unit_id,
@@ -241,11 +243,8 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const deleteMulti = async (req: Request, res: Response) => {
-
     try {
         const { idList } = req.body;
-        console.log(req.body);
-        // const deleteSoft = await getRepository(SaleOrder).softDelete(req.params.id);
         const deleteSaleOrder = await
             createQueryBuilder()
                 .softDelete()
