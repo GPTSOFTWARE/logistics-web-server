@@ -32,7 +32,7 @@
         "application/json"
     ],
     "paths": {
-        "/orders/{PAGE}/{PAGE_SIZE}": {
+        "/orders?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách Sale Order"
@@ -49,8 +49,8 @@
                     {
                         "name": "PAGE_SIZE",
                         "in": "path",
-                        "required": true,
-                        "description": "Số phần tử cần lấy",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
                         "type": "number"
                     }
                 ],
@@ -323,7 +323,7 @@
                 }
             }
         },
-        "/jobs/{PAGE}/{PAGE_SIZE}": {
+        "/jobs?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách công việc"
@@ -340,8 +340,8 @@
                     {
                         "name": "PAGE_SIZE",
                         "in": "path",
-                        "required": true,
-                        "description": "Số phần tử cần lấy",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
                         "type": "number"
                     }
                 ],
@@ -508,7 +508,7 @@
                 }
             }
         },
-        "/requests/{PAGE}/{PAGE_SIZE}": {
+        "/requests?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách yêu cầu đặt hàng"
@@ -525,8 +525,8 @@
                     {
                         "name": "PAGE_SIZE",
                         "in": "path",
-                        "required": true,
-                        "description": "Số phần tử cần lấy",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
                         "type": "number"
                     }
                 ],
@@ -580,7 +580,7 @@
                 }
             }
         },
-        "/users/{PAGE}/{PAGE_SIZE}": {
+        "/users?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
                     "Lấy danh sách tài khoản"
@@ -597,8 +597,8 @@
                     {
                         "name": "PAGE_SIZE",
                         "in": "path",
-                        "required": true,
-                        "description": "Số phần tử cần lấy",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
                         "type": "number"
                     }
                 ],
