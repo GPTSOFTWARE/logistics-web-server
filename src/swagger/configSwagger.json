@@ -580,12 +580,12 @@
                 }
             }
         },
-        "/users?page={PAGE}&page_size={PAGE_SIZE}": {
+        "/contact?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
-                    "Lấy danh sách tài khoản"
+                    "Lấy danh sách liên hệ"
                 ],
-                "summary": "GET tất các các tài khoản",
+                "summary": "GET tất các các liên hệ",
                 "parameters": [
                     {
                         "name": "PAGE",
@@ -606,8 +606,45 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/Account"
+                            "$ref": "#/definitions/Contact"
                         }
+                    }
+                }
+            }
+        },
+        "/contact": {
+            "post": {
+                "tags": [
+                    "Tạo Liên hệ"
+                ],
+                "summary": "Gửi liên hệ mới",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Contact"
+                            },
+                            "example": {
+                                "fullname": "Nguyễn Thành Long",
+                                "email": "long@gmail.com",
+                                "phone": "0333333333",
+                                "title": "Long rất đẹp trai",
+                                "text": "long đẹp trai"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
                     }
                 }
             }
