@@ -13,7 +13,7 @@ import city from "./routes/city.route";
 import job from "./routes/job.route";
 import contact from "./routes/contact.route";
 import request from "./routes/request.route";
-
+import search from "./routes/search.route";
 import payment from "./routes/payment.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
@@ -38,6 +38,7 @@ app.use(payment);
 app.use(job);
 app.use(contact);
 app.use(request);
+app.use(search);
 
 
 
