@@ -1,6 +1,6 @@
 // const User = require('../entity/User');
 import { NextFunction, Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { Account } from "../../entity/Users";
 import {
   comparePassword,
@@ -39,6 +39,34 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   const results = await getRepository(Account).delete(req.params.id);
   return res.json(results);
 };
+
+export const deleteMultiUser = async (req: Request, res: Response) =>{
+  try{
+
+    const {idList } = req.body;
+    const deleteUser = await createQueryBuilder()
+                                .softDelete()
+                                .from(Account)
+                                .where("id IN(:...ids)", { ids: idList })
+                                .execute();
+    res.status(200).json({ message: "success" });
+  }
+  catch (err) {
+      console.error(err);
+  }
+}
+
+export const restoreUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+
+      const restoreOrder = await getRepository(Account).restore(req.params.id);
+      res.json({ message: "success" });
+  }
+  catch (err) {
+      console.log(err);
+  }
+}
+
 
 const login = async (req: Request, res: Response): Promise<Response> => {
 
@@ -123,13 +151,26 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
 
       //find user by id
       const user = await getRepository(Account).findOneOrFail(id);
+      console.log(user.password);
     
       if(user){
         const validPassword = await comparePassword(user.password, oldPassword);
         if(validPassword){
-            user.password = await hashPassword(newPassword);
-                            await getRepository(Account).save(user);
+            const updateUser = await createQueryBuilder()
+                                      .update(Account)
+                                      .set({
+                                        password : hashPassword(newPassword)
+                                      })
+                                      .where('id = :id', {id: id})
+                                      .execute();
+            res.status(200).send('change password successful');
         }
+        else{
+          res.status(200).send('old password incorrect');
+        }
+      }
+      else{
+        return res.status(404).send('NOT FOUND');
       }
   }
   catch(err) {

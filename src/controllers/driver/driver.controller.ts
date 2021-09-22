@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { Driver, IDriver } from "../../entity/Driver";
 
 
@@ -21,6 +21,11 @@ const createDriver = async (
     next: NextFunction) => {
     try{
         const data = req.body;
+
+        const findDriver = await getRepository(Driver).findOne({idenityCard : data.idenityCard});
+        if(findDriver){
+            return res.status(400).send('Tài xế đã tồn tại');
+        }
         const createDriver = await getRepository(Driver).create(data);
         const saveDriver = await getRepository(Driver).save(createDriver);
 
@@ -31,17 +36,68 @@ const createDriver = async (
     }
 }
 
-// export const getDriverById = async (req: Request, res: Response, next: NextFunction) => {
-//     try{
-//         const driver = await getRepository(Driver).findOne(req.params.id);
-//         if(driver){
-//             res.json(driver);
-//         }
-//         else{
+export const getDriverById = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const driver = await getRepository(Driver).findOne(req.params.id);
+        if(driver){
+            res.status(200).json(driver);
+        }
+        else{
+            res.status(404).json({message: "Not Found"});
+        }
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
 
-//         }
-//     }
-// }
+export const updateDriver = async (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
+    try{
+        const data = req.body;
+        const updateDriver = await  createQueryBuilder('driver')
+                                    .update(Driver)
+                                    .set(data)
+                                    .where('driver.id = :id', {id: req.params.id})
+                                    .execute();
+                            
+        return res.status(200).json({ message: "update successful!"});       
+    }
+    catch (err) {
+        console.error(err);
+
+    }
+}
+
+export const deleteDriver = async (req: Request, res: Response, next: NextFunction) =>{
+    try{
+
+        const {idList } = req.body;
+        const deleteDriver = await createQueryBuilder()
+                                    .softDelete()
+                                    .from(Driver)
+                                    .where("id IN(:...ids)", { ids: idList })
+                                    .execute();
+        res.status(200).json({ message: "success" });
+    }
+
+    catch (err) {
+        console.error(err);
+    }
+}
+
+export const restoreDriver = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const restoreOrder = await getRepository(Driver).restore(req.params.id);
+        res.json({ message: "success" });
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+
+
 
 //  
 export {getDrivers, createDriver }

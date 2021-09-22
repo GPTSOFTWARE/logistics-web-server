@@ -15,6 +15,7 @@ import contact from "./routes/contact.route";
 import request from "./routes/request.route";
 import search from "./routes/search.route";
 import payment from "./routes/payment.route";
+import driver from "./routes/driver.route";
 import { createConnection } from "typeorm";
 import { dbConfig } from "./utils/db";
 import swagger from 'swagger-ui-express'
@@ -39,6 +40,7 @@ app.use(job);
 app.use(contact);
 app.use(request);
 app.use(search);
+app.use(driver);
 
 
 

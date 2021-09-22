@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, Unique } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany, Unique, DeleteDateColumn, BeforeUpdate, BeforeInsert } from "typeorm";
 import { SaleOrder } from "./SaleOrder";
 
 export enum Role {
@@ -47,7 +47,32 @@ export class Account extends BaseEntity {
     })
     role: Role;
 
-    // one user can have multiple sale_order_header
-    // @OneToMany(() => SaleOrderHeader, order => order.user)
-    // orders: SaleOrderHeader[];
+    @Column({
+        type: "timestamp with time zone",
+        nullable: true,
+        default: () => "CURRENT_TIMESTAMP" 
+    })
+    public updatedAt: Date;
+
+    @Column({
+        type: "timestamp with time zone",
+        nullable: true,
+        default: () => "CURRENT_TIMESTAMP"
+    })
+    public createdAt: Date;
+
+    @BeforeUpdate()
+    public setUpdatedAt() {
+        this.updatedAt = new Date();
+    }
+
+    @BeforeInsert()
+    public updateDates() {
+        // const time = Math.floor(Date.now() / 1000);
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+    
+    @DeleteDateColumn()
+    deletedAt?: Date;
 }

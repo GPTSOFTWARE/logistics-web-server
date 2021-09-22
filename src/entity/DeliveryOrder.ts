@@ -50,7 +50,7 @@ export class DeliveryOrder extends BaseEntity  implements IDeliveryOrder {
     )
     plannedTime: Date;
 
-    @ManyToOne(() => Driver, (driver: Driver) => driver.deliveryOrders)
+    @ManyToOne(() => Driver, (driver: Driver) => driver.deliveryOrders, { onDelete: 'CASCADE'})
     @JoinColumn({ name: 'driver_id' })
     driver!: Driver;
 
