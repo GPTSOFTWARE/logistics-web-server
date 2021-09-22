@@ -6,9 +6,9 @@ import { SaleOrder } from "../../entity/SaleOrder";
 export const searchingOrder = async (req: Request, res: Response) =>{
 
     try{ 
-        const phone = req.query.customerPhone;
-        const name = req.query.name;
-        const date = req.query.date;
+        const phone = req.body.customerPhone;
+        const name = req.body.name;
+        const date = req.body.date;
 
         const reqName = name.toString().toLowerCase();
         const parseDate = Date.parse(date.toString());
