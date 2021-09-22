@@ -6,8 +6,6 @@ import {
     createOrder,
     getSaleOrder,
     updateOrder,
-    removeOrder,
-    softDelete,
     restoreOrder,
     deleteMulti
 }
@@ -19,8 +17,7 @@ router.get("/order/:id", getOrderById)
 router.get("/order/user/:id", getOrderByUserId);
 router.post("/order", createOrder);
 router.put("/order/:id", updateOrder);
-router.delete("/order/soft/:id", softDelete);
 router.patch("/order/restore/:id", restoreOrder);
-router.delete("/order/:id", removeOrder);
 router.delete("/order/delete", deleteMulti);
+
 export default router;
