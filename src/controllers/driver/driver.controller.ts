@@ -31,5 +31,17 @@ const createDriver = async (
     }
 }
 
+// export const getDriverById = async (req: Request, res: Response, next: NextFunction) => {
+//     try{
+//         const driver = await getRepository(Driver).findOne(req.params.id);
+//         if(driver){
+//             res.json(driver);
+//         }
+//         else{
+
+//         }
+//     }
+// }
+
 //  
 export {getDrivers, createDriver }
