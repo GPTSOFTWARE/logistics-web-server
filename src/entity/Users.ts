@@ -3,7 +3,8 @@ import { SaleOrder } from "./SaleOrder";
 
 export enum Role {
     ADMIN = "admin",
-    USER = "user"
+    USER = "user",
+    MANAGE = "manage"
 }
 
 @Entity()
