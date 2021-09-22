@@ -649,6 +649,44 @@
                 }
             }
         },
+        "/search/order": {
+            "post": {
+                "tags": [
+                    "Tìm kiếm đơn hàng"
+                ],
+                "summary": "Tìm đơn hàng",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/SaleOrder"
+                            },
+                            "example": {
+                                "customerPhone":"0123444444",
+                                "name":"anh tony",
+                                "date":"2021-09-21 13:22:21.714138+00"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SaleOrder"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
