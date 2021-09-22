@@ -1,24 +1,23 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import moment from "moment";
 import { Repository } from "typeorm";
 import { getRepository } from "typeorm/globals";
+import { Job } from "../../entity/job";
 import { SaleOrder } from "../../entity/SaleOrder";
 
-export const searchingOrder = async (req: Request, res: Response) =>{
+export const searchingOrder = async (req: Request, res: Response, next: NextFunction) =>{
 
     try{ 
-        // const customerphone = req.query.customerPhone;
-        // const name = req.body.name;
-        // const date = req.body.date;
+    
         const {customerPhone , name, date} = req.body;
+        console.log(customerPhone, name, date);
 
-        const phone = customerPhone.toString();
         const reqName = name.toString().toLowerCase();
         const parseDate = Date.parse(date.toString());
         const date2 = moment(parseDate).format("MMM Do YY");  
 
-        console.log(phone);
         console.log(date2);
+      
         const order = await getRepository(SaleOrder)
                             .createQueryBuilder('order')
                             .leftJoinAndSelect('order.products', 'product')
@@ -58,3 +57,22 @@ export const searchingOrder = async (req: Request, res: Response) =>{
     }
 
 };
+
+
+export const searchingJob = async (req: Request, res: Response, next: NextFunction) =>{
+    
+    try{
+        const {name } = req.body;
+
+        const job= await getRepository(Job)
+                        .createQueryBuilder('job')
+                        .select()
+                    .where('job.nameJob ILIKE :name', {name : `%${name}%`})
+                    .getMany();
+        return res.status(200).json(job);
+    }
+    catch(err){
+        console.log(err);
+
+    }
+}

@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import { NumberLiteralType } from "typescript";
 
 export interface IJob {
@@ -16,7 +16,9 @@ export class Job extends BaseEntity implements IJob{
     
     @PrimaryGeneratedColumn()
     id:number;
-
+    
+    @Index({ fulltext: true })
+    
     @Column()
     nameJob:string;
     
