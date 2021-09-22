@@ -1,49 +1,41 @@
-import { BaseEntity, BeforeInsert, BeforeUpdate, Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { StringLiteralLike } from "typescript";
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, DeleteDateColumn, Entity, IsNull, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DeliveryOrder } from "./DeliveryOrder";
-import { SaleOrder } from "./SaleOrder";
 
 
-export interface IDriver{
-    
+export interface IDriver {
+
     id: number;
-    name:string;
-    phone:String;
-    age:number;
+    name: string;
+    phone: String;
+    age: number;
     idenityCard: string;
-    img:string;
-
 }
 @Entity()
 export class Driver extends BaseEntity {
 
     @PrimaryGeneratedColumn()
-    id:number ;
+    id: number;
 
     @Column()
-    name:string;
+    name: string;
 
 
     @Column({
         type: "varchar",
         length: "11",
-        nullable: false,
     })
     phone: string;
 
     @Column()
-    age:number;
+    age: number;
 
     @Column()
-    img: string;
-
-    @Column()
-    idenityCard:string;
+    idenityCard: string;
 
     @Column({
         type: "timestamp with time zone",
         nullable: true,
-        default: () => "CURRENT_TIMESTAMP" 
+        default: () => "CURRENT_TIMESTAMP"
     })
     public updatedAt: Date;
 
@@ -69,9 +61,9 @@ export class Driver extends BaseEntity {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-   
 
 
-    @OneToMany(() => DeliveryOrder, (saleOrder:DeliveryOrder) =>saleOrder.driver)
+
+    @OneToMany(() => DeliveryOrder, (saleOrder: DeliveryOrder) => saleOrder.driver)
     deliveryOrders: DeliveryOrder[];
 }

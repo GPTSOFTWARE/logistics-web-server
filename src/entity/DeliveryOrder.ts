@@ -4,20 +4,20 @@ import { Driver } from "./Driver";
 import { SaleOrder } from "./SaleOrder";
 
 export enum typeShip {
-    FAST = 'giao hàng nhanh',
-    STANDARD = 'giao hàng tiêu chuẩn'
+    FAST = 'Giao hàng nhanh',
+    STANDARD = 'Giao hàng tiêu chuẩn'
 }
 
 export interface IDeliveryOrder {
-    id:number;
-    saleOrderId:number;
-    statusId:number;
-    typeShip:string;
-    plannedTime:Date;
+    id: number;
+    saleOrderId: number;
+    statusId: number;
+    typeShip: string;
+    plannedTime: Date;
 }
 
 @Entity()
-export class DeliveryOrder extends BaseEntity  implements IDeliveryOrder {
+export class DeliveryOrder extends BaseEntity implements IDeliveryOrder {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -50,20 +50,19 @@ export class DeliveryOrder extends BaseEntity  implements IDeliveryOrder {
     )
     plannedTime: Date;
 
-    @ManyToOne(() => Driver, (driver: Driver) => driver.deliveryOrders, { onDelete: 'CASCADE'})
+    @ManyToOne(() => Driver, (driver: Driver) => driver.deliveryOrders, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'driver_id' })
     driver!: Driver;
 
+    @ManyToOne(() => SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders, { onDelete: 'CASCADE' })
+    saleOrder!: SaleOrder;
+
+    @ManyToOne(() => Status, (status: Status) => status.deliveryOrders, { onDelete: 'CASCADE' })
+    status!: Status;
 
     @BeforeInsert()
     public updateDates() {
         this.createdAt = new Date();
     }
-
-    @ManyToOne(() =>SaleOrder, (saleOrder: SaleOrder) => saleOrder.deliveryOrders, { onDelete: 'CASCADE' })
-    saleOrder!: SaleOrder;
-
-    @ManyToOne(() =>Status, (status: Status) => status.deliveryOrders, { onDelete: 'CASCADE' })
-    status!: Status;
 
 }
