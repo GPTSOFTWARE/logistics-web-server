@@ -148,6 +148,7 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .leftJoinAndSelect('saleOrder.categories', 'Category')
             .leftJoinAndSelect('saleOrder.unit', 'unit')
             .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrder')
+            .leftJoinAndSelect('deliveryOrder.status', 'status')
             .where('saleOrder.id = :id', { id: req.params.id })
             .getOne();
         const updateProduct = await createQueryBuilder()
@@ -157,17 +158,13 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .execute();
 
         for (let item of products) {
+            const unit = await getRepository(Unit)
+                .createQueryBuilder('unit')
+                .where('unit.id = :id', { id: item.unit_id })
+                .getOne();
             if (item.id) {
                 for (let element of orderWithId.products) {
                     if (item.id === element.id) {
-                        console.log(typeof item);
-
-                        const unit = await getRepository(Unit)
-                            .createQueryBuilder('unit')
-                            .where('unit.id = :id', { id: item.unit_id })
-                            .getOne();
-                        console.log(unit);
-
                         await getRepository(Product)
                             .createQueryBuilder()
                             .update(Product)
@@ -190,8 +187,7 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
                 }
             }
             else {
-                const product = { ...item, saleOrder: req.params.id };
-
+                const product = { ...item, saleOrder: req.params.id, unit };
                 await createQueryBuilder()
                     .insert()
                     .into(Product)

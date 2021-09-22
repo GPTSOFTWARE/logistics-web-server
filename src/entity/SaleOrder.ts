@@ -30,7 +30,6 @@ export interface ISaleOrder {
     payment_id?: number;
     unit_id?: number;
     orderName: string;
-
 }
 
 @Entity()
