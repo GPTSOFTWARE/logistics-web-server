@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 export interface IJob {
     id: number;
@@ -71,5 +71,8 @@ export class Job extends BaseEntity implements IJob {
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
+
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
 }

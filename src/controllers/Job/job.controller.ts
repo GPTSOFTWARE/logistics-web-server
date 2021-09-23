@@ -92,3 +92,30 @@ export const deleteJob = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
+export const deleteMultiJob = async (req: Request, res: Response) => {
+    try {
+  
+      const { idList } = req.body;
+      const deleteUser = await createQueryBuilder()
+        .softDelete()
+        .from(Job)
+        .where("id IN(:...ids)", { ids: idList })
+        .execute();
+      res.status(200).json({ message: "success" });
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  export const restoreJob = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+  
+      const restoreOrder = await getRepository(Job).restore(req.params.id);
+      res.json({ message: "success" });
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+  
