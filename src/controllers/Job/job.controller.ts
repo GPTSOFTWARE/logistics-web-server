@@ -6,6 +6,7 @@ import { IGetJobQuery } from "../query.interface";
 export const getJob = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
     const page_size = +req?.query?.page_size || 10;
+    const name = req.query.name;
     const [data, total] = await getRepository(Job)
         .createQueryBuilder("job")
         .take(page_size)

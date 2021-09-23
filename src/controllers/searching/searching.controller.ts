@@ -62,14 +62,16 @@ export const searchingOrder = async (req: Request, res: Response, next: NextFunc
 export const searchingJob = async (req: Request, res: Response, next: NextFunction) =>{
     
     try{
+        const page = +req?.query?.page || 1;
+        const page_size = +req?.query?.page_size || 10;
         const name = req.query.name;
-
-        const job= await getRepository(Job)
-                        .createQueryBuilder('job')
-                        .select()
-                        .where('job.nameJob ILIKE :name', {name : `%${name}%`})
-                        .getMany();
-        return res.status(200).json(job);
+        const [data, total] = await getRepository(Job)
+            .createQueryBuilder("job")
+            .where('job.nameJob ILIKE :name', {name : `%${name}%`})
+            .take(page_size)
+            .skip((page - 1) * page_size)
+            .getManyAndCount();
+        return res.json({ total, data });
     }
     catch(err){
         console.log(err);
