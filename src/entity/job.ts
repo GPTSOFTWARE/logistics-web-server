@@ -10,6 +10,7 @@ export interface IJob {
     position: string;
     require: string;
     thumbnails: string;
+    quantity: number;
 }
 
 
@@ -38,6 +39,9 @@ export class Job extends BaseEntity implements IJob {
 
     @Column()
     position: string;
+
+    @Column()
+    quantity: number;
 
     @Column()
     require: string;
