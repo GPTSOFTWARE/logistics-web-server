@@ -6,9 +6,10 @@ import { IGetJobQuery } from "../query.interface";
 export const getJob = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
     const page_size = +req?.query?.page_size || 10;
-    const name = req.query.name;
+    const name = req?.query?.name || "";
     const [data, total] = await getRepository(Job)
         .createQueryBuilder("job")
+        .where('job.nameJob ILIKE :name', {name : `%${name}%`})
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();

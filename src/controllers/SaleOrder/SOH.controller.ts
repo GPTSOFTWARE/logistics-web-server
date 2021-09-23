@@ -259,6 +259,54 @@ const deleteMulti = async (req: Request, res: Response) => {
 }
 
 
+export const getSaleOrderByTotalPrice = async (req: Request, res: Response, next:NextFunction) =>{
+
+    try{
+            const order = await getRepository(SaleOrder)
+                            .createQueryBuilder('order')
+                            .orderBy('order.totalPrice',"DESC")
+                            .limit(5)
+                            .getMany();
+        
+            res.status(200).json(order);
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const getOrderByPhone = async (req: Request, res: Response, next: NextFunction) =>{
+    try{
+
+        const order = await getRepository(SaleOrder)
+                            .createQueryBuilder('order')
+                            .select('order.customerPhone')
+                            .addSelect("COUNT(order.customerPhone)","count")
+                            .groupBy('order.customerPhone')
+                            .orderBy("count", "DESC")
+                            .limit(5)
+                            .getRawMany();
+        res.status(200).json(order);
+                            
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
+export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const order = await getRepository(DeliveryOrder)
+                            .createQueryBuilder('order')
+                            .where('order.statusId = :id', {id: req.params.id})
+                            .getCount(); // muon hien them order thi dung getManyAndCount()
+        res.status(200).json(order);
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 export { getSaleOrder, getOrderByUserId, getOrderById, createOrder, updateOrder, removeOrder, softDelete, restoreOrder, deleteMulti }
 
 
