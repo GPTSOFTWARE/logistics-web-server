@@ -14,7 +14,7 @@ export const searchingOrder = async (req: Request, res: Response, next: NextFunc
 
         const reqName = name.toString().toLowerCase();
         const parseDate = Date.parse(date.toString());
-        const date2 = moment(parseDate).format("MMM Do YY");  
+        const date2 = moment(parseDate).format("MMM Do YY"); 
 
         console.log(date2);
       
