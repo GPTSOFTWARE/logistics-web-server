@@ -1429,6 +1429,37 @@
                 }
             }
         },
+        "Contact":{
+            "type": "object",
+            "properties": {
+                "fullname":{
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                },
+                "email":{
+                    "type": "string"
+                },
+                "title":{
+                    "type": "string"
+                },
+                "text":{
+                    "type": "string"
+                }
+            }
+        },
+        "Contacts":{
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Contact"
+                    }
+                }
+            }
+        },
         "Request": {
             "type": "object",
             "properties": {
