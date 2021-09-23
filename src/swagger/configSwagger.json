@@ -757,28 +757,20 @@
                 }
             }
         },
-        "/search/job": {
-            "post": {
+        "/search/job?name={NAME}": {
+            "get": {
                 "tags": [
-                    "Tìm kiếm công việc"
+                    "tìm kiếm theo tên công việc"
                 ],
-                "summary": "Tìm công việc",
-                "requestBody": {
-                    "description": "Các thuộc tính bắt buộc : ",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/definitions/Job"
-                            },
-                            "example": {
-                                "name":"Tiếp viên hàng không"
-                            }
-                        }
+                "summary": "GET công việc",
+                "parameters": [
+                    {
+                        "name": "NAME",
+                        "in": "path",
+                        "required": true,
+                        "description": "tên công việc",
+                        "type": "string"
                     }
-                },
-                "produces": [
-                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -786,9 +778,6 @@
                         "schema": {
                             "$ref": "#/definitions/Job"
                         }
-                    },
-                    "400": {
-                        "description": "Failed. Bad post data."
                     }
                 }
             }

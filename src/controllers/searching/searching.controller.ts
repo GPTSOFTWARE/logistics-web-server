@@ -62,13 +62,13 @@ export const searchingOrder = async (req: Request, res: Response, next: NextFunc
 export const searchingJob = async (req: Request, res: Response, next: NextFunction) =>{
     
     try{
-        const {name } = req.body;
+        const name = req.query.name;
 
         const job= await getRepository(Job)
                         .createQueryBuilder('job')
                         .select()
-                    .where('job.nameJob ILIKE :name', {name : `%${name}%`})
-                    .getMany();
+                        .where('job.nameJob ILIKE :name', {name : `%${name}%`})
+                        .getMany();
         return res.status(200).json(job);
     }
     catch(err){
