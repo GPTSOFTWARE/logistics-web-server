@@ -88,3 +88,22 @@ export const getDeliveryOrderById = async (req: Request, res: Response, next: Ne
         console.error(err);
     }
 }
+
+export const addDriverToOrder = async (req: Request, res: Response, next: NextFunction) =>{
+
+    try{
+        const data = req.body;
+        const updateDeli = await createQueryBuilder()
+                                .update(DeliveryOrder)
+                                .set({ 
+                                    driver: data.driverId,
+                                })
+                                .where('saleOrderId  = :saleOrderId',{saleOrderId: data.saleOrderId})
+                                .andWhere('statusId = :statusId',{statusId: data.statusId})
+                                .execute();
+        res.status(200).json({message: "success"});
+    }
+    catch(err){
+        console.error(err);
+    }
+}
