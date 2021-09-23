@@ -4,8 +4,8 @@ import { Driver } from "./Driver";
 import { SaleOrder } from "./SaleOrder";
 
 export enum typeShip {
-    FAST = 'Giao hàng nhanh',
-    STANDARD = 'Giao hàng tiêu chuẩn'
+    FAST = 'giao hàng nhanh',
+    STANDARD = 'giao hàng tiêu chuẩn'
 }
 
 export interface IDeliveryOrder {

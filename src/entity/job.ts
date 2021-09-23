@@ -1,27 +1,29 @@
 import { BaseEntity, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
-import { NumberLiteralType } from "typescript";
 
 export interface IJob {
     id: number;
     nameJob: string;
     salaryBefore: number;
-    salaryAfter:number;
+    salaryAfter: number;
     degree: string;
     address: string;
+    position: string;
+    require: string;
+    thumbnails: string;
 }
 
 
 @Entity()
-export class Job extends BaseEntity implements IJob{
-    
+export class Job extends BaseEntity implements IJob {
+
     @PrimaryGeneratedColumn()
-    id:number;
-    
+    id: number;
+
     @Index({ fulltext: true })
-    
+
     @Column()
-    nameJob:string;
-    
+    nameJob: string;
+
     @Column('decimal')
     salaryBefore: number;
 
@@ -29,22 +31,31 @@ export class Job extends BaseEntity implements IJob{
     salaryAfter: number;
 
     @Column()
-    degree:string;
+    degree: string;
 
     @Column()
-    address:string;
+    address: string;
+
+    @Column()
+    position: string;
+
+    @Column()
+    require: string;
+
+    @Column()
+    thumbnails: string;
 
     @Column({
         type: "timestamp with time zone",
         nullable: true,
-        default: () => "CURRENT_TIMESTAMP" 
+        default: () => "CURRENT_TIMESTAMP"
     })
     updatedAt: Date;
 
     @Column({
         type: "timestamp with time zone",
         nullable: true,
-        default: () => "CURRENT_TIMESTAMP" 
+        default: () => "CURRENT_TIMESTAMP"
     })
     createdAt: Date;
 
@@ -55,9 +66,9 @@ export class Job extends BaseEntity implements IJob{
 
     @BeforeInsert()
     public updateDates() {
-   
+
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
 
-} 
+}
