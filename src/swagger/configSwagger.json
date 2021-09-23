@@ -396,7 +396,7 @@
                 }
             }
         },
-        "/jobs/{id}": {
+        "/job/{id}": {
             "parameters": [
                 {
                     "name": "id",
