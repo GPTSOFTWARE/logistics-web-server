@@ -370,11 +370,14 @@
                                 "$ref": "#/definitions/Job"
                             },
                             "example": {
-                                "nameJob": "Tiếp Viên Hàng Không",
-                                "salaryBefore": 1000000,
-                                "salaryAfter": 2000000,
-                                "degree": "Đại Học",
-                                "address": "TP HCM"
+                                "nameJob":"Nhân viên Giao Hàng",
+                                "salaryBefore":3000000,
+                                "salaryAfter":4000000,
+                                "degree":"Tốt nghiệp Cấp 2",
+                                "address":"TP HCM",
+                                "position" : "Nhân Viên",
+                                "require" : "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
+                                "thumbnails" : "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
                             }
                         }
                     }
@@ -444,11 +447,14 @@
                                 "$ref": "#/definitions/Job"
                             },
                             "example": {
-                                "nameJob": "Designer",
-                                "salaryBefore": 500000,
-                                "salaryAfter": 800000,
-                                "degree": "Cao Đẳng",
-                                "address": "TP HCM"
+                                "nameJob":"Nhân viên Giao Hàng",
+                                "salaryBefore":3000000,
+                                "salaryAfter":4000000,
+                                "degree":"Tốt nghiệp Cấp 2",
+                                "address":"TP HCM",
+                                "position" : "Nhân Viên",
+                                "require" : "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
+                                "thumbnails" : "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
                             }
                         }
                     }
@@ -504,6 +510,68 @@
                     },
                     "404": {
                         "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/job/delete": {
+            "delete": {
+                "tags": [
+                    "Xóa mềm một công việc( Có thể Restore )"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "example": {
+                                "idList": [
+                                    5,
+                                    7,
+                                    8
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "Xóa Tài xế",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    }
+                }
+            }
+        },
+        "/job/restore/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã công việc",
+                    "type": "string"
+                }
+            ],
+            "patch": {
+                "tags": [
+                    "Khôi phục một công việc"
+                ],
+                "summary": "Khôi phục công việc",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
                     }
                 }
             }
