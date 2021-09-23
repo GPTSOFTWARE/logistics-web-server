@@ -7,10 +7,16 @@ const getDrivers = async (req: Request, res: Response): Promise<Response> => {
     const page = +req?.query?.page || 1;
     const page_size = +req?.query?.page_size || 10;
     const [data, total] = await getRepository(Driver)
-                .createQueryBuilder("driver")
-                .take(page_size)
-                .skip((page - 1) * page_size)
-                .getManyAndCount();
+        .createQueryBuilder("driver")
+        .take(page_size)
+        .skip((page - 1) * page_size)
+        .getManyAndCount();
+    return res.json({ total, data });
+};
+const getAllDrivers = async (req: Request, res: Response): Promise<Response> => {
+    const [data, total] = await getRepository(Driver)
+        .createQueryBuilder("driver")
+        .getManyAndCount();
     return res.json({ total, data });
 };
 
@@ -19,17 +25,17 @@ const createDriver = async (
     req: Request<any, any, any, any>,
     res: Response,
     next: NextFunction) => {
-    try{
+    try {
         const data = req.body;
 
-        const findDriver = await getRepository(Driver).findOne({idenityCard : data.idenityCard});
-        if(findDriver){
+        const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
+        if (findDriver) {
             return res.status(400).send('Tài xế đã tồn tại');
         }
         const createDriver = await getRepository(Driver).create(data);
         const saveDriver = await getRepository(Driver).save(createDriver);
 
-        res.status(200).json({message:'success'});
+        res.status(200).json({ message: 'success' });
     }
     catch (err) {
         console.error(err);
@@ -37,13 +43,13 @@ const createDriver = async (
 }
 
 export const getDriverById = async (req: Request, res: Response, next: NextFunction) => {
-    try{
+    try {
         const driver = await getRepository(Driver).findOne(req.params.id);
-        if(driver){
+        if (driver) {
             res.status(200).json(driver);
         }
-        else{
-            res.status(404).json({message: "Not Found"});
+        else {
+            res.status(404).json({ message: "Not Found" });
         }
     }
     catch (err) {
@@ -52,15 +58,15 @@ export const getDriverById = async (req: Request, res: Response, next: NextFunct
 }
 
 export const updateDriver = async (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
-    try{
+    try {
         const data = req.body;
-        const updateDriver = await  createQueryBuilder('driver')
-                                    .update(Driver)
-                                    .set(data)
-                                    .where('driver.id = :id', {id: req.params.id})
-                                    .execute();
-                            
-        return res.status(200).json({ message: "update successful!"});       
+        const updateDriver = await createQueryBuilder('driver')
+            .update(Driver)
+            .set(data)
+            .where('driver.id = :id', { id: req.params.id })
+            .execute();
+
+        return res.status(200).json({ message: "update successful!" });
     }
     catch (err) {
         console.error(err);
@@ -68,15 +74,15 @@ export const updateDriver = async (req: Request<any, any, any, any>, res: Respon
     }
 }
 
-export const deleteDriver = async (req: Request, res: Response, next: NextFunction) =>{
-    try{
+export const deleteDriver = async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
-        const {idList } = req.body;
+        const { idList } = req.body;
         const deleteDriver = await createQueryBuilder()
-                                    .softDelete()
-                                    .from(Driver)
-                                    .where("id IN(:...ids)", { ids: idList })
-                                    .execute();
+            .softDelete()
+            .from(Driver)
+            .where("id IN(:...ids)", { ids: idList })
+            .execute();
         res.status(200).json({ message: "success" });
     }
 
@@ -100,4 +106,4 @@ export const restoreDriver = async (req: Request, res: Response, next: NextFunct
 
 
 //  
-export {getDrivers, createDriver }
+export { getDrivers, createDriver, getAllDrivers }

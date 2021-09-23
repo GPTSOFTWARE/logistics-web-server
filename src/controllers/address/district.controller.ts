@@ -5,33 +5,29 @@ import { District } from "../../entity/district";
 
 export const getDistrict = async (req: Request, res: Response): Promise<Response> => {
 
-    const page = +req?.query?.page || 1;
-    const page_size = +req?.query?.page_size || 10;
     const [data, total] = await getRepository(District)
-                .createQueryBuilder("district")
-                .leftJoinAndSelect('district.city', 'city')
-                .take(page_size)
-                .skip((page - 1) * page_size)
-                .getManyAndCount();
+        .createQueryBuilder("district")
+        .leftJoinAndSelect('district.city', 'city')
+        .getManyAndCount();
     return res.json({ total, data });
 
 };
 
 
-export const getDistrictById = async (req: Request, res: Response, next: NextFunction): Promise<Response> =>{
+export const getDistrictById = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
 
-    try{
-            const id = req.params.id;
-            const district =  await getRepository(District)
-                                    .createQueryBuilder('district')
-                                    .where('id = :id', {id:id})
-                                    .getOne();
-            return res.status(200).json(district);
+    try {
+        const id = req.params.id;
+        const district = await getRepository(District)
+            .createQueryBuilder('district')
+            .where('id = :id', { id: id })
+            .getOne();
+        return res.status(200).json(district);
     }
     catch (err) {
         console.log(err);
     }
-    
+
 }
 
 // export const getDistrictByProvince = async (req: Request, res: Response, next: NextFunction) => {
