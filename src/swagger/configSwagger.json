@@ -687,6 +687,261 @@
                 }
             }
         },
+        "/search/job": {
+            "post": {
+                "tags": [
+                    "Tìm kiếm công việc"
+                ],
+                "summary": "Tìm công việc",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Job"
+                            },
+                            "example": {
+                                "name":"Tiếp viên hàng không"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Job"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/drivers?page={PAGE}&page_size={PAGE_SIZE}": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách tài xế"
+                ],
+                "summary": "GET tất các các order",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    }
+                }
+            }
+        },
+        "/driver": {
+            "post": {
+                "tags": [
+                    "Tạo tài xế"
+                ],
+                "summary": "Tạo mới tài xế",
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Driver"
+                            },
+                            "example": {
+                                        "name":"Nguyen hoai nho",
+                                        "phone":"02123322333",
+                                        "age":21,
+                                        "idenityCard": "212122235"
+                                        
+                                    }
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            },
+        "/driver/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã tài xế",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Tìm một tài xế "
+                ],
+                "summary": "GET một tài xé với ID ",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Tài xế có ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cập nhật tài xế có ID",
+                "tags": [
+                    "Cập nhật một tài xế"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Driver"
+                            },
+                            "example": {
+                                "name":"Nguyen hoai nho",
+                                "phone":"02123322333",
+                                "age":21,
+                                "idenityCard": "212122235"
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "ID tài xế cần cập nhật",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/driver/delete": {
+            "delete": {
+                "tags": [
+                    "Xóa mềm một tài xế( Có thể Restore )"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "example": {
+                                "idList": [
+                                    5,
+                                    7,
+                                    8
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "Xóa Tài xế",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    }
+                }
+            }
+        },
+        "/driver/restore/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã tài xế",
+                    "type": "string"
+                }
+            ],
+            "patch": {
+                "tags": [
+                    "Khôi phục một tài xế"
+                ],
+                "summary": "Khôi phục tài xế",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    }
+                }
+            }
+        },
+
         "/register": {
             "post": {
                 "tags": [
@@ -757,6 +1012,188 @@
                 }
             }
         },
+        "/users?page={PAGE}&page_size={PAGE_SIZE}": {
+            "get": {
+                "tags": [
+                    "Lấy danh sách tài khoản"
+                ],
+                "summary": "GET tất cả tài khoản",
+                "parameters": [
+                    {
+                        "name": "PAGE",
+                        "in": "path",
+                        "required": true,
+                        "description": "Số trang",
+                        "type": "number"
+                    },
+                    {
+                        "name": "PAGE_SIZE",
+                        "in": "path",
+                        "required": false,
+                        "description": "Số phần tử cần lấy ( Default : 10 )",
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã account",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Tìm một tài khoản"
+                ],
+                "summary": "GET một account với ID ",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Account có ID",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Cập nhật account có ID",
+                "tags": [
+                    "Cập nhật một tài khoản"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Account"
+                            },
+                            "example": {
+                                "email": "teste1r@gmail.com.vn",
+                                "fullname": "Tester 123",
+                                "phone": "09090901216",
+                                "imgUrl": null
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "ID account cần cập nhật",
+                        "schema": {
+                            "$ref": "#/definitions/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/user/delete": {
+            "delete": {
+                "tags": [
+                    "Xóa mềm một tàu khoản( Có thể Restore )"
+                ],
+                "requestBody": {
+                    "description": "Các thuộc tính bắt buộc : ",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "example": {
+                                "idList": [
+                                    5,
+                                    7,
+                                    8
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "Xóa Tài khoản",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/restore/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID là mã tài khoản",
+                    "type": "string"
+                }
+            ],
+            "patch": {
+                "tags": [
+                    "Khôi phục một tài khoản"
+                ],
+                "summary": "Khôi phục tài khoản",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            }
+        },
+
         "/admin/dashboard": {
             "post": {
                 "tags": [
@@ -905,6 +1342,34 @@
                 }
             }
         },
+        "Driver":{
+            "type": "object",
+            "properties": {
+                "name":{
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                },
+                "age":{
+                    "type": "number"
+                },
+                "idenityCard":{
+                    "type": "string"
+                }
+            }
+        },
+        "Drivers":{
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Driver"
+                    }
+                }
+            }
+        },
         "Request": {
             "type": "object",
             "properties": {
@@ -986,3 +1451,4 @@
         }
     }
 }
+
