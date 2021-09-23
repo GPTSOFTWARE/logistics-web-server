@@ -370,14 +370,15 @@
                                 "$ref": "#/definitions/Job"
                             },
                             "example": {
-                                "nameJob":"Nhân viên Giao Hàng",
-                                "salaryBefore":3000000,
-                                "salaryAfter":4000000,
-                                "degree":"Tốt nghiệp Cấp 2",
-                                "address":"TP HCM",
-                                "position" : "Nhân Viên",
-                                "require" : "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
-                                "thumbnails" : "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
+                                "nameJob": "Nhân viên Giao Hàng",
+                                "salaryBefore": "3000000",
+                                "salaryAfter": "4000000",
+                                "degree": "Tốt nghiệp THCS",
+                                "address": "TP.HCM",
+                                "position": "Nhân Viên",
+                                "quantity": 50,
+                                "require": "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
+                                "thumbnails": "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
                             }
                         }
                     }
@@ -447,14 +448,15 @@
                                 "$ref": "#/definitions/Job"
                             },
                             "example": {
-                                "nameJob":"Nhân viên Giao Hàng",
-                                "salaryBefore":3000000,
-                                "salaryAfter":4000000,
-                                "degree":"Tốt nghiệp Cấp 2",
-                                "address":"TP HCM",
-                                "position" : "Nhân Viên",
-                                "require" : "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
-                                "thumbnails" : "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
+                                "nameJob": "Nhân viên Giao Hàng",
+                                "salaryBefore": "3000000",
+                                "salaryAfter": "4000000",
+                                "degree": "Tốt nghiệp THCS",
+                                "address": "TP.HCM",
+                                "position": "Nhân Viên",
+                                "quantity": 50,
+                                "require": "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
+                                "thumbnails": "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
                             }
                         }
                     }
