@@ -5,13 +5,11 @@ import { IProduct, Product } from "../../entity/Product";
 import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
 import { Unit } from "../../entity/Unit";
 import { Account } from "../../entity/Users";
-import { comparePassword } from "../../utils/helpers";
-import { updateProduct } from "../product/product.controller";
 import { ICreateOrderDTO, IUpdateOrderDTO } from "./SOH.interface";
 
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
-    const page = +req?.query?.page || 1;
-    const page_size = +req?.query?.page_size || 10;
+    // const page = +req?.query?.page || 1;
+    // const page_size = +req?.query?.page_size || 10;
     const [data, total] = await
         getRepository(SaleOrder)
             .createQueryBuilder("saleOrder")
@@ -22,8 +20,8 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .leftJoinAndSelect('saleOrder.unit', 'unit')
             .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrders')
             .leftJoinAndSelect('deliveryOrders.status', 'status')
-            .take(page_size)
-            .skip((page - 1) * page_size)
+            // .take(page_size)
+            // .skip((page - 1) * page_size)
             .getManyAndCount();
     return res.json({ total, data });
 };
@@ -259,35 +257,35 @@ const deleteMulti = async (req: Request, res: Response) => {
 }
 
 
-export const getSaleOrderByTotalPrice = async (req: Request, res: Response, next:NextFunction) =>{
+export const getSaleOrderByTotalPrice = async (req: Request, res: Response, next: NextFunction) => {
 
-    try{
-            const order = await getRepository(SaleOrder)
-                            .createQueryBuilder('order')
-                            .orderBy('order.totalPrice',"DESC")
-                            .limit(5)
-                            .getMany();
-        
-            res.status(200).json(order);
+    try {
+        const order = await getRepository(SaleOrder)
+            .createQueryBuilder('order')
+            .orderBy('order.totalPrice', "DESC")
+            .limit(5)
+            .getMany();
+
+        res.status(200).json(order);
     }
-    catch(err){
+    catch (err) {
         console.error(err);
     }
 }
 
-export const getOrderByPhone = async (req: Request, res: Response, next: NextFunction) =>{
-    try{
+export const getOrderByPhone = async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
         const order = await getRepository(SaleOrder)
-                            .createQueryBuilder('order')
-                            .select('order.customerPhone')
-                            .addSelect("COUNT(order.customerPhone)","count")
-                            .groupBy('order.customerPhone')
-                            .orderBy("count", "DESC")
-                            .limit(5)
-                            .getRawMany();
+            .createQueryBuilder('order')
+            .select('order.customerPhone')
+            .addSelect("COUNT(order.customerPhone)", "count")
+            .groupBy('order.customerPhone')
+            .orderBy("count", "DESC")
+            .limit(5)
+            .getRawMany();
         res.status(200).json(order);
-                            
+
     }
     catch (err) {
         console.error(err);
@@ -295,11 +293,11 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
 }
 
 export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
-    try{
+    try {
         const order = await getRepository(DeliveryOrder)
-                            .createQueryBuilder('order')
-                            .where('order.statusId = :id', {id: req.params.id})
-                            .getCount(); // muon hien them order thi dung getManyAndCount()
+            .createQueryBuilder('order')
+            .where('order.statusId = :id', { id: req.params.id })
+            .getCount(); // muon hien them order thi dung getManyAndCount()
         res.status(200).json(order);
     }
     catch (err) {
