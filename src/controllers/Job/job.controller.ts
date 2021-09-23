@@ -91,3 +91,4 @@ export const deleteJob = async (req: Request, res: Response, next: NextFunction)
         console.log(err);
     }
 }
+

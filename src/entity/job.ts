@@ -34,6 +34,7 @@ export class Job extends BaseEntity implements IJob{
     @Column()
     address:string;
 
+
     @Column({
         type: "timestamp with time zone",
         nullable: true,
