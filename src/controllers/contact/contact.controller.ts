@@ -32,7 +32,7 @@ export const createContact = async (
             .into(Contact)
             .values(data)
             .execute();
-        res.status(200).json({ message: "success" });
+        res.status(201).json({ message: "Created" });
     }
     catch (err) {
         console.log(err);

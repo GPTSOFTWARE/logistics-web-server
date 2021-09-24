@@ -113,20 +113,24 @@ const login = async (req: Request, res: Response): Promise<Response> => {
 
 const register = async (req: Request, res: Response): Promise<Response> => {
 
-  const userData = req.body;
+  try{
+    const userData = req.body;
+    var checkPhone = await getRepository(Account).findOne({ phone: userData.phone });
+
+    if (checkPhone) {
+      return res.status(400).send('Phone number already exists!');
+    }
 
 
-  var checkPhone = await getRepository(Account).findOne({ phone: userData.phone });
-
-  if (checkPhone) {
-    return res.status(400).send('Phone number already exists!');
+    userData.password = await hashPassword(userData.password);
+    const newUser = await getRepository(Account).create(userData);
+    const saveUser = await getRepository(Account).save(newUser);
+    return res.status(200).json(saveUser);
+  }
+  catch (err) {
+    console.log(err);
   }
 
-
-  userData.password = await hashPassword(userData.password);
-  const newUser = await getRepository(Account).create(userData);
-  const saveUser = await getRepository(Account).save(newUser);
-  return res.status(200).json(saveUser);
 };
 
 export const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -187,7 +191,7 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
         res.status(200).send('change password successful');
       }
       else {
-        res.status(200).send('old password incorrect');
+        res.status(400).send('old password incorrect');
       }
     }
     else {

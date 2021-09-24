@@ -9,5 +9,5 @@ router.get('/deliveryorder/:id', getDeliveryOrderById);
 router.get('/delivery', getDelivery);
 router.get('/delivery/:id', getDeliveryById);
 router.post('/delivery', switchDelivery);
-router.put('/delivery/update', addDriverToOrder);
+router.put('/delivery/update/:id', addDriverToOrder);
 export default router;

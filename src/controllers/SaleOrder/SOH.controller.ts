@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { createQueryBuilder, getRepository } from "typeorm";
+import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
+import { isForOfStatement } from "typescript";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { Product } from "../../entity/Product";
 import { SaleOrder } from "../../entity/SaleOrder";
@@ -34,7 +35,9 @@ const createOrder = async (
     try {
         const data = req.body;
         const { products, typeShip, ...order } = data;
-
+        if (order.customerPhone.length < 10 || order.receiverPhone.length < 10) {
+            res.status(400).json({ message: "Số điện thoại không hợp lê" });
+        }
         const result = await getRepository(SaleOrder)
             .createQueryBuilder('order')
             .insert()
@@ -77,7 +80,7 @@ const createOrder = async (
                 typeShip: typeShip,
             })
             .execute();
-        res.status(200).json({ message: 'Success' });
+        res.status(201).json({ message: 'created' });
 
     } catch (err) {
         console.log(err);

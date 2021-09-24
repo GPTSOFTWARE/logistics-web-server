@@ -10,7 +10,7 @@ export const getDelivery = async (req: Request, res: Response, next: NextFunctio
             .createQueryBuilder('status')
             .getMany();
 
-        res.json(delivery);
+        res.status(200).json(delivery);
     }
     catch (err) {
         console.error(err);
@@ -21,7 +21,13 @@ export const getDeliveryById = async (req: Request, res: Response, next: NextFun
     try {
         const id = req.params.id;
         const delivery = await getRepository(Status).findOne(id);
-        res.json(delivery);
+        if(delivery){
+            res.json(delivery);
+        }
+        else{
+            res.status(404).send("Not Found");
+        }
+       
     }
     catch (err) {
         console.error(err);
