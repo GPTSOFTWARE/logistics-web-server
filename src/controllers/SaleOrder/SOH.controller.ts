@@ -1,15 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
-import { IProduct, Product } from "../../entity/Product";
-import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
+import { Product } from "../../entity/Product";
+import { SaleOrder } from "../../entity/SaleOrder";
 import { Unit } from "../../entity/Unit";
 import { Account } from "../../entity/Users";
 import { ICreateOrderDTO, IUpdateOrderDTO } from "./SOH.interface";
-
+import { IDFORMAT } from "../../utils/constant";
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
-    // const page = +req?.query?.page || 1;
-    // const page_size = +req?.query?.page_size || 10;
     const [data, total] = await
         getRepository(SaleOrder)
             .createQueryBuilder("saleOrder")
@@ -21,9 +19,9 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrders')
             .leftJoinAndSelect('deliveryOrders.status', 'status')
             .orderBy('saleOrder.createdAt', 'DESC')
-            // .take(page_size)
-            // .skip((page - 1) * page_size)
             .getManyAndCount();
+
+
     return res.json({ total, data });
 };
 
@@ -221,10 +219,10 @@ const restoreOrder = async (req: Request, res: Response, next: NextFunction) => 
         const restoreOrder = await getRepository(SaleOrder).restore(req.params.id);
 
         const restoreDelivery = await createQueryBuilder()
-                                    .restore()
-                                    .from(DeliveryOrder)
-                                    .where('saleOrderId = :id', {id : req.params.id})
-                                    .execute();
+            .restore()
+            .from(DeliveryOrder)
+            .where('saleOrderId = :id', { id: req.params.id })
+            .execute();
         res.json({ message: "success" });
     }
     catch (err) {
@@ -259,10 +257,10 @@ const deleteMulti = async (req: Request, res: Response) => {
                 .execute();
 
         const deleteDeli = await createQueryBuilder()
-                                .softDelete()
-                                .from(DeliveryOrder)
-                                .where('saleOrderId IN(:...ids)',{ids: idList})
-                                .execute();        
+            .softDelete()
+            .from(DeliveryOrder)
+            .where('saleOrderId IN(:...ids)', { ids: idList })
+            .execute();
         res.status(200).json({ message: "success" });
     }
     catch (err) {
@@ -310,22 +308,22 @@ export const getOrderByStatus = async (req: Request, res: Response, next: NextFu
     try {
         const statusid = req.body.statusId;
 
-        if(statusid == 1){ // if status equal 1(LK), find saleOrder loop once
+        if (statusid == 1) { // if status equal 1(LK), find saleOrder loop once
             const order = await getRepository(DeliveryOrder)
-                            .createQueryBuilder('order')
-                            .select('order.saleOrderId')
-                            .groupBy('order.saleOrderId')
-                            .having("COUNT(order.saleOrderId) = :number", {number : 1})
-                            .getRawMany();
-            res.status(200).json({order: order, total: order.length});
+                .createQueryBuilder('order')
+                .select('order.saleOrderId')
+                .groupBy('order.saleOrderId')
+                .having("COUNT(order.saleOrderId) = :number", { number: 1 })
+                .getRawMany();
+            res.status(200).json({ order: order, total: order.length });
 
         }
-        else if(statusid == 3){ // if status equal 3(DG), find delivery which has status equal 3
-                const order = await getRepository(DeliveryOrder)
+        else if (statusid == 3) { // if status equal 3(DG), find delivery which has status equal 3
+            const order = await getRepository(DeliveryOrder)
                 .createQueryBuilder('order')
-                .where('order.statusId = :id', { id: 3})
+                .where('order.statusId = :id', { id: 3 })
                 .getManyAndCount();// muon hien them order thi dung getManyAndCount()
-                res.status(200).json({order: order, total: order.length});
+            res.status(200).json({ order: order, total: order.length });
         }
     }
     catch (err) {
