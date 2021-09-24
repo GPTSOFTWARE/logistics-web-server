@@ -32,7 +32,12 @@ export const getJobById = async (
     try {
         const id = req.params.id;
         const job = await getRepository(Job).findOne(id);
-        res.status(200).json(job);
+        if(job){
+            res.status(200).json(job);
+        }
+        else{
+            res.status(404).json({ message: "Not Found"});
+        }
 
     }
     catch (err) {
@@ -52,7 +57,7 @@ export const createJob = async (
             .into(Job)
             .values(data)
             .execute();
-        res.status(200).json({ message: "success" });
+        res.status(201).json({ message: "created" });
     }
     catch (err) {
         console.log(err);
@@ -84,6 +89,10 @@ export const updateJob = async (
 export const deleteJob = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
+        const job = await getRepository(Job).findOne(req.params.id);
+        if(!job) {
+            res.status(404).json({ message: "Not Found" });
+        }
         const deleteOrder = await createQueryBuilder()
             .delete()
             .from(Job)

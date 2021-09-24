@@ -32,8 +32,14 @@ export const switchDelivery = async (
 
             })
             .execute();
-        const statusId = createNewDelivery.identifiers[0].id;
-        console.log(statusId);
+        const deliveryId = createNewDelivery.identifiers[0].id;
+        await createQueryBuilder()
+            .update(DeliveryOrder)
+            .set({
+               driver: data.driverid,
+            })
+            .where("id = :id", { id: deliveryId })
+            .execute();
 
         // if(statusId == 2){
         //     await createQueryBuilder('delivery')
@@ -93,13 +99,13 @@ export const addDriverToOrder = async (req: Request, res: Response, next: NextFu
 
     try{
         const data = req.body;
-        const updateDeli = await createQueryBuilder()
+        const updateDeli = await getRepository(DeliveryOrder) 
+                                .createQueryBuilder()
                                 .update(DeliveryOrder)
                                 .set({ 
-                                    driver: data.driverId,
+                                    driver: data.driverid
                                 })
-                                .where('saleOrderId  = :saleOrderId',{saleOrderId: data.saleOrderId})
-                                .andWhere('statusId = :statusId',{statusId: data.statusId})
+                                .where('id = :id',{id : req.params.id})
                                 .execute();
         res.status(200).json({message: "success"});
     }

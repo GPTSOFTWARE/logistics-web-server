@@ -32,7 +32,7 @@ export const createRequest = async (
             .into(RequestOrder)
             .values(data)
             .execute();
-        res.status(200).json({ message: "success" });
+        res.status(201).json({ message: "created" });
     }
     catch (err) {
         console.log(err);
