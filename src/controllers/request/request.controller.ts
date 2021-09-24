@@ -9,6 +9,7 @@ export const getRequest = async (req: Request, res: Response): Promise<Response>
     const [data, total] = await getRepository(RequestOrder)
         .createQueryBuilder("request")
         .take(page_size)
+        .orderBy('request.createdAt', 'DESC')
         .skip((page - 1) * page_size)
         .getManyAndCount();
     return res.json({ total, data });

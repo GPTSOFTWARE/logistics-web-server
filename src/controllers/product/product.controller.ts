@@ -9,6 +9,7 @@ const getProducts = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(Product)
         .createQueryBuilder("product")
         .leftJoinAndSelect('products.unit', 'unit_id')
+        .orderBy('product.id', 'DESC')
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();

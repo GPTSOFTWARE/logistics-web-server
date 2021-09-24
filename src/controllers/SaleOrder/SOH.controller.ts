@@ -20,6 +20,7 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .leftJoinAndSelect('saleOrder.unit', 'unit')
             .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrders')
             .leftJoinAndSelect('deliveryOrders.status', 'status')
+            .orderBy('saleOrder.createdAt', 'DESC')
             // .take(page_size)
             // .skip((page - 1) * page_size)
             .getManyAndCount();
@@ -112,6 +113,7 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
     const listOrder = await getRepository(SaleOrder)
         .createQueryBuilder("order")
         .where("order.customerPhone = :phone", { phone: userId.phone })
+        .orderBy('order.createdAt', 'DESC')
         .getMany();
 
     if (!userId) {
