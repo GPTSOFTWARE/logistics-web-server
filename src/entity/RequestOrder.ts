@@ -20,28 +20,40 @@ export class RequestOrder extends BaseEntity implements IRequestOrder {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ 
+        type: "varchar",
+        length: "100",
+        nullable: false,
+    })
     fullname: string;
     
-    @Column()
+    @Column({ 
+        type: "varchar",
+        length: "11",
+        nullable: false
+    })
     phone: string;
 
-    @Column()
+    @Column({ 
+        type: "varchar",
+        length: "100",
+        nullable: true,
+    })
     email: string;
 
-    @Column()
+    @Column('text')
     address: string;
 
     @Column()
     typeProduct : string;
 
-    @Column()
+    @Column('decimal')
     weight: number;
 
     @Column()
     fastShip: boolean;
 
-    @Column()
+    @Column('text')
     note:string;
 
 

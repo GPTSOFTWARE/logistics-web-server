@@ -15,13 +15,25 @@ export class Contact extends BaseEntity implements IContact {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "50",
+        nullable: false,
+    })
     fullname: string;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "30",
+        nullable: true,
+    })
     email: string;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "11",
+        nullable: true,
+    })
     phone: string;
 
     @Column()

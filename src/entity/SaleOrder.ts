@@ -39,26 +39,42 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     id: number;
 
     // sender information
-    @Column()
+    @Column({ 
+        type:"varchar", 
+        length:"100"
+    })
     customerName: string;
 
     @Column()
     customerAddress: string;
 
-    @Column()
+    @Column({ 
+        type:"varchar", 
+        length:"11"
+    })
     customerPhone: string;
 
     // receiver information
-    @Column()
+    @Column({ 
+        "type":"varchar", 
+        length:"100"
+    })
     receiverName: string;
 
     @Column()
     receiverAddress: string;
 
-    @Column()
+    @Column({
+        "type":"varchar", 
+        length:"11"
+    })
     receiverPhone: string;
 
-    @Column()
+    @Column({ 
+        type:"varchar", 
+        length:"100",
+        nullable:true
+    })
     orderName: string;
 
     @Column({
@@ -74,10 +90,13 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @Column()
     quantity: number;
 
-    @Column()
+    @Column("float")
     totalPrice: number;
 
-    @Column()
+    @Column({ 
+        type:"text",
+        nullable:true
+    })
     notes: string;
 
     @ManyToOne(() => Category, (category: Category) => category.saleOrder)

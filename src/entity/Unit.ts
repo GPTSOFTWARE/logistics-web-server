@@ -13,7 +13,11 @@ export class Unit extends BaseEntity implements IUnit {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "100",
+        nullable: false,
+    })
     name: string;
 
     @OneToMany(() => Product, (product: Product) => product.unit)

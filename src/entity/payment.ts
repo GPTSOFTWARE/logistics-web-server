@@ -12,10 +12,18 @@ export class PaymentMethod extends BaseEntity implements IPaymentMethod {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ 
+        type: "varchar",
+        length: "20",
+        nullable: false
+    })
     codePayment: string;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "100",
+        nullable: false
+    })
     namePayment: string;
 
 

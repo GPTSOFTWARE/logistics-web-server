@@ -21,7 +21,6 @@ export class Job extends BaseEntity implements IJob {
     id: number;
 
     @Index({ fulltext: true })
-
     @Column()
     nameJob: string;
 
@@ -31,19 +30,27 @@ export class Job extends BaseEntity implements IJob {
     @Column('decimal')
     salaryAfter: number;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "50",
+        nullable: true,
+    })
     degree: string;
 
-    @Column()
+    @Column('text')
     address: string;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "50",
+        nullable: false,
+    })
     position: string;
 
     @Column()
     quantity: number;
 
-    @Column()
+    @Column('text')
     require: string;
 
     @Column()

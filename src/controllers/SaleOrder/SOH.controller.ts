@@ -217,6 +217,12 @@ const restoreOrder = async (req: Request, res: Response, next: NextFunction) => 
     try {
 
         const restoreOrder = await getRepository(SaleOrder).restore(req.params.id);
+
+        const restoreDelivery = await createQueryBuilder()
+                                    .restore()
+                                    .from(DeliveryOrder)
+                                    .where('saleOrderId = :id', {id : req.params.id})
+                                    .execute();
         res.json({ message: "success" });
     }
     catch (err) {
@@ -249,6 +255,12 @@ const deleteMulti = async (req: Request, res: Response) => {
                 .from(SaleOrder)
                 .where("id IN(:...ids)", { ids: idList })
                 .execute();
+
+        const deleteDeli = await createQueryBuilder()
+                                .softDelete()
+                                .from(DeliveryOrder)
+                                .where('saleOrderId IN(:...ids)',{ids: idList})
+                                .execute();        
         res.status(200).json({ message: "success" });
     }
     catch (err) {
@@ -294,11 +306,25 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
 
 export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const order = await getRepository(DeliveryOrder)
-            .createQueryBuilder('order')
-            .where('order.statusId = :id', { id: req.params.id })
-            .getCount(); // muon hien them order thi dung getManyAndCount()
-        res.status(200).json(order);
+        const statusid = req.body.statusId;
+
+        if(statusid == 1){ // if status equal 1(LK), find saleOrder loop once
+            const order = await getRepository(DeliveryOrder)
+                            .createQueryBuilder('order')
+                            .select('order.saleOrderId')
+                            .groupBy('order.saleOrderId')
+                            .having("COUNT(order.saleOrderId) = :number", {number : 1})
+                            .getRawMany();
+            res.status(200).json({order: order, total: order.length});
+
+        }
+        else if(statusid == 3){ // if status equal 3(DG), find delivery which has status equal 3
+                const order = await getRepository(DeliveryOrder)
+                .createQueryBuilder('order')
+                .where('order.statusId = :id', { id: 3})
+                .getManyAndCount();// muon hien them order thi dung getManyAndCount()
+                res.status(200).json({order: order, total: order.length});
+        }
     }
     catch (err) {
         console.log(err);
