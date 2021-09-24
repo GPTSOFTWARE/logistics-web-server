@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Status } from "./Status";
 import { Driver } from "./Driver";
 import { SaleOrder } from "./SaleOrder";
@@ -64,5 +64,8 @@ export class DeliveryOrder extends BaseEntity implements IDeliveryOrder {
     public updateDates() {
         this.createdAt = new Date();
     }
+
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
 }

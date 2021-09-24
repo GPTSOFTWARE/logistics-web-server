@@ -16,7 +16,11 @@ export class Driver extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "50",
+        nullable: false,
+    })
     name: string;
 
 
@@ -29,7 +33,12 @@ export class Driver extends BaseEntity {
     @Column()
     age: number;
 
-    @Column()
+    @Column({
+        type: "varchar",
+        length: "20",
+        nullable: false,
+        unique:true,
+    })
     idenityCard: string;
 
     @Column({

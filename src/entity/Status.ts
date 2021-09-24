@@ -18,7 +18,11 @@ export class Status extends BaseEntity implements IStatus{
     @Column({ nullable: false })
     code: string;
 
-    @Column()
+    @Column({ 
+        type: "varchar",
+        length: "100",
+        nullable: false,
+    })
     name: string;
 
     @OneToMany(() =>DeliveryOrder, deliveryOrder => deliveryOrder.status)
