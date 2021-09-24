@@ -32,12 +32,12 @@ const createDriver = async (
 
         const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
         if (findDriver) {
-            return res.status(400).send('Tài xế đã tồn tại');
+            return res.send('Tài xế đã tồn tại');
         }
         const createDriver = await getRepository(Driver).create(data);
         const saveDriver = await getRepository(Driver).save(createDriver);
 
-        res.status(200).json({ message: 'success' });
+        res.status(201).json({ message: 'created' });
     }
     catch (err) {
         console.error(err);
@@ -61,14 +61,18 @@ export const getDriverById = async (req: Request, res: Response, next: NextFunct
 
 export const updateDriver = async (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
     try {
+
+        const driver = await getRepository(Driver).findOne(req.params.id);
+        if(!driver){
+            res.status(404).send({ message: "Not Found" });
+        }
         const data = req.body;
         const updateDriver = await createQueryBuilder('driver')
             .update(Driver)
             .set(data)
             .where('driver.id = :id', { id: req.params.id })
             .execute();
-
-        return res.status(200).json({ message: "update successful!" });
+            res.status(200).json({ message: "update successful!" });
     }
     catch (err) {
         console.error(err);
@@ -97,7 +101,7 @@ export const restoreDriver = async (req: Request, res: Response, next: NextFunct
     try {
 
         const restoreOrder = await getRepository(Driver).restore(req.params.id);
-        res.json({ message: "success" });
+        res.status(200).json({ message: "success" });
     }
     catch (err) {
         console.log(err);
