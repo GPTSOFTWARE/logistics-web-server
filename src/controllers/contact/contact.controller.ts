@@ -7,6 +7,7 @@ export const getContact = async (req: Request, res: Response): Promise<Response>
     const page_size = +req?.query?.page_size || 10;
     const [data, total] = await getRepository(Contact)
         .createQueryBuilder("contact")
+        .orderBy('contact.id', 'DESC')
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();
@@ -15,6 +16,7 @@ export const getContact = async (req: Request, res: Response): Promise<Response>
 export const getAllContact = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(Contact)
         .createQueryBuilder("contact")
+        .orderBy('contact.id', 'DESC')
         .getManyAndCount();
     return res.json({ total, data });
 };

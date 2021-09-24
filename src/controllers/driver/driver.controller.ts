@@ -8,6 +8,7 @@ const getDrivers = async (req: Request, res: Response): Promise<Response> => {
     const page_size = +req?.query?.page_size || 10;
     const [data, total] = await getRepository(Driver)
         .createQueryBuilder("driver")
+        .orderBy('driver.createdAt', 'DESC')
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();
@@ -16,6 +17,7 @@ const getDrivers = async (req: Request, res: Response): Promise<Response> => {
 const getAllDrivers = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(Driver)
         .createQueryBuilder("driver")
+        .orderBy('driver.createdAt', 'DESC')
         .getManyAndCount();
     return res.json({ total, data });
 };

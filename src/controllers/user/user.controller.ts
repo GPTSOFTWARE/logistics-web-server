@@ -13,6 +13,7 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const page_size = +req?.query?.page_size || 10;
   const [data, total] = await getRepository(Account)
     .createQueryBuilder("user")
+    .orderBy('user.createdAt', 'DESC')
     .take(page_size)
     .skip((page - 1) * page_size)
     .getManyAndCount();
@@ -21,6 +22,7 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
 const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
   const [data, total] = await getRepository(Account)
     .createQueryBuilder("user")
+    .orderBy('user.createdAt', 'DESC')
     .getManyAndCount();
   return res.json({ total, data });
 };

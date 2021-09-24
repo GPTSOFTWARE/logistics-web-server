@@ -10,6 +10,7 @@ export const getJob = async (req: Request, res: Response): Promise<Response> => 
     const [data, total] = await getRepository(Job)
         .createQueryBuilder("job")
         .where('job.nameJob ILIKE :name', {name : `%${name}%`})
+        .orderBy('job.createdAt', 'DESC')
         .take(page_size)
         .skip((page - 1) * page_size)
         .getManyAndCount();
@@ -18,6 +19,7 @@ export const getJob = async (req: Request, res: Response): Promise<Response> => 
 export const getAllJob = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(Job)
         .createQueryBuilder("job")
+        .orderBy('job.createdAt', 'DESC')
         .getManyAndCount();
     return res.json({ total, data });
 };
