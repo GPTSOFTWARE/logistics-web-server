@@ -1,6 +1,6 @@
 // const User = require('../entity/User');
 import { NextFunction, Request, Response } from "express";
-import { createQueryBuilder, getRepository } from "typeorm";
+import { createQueryBuilder, getRepository, Not } from "typeorm";
 import { Account } from "../../entity/Users";
 import {
   comparePassword,
@@ -28,19 +28,32 @@ const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(Account).findOne(req.params.id);
-  return res.json(user);
+  try{
+    const user = await getRepository(Account).findOne(req.params.id);
+    return res.status(200).json(user);
+  }
+  catch(err){
+    console.log(err);
+    res.status(400).send("Not Found");
+  }
 };
 
 const updateUser = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getRepository(Account).findOne(req.params.id);
-  if (user) {
-    getRepository(Account).merge(user, req.body); //get body request
-    const result = await getRepository(Account).save(user);
-    return res.json(result);
+  
+  try{
+        const user = await getRepository(Account).findOne(req.params.id);
+        if (user) {
+        getRepository(Account).merge(user, req.body); //get body request
+        const result = await getRepository(Account).save(user);
+        return res.json(result);
+        }
+        else{
+          res.status(400).send("Not Found");
+        }
   }
-
-  return res.status(404).json({ message: "User Not Found" });
+  catch (err) {
+    console.log(err);
+  }
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
