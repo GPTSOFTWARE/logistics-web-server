@@ -1,7 +1,8 @@
-import { BaseEntity, BeforeInsert, Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Status } from "./Status";
 import { Driver } from "./Driver";
 import { SaleOrder } from "./SaleOrder";
+import { DeliveryHistory } from "./DeliveryHistory";
 
 export enum typeShip {
     FAST = 'giao hàng nhanh',
@@ -32,7 +33,35 @@ export class DeliveryOrder extends BaseEntity implements IDeliveryOrder {
         nullable: true,
         default: () => "CURRENT_TIMESTAMP" // Pass prop datatype require is String Boolean Number
     })
+    public updatedAt: Date;
+
+    @Column({
+        type: "timestamp with time zone",
+        nullable: true,
+        default: () => "CURRENT_TIMESTAMP" // Pass prop datatype require is String Boolean Number
+    })
     public createdAt: Date;
+
+    @Column({ nullable: true })
+    public updatedBy: number;
+
+    @Column({ nullable: true })
+    public createdBy: number;
+
+    @BeforeUpdate()
+    public setUpdatedAt() {
+        this.updatedAt = new Date();
+    }
+
+    @BeforeInsert()
+    public updateDates() {
+        // const time = Math.floor(Date.now() / 1000);
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @DeleteDateColumn()
+    deletedAt?: Date;
 
     @Column({
         type: "enum",
@@ -60,12 +89,8 @@ export class DeliveryOrder extends BaseEntity implements IDeliveryOrder {
     @ManyToOne(() => Status, (status: Status) => status.deliveryOrders, { onDelete: 'CASCADE' })
     status!: Status;
 
-    @BeforeInsert()
-    public updateDates() {
-        this.createdAt = new Date();
-    }
+    @OneToMany(() => DeliveryHistory, (delivery : DeliveryHistory) => delivery.deliveryOrder, { onDelete: 'CASCADE'})
+    deliveryHistory!: DeliveryHistory[];
 
-    @DeleteDateColumn()
-    deletedAt?: Date;
 
 }
