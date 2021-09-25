@@ -121,7 +121,6 @@ const register = async (req: Request, res: Response): Promise<Response> => {
       return res.status(400).send('Phone number already exists!');
     }
 
-
     userData.password = await hashPassword(userData.password);
     const newUser = await getRepository(Account).create(userData);
     const saveUser = await getRepository(Account).save(newUser);
@@ -147,13 +146,13 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
   const validPassword = await comparePassword(user.password, password);
 
   if (!validPassword) {
-    return res.status(404).json({ code: 404, message: 'wrong password' });
+    return res.status(400).json({ code: 400, message: 'Password not match' });
   }
 
   if (user.role.valueOf() === 'admin') {
 
     const token = await generatorToken(user);
-    res.status(200).json({ code: 200, token: token, message: 'login successful' });
+    res.status(200).json({ code: 200, token: token, message: 'Login successful' });
 
   }
   else {

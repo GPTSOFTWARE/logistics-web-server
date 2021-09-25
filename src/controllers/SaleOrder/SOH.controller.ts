@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createQueryBuilder, getRepository, InsertResult } from "typeorm";
 import { isForOfStatement } from "typescript";
+import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { IProduct, Product } from "../../entity/Product";
 import { ISaleOrder, SaleOrder } from "../../entity/SaleOrder";
@@ -37,8 +38,11 @@ const createOrder = async (
     try {
         const data = req.body;
         const { products, typeShip, ...order } = data;
-        if(order.customerPhone.length <10 || order.receiverPhone.length < 10) {
-            res.status(400).json({ message:"Số điện thoại không hợp lê"});
+        if(order.customerPhone.length <10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
+            res.status(400).json({ message:"invalid phone number"});
+        }
+        else if(order.totalPrice < 0 || order.quantity < 0 ){
+            res.status(400).json({ message:"invalid number"});
         }
         const result = await getRepository(SaleOrder)
             .createQueryBuilder('order')
@@ -73,13 +77,28 @@ const createOrder = async (
             .execute();
 
         // //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
-        await createQueryBuilder()
+        const delivery =   await createQueryBuilder()
             .insert()
             .into(DeliveryOrder)
             .values({
                 saleOrderId: order_id,
                 statusId: 1,
                 typeShip: typeShip,
+            })
+            .execute();
+
+        const deliveryId: number = delivery.identifiers[0].id; // take deliveryid just created
+
+        const findDeli = await getRepository(DeliveryOrder).findOne(deliveryId);
+
+        // add delivery just created into history
+
+        await createQueryBuilder()
+            .insert()
+            .into(DeliveryHistory)
+            .values({
+                deliveryOrderId: deliveryId,
+                status: findDeli.statusId.toString()
             })
             .execute();
         res.status(201).json({ message: 'created' });
@@ -274,7 +293,7 @@ const deleteMulti = async (req: Request, res: Response) => {
 }
 
 
-export const getSaleOrderByTotalPrice = async (req: Request, res: Response, next: NextFunction) => {
+export const getSaleOrderByOrderByTotalPrice = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const order = await getRepository(SaleOrder)
@@ -311,25 +330,12 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
 
 export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const statusid = req.body.statusId;
 
-        if(statusid == 1){ // if status equal 1(LK), find saleOrder loop once
-            const order = await getRepository(DeliveryOrder)
-                            .createQueryBuilder('order')
-                            .select('order.saleOrderId')
-                            .groupBy('order.saleOrderId')
-                            .having("COUNT(order.saleOrderId) = :number", {number : 1})
-                            .getRawMany();
-            res.status(200).json({order: order, total: order.length});
-
-        }
-        else if(statusid == 3){ // if status equal 3(DG), find delivery which has status equal 3
-                const order = await getRepository(DeliveryOrder)
-                .createQueryBuilder('order')
-                .where('order.statusId = :id', { id: 3})
-                .getManyAndCount();// muon hien them order thi dung getManyAndCount()
-                res.status(200).json({order: order, total: order.length});
-        }
+        const order = await getRepository(DeliveryOrder)
+                                        .createQueryBuilder('deli')
+                                        .where('deli.statusId = :id', {id : req.params.id})
+                                        .getManyAndCount();
+        res.status(200).json({order: order});
     }
     catch (err) {
         console.log(err);

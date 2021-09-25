@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import moment from "moment";
-import { createQueryBuilder, getRepository } from "typeorm";
+import { createQueryBuilder,  getRepository } from "typeorm";
+import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
+import { Driver } from "../../entity/Driver";
 
 export const switchDelivery = async (
     req: Request<any, any, any, any>,
@@ -19,49 +21,37 @@ export const switchDelivery = async (
         var newDate = new Date();
         var date = moment(newDate);
         if (findSaleOrder) {
-            return res.json({ message: 'Đơn hàng đang ở trong trạng thái này' })
+            return res.json({ message: 'Đơn hàng đang ở trong trạng thái này' }); //  delivery exists !
         }
-        const createNewDelivery = await createQueryBuilder()
-            .insert()
-            .into(DeliveryOrder)
-            .values({
-                statusId: data.statusId,
-                saleOrderId: data.saleOrderId,
-                typeShip: data.typeShip,
-                plannedTime: date.add(8, 'h')
+        //check driverexist ;
+        const checkDriver = await getRepository(Driver).findOne(data.driverid);
+        if(!checkDriver){
+            res.status(404).json({message: 'Driver Not Found'});
+        }
+        else{
+            //update status delivery
+                const updateStatusDelivery = await createQueryBuilder()
+                .update(DeliveryOrder)
+                .set({
+                    statusId: data.statusId,
+                    plannedTime: date.add(8, 'h'),
+                    typeShip: data.typeShip,
+                    driver: data.driverid,
+                })
+                .where("id = :id", { id: req.params.id })
+                .execute();
+                //after update new status, add new status of delivery into delivery history.
+                await createQueryBuilder()
+                            .insert()
+                            .into(DeliveryHistory)
+                            .values({
+                                    deliveryOrderId: req.params.id,
+                                    status: data.statusId
+                                    })
+                            .execute();
+                res.status(200).json({ message: 'Cập nhật tình trạng đơn hàng thành công' });
 
-            })
-            .execute();
-        const deliveryId = createNewDelivery.identifiers[0].id;
-        await createQueryBuilder()
-            .update(DeliveryOrder)
-            .set({
-               driver: data.driverid,
-            })
-            .where("id = :id", { id: deliveryId })
-            .execute();
-
-        // if(statusId == 2){
-        //     await createQueryBuilder('delivery')
-        //             .update(SaleOrder)
-        //             .set({
-        //                 plannedTime: createNewDelivery.identifiers[5].plannedTime
-        //             })
-        //             .where('delivery.statusId = :Id', {Id: 1})
-        //             .andWhere('delivery.saleOrderId = :orderId', {orderId: data.saleOrderId})
-        //             .execute();
-        // }
-        // else if(statusId == 3){
-        //     await createQueryBuilder('delivery')
-        //     .update(SaleOrder)
-        //     .set({
-        //         plannedTime: new Date()
-        //     })
-        //     .execute();
-        // }
-        console.log(createNewDelivery);
-        res.status(200).json({ message: 'Cập nhật tình trạng đơn hàng thành công' });
-
+        }
     }
     catch (error) {
         console.log(error);
@@ -91,25 +81,6 @@ export const getDeliveryOrderById = async (req: Request, res: Response, next: Ne
         res.json(delivery);
     }
     catch (err) {
-        console.error(err);
-    }
-}
-
-export const addDriverToOrder = async (req: Request, res: Response, next: NextFunction) =>{
-
-    try{
-        const data = req.body;
-        const updateDeli = await getRepository(DeliveryOrder) 
-                                .createQueryBuilder()
-                                .update(DeliveryOrder)
-                                .set({ 
-                                    driver: data.driverid
-                                })
-                                .where('id = :id',{id : req.params.id})
-                                .execute();
-        res.status(200).json({message: "success"});
-    }
-    catch(err){
         console.error(err);
     }
 }
