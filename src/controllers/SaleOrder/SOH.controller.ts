@@ -38,6 +38,7 @@ const createOrder = async (
     try {
         const data = req.body;
         const { products, typeShip, ...order } = data;
+        
         if(order.customerPhone.length <10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
             res.status(400).json({ message:"invalid phone number"});
         }
