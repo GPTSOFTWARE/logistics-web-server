@@ -36,8 +36,14 @@ const createOrder = async (
     try {
         const data = req.body;
         const { products, typeShip, ...order } = data;
+<<<<<<< HEAD
         if (order.customerPhone.length < 10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
             res.status(400).json({ message: "invalid phone number" });
+=======
+        
+        if(order.customerPhone.length <10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
+            res.status(400).json({ message:"invalid phone number"});
+>>>>>>> 2ad0b59840a39731bfd82ef7dd9ffc720629f987
         }
         else if (order.totalPrice < 0 || order.quantity < 0) {
             res.status(400).json({ message: "invalid number" });

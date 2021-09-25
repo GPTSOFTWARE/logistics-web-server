@@ -62,7 +62,7 @@ export const getDriverById = async (req: Request, res: Response, next: NextFunct
 export const updateDriver = async (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
     try {
 
-        const driver = await getRepository(Driver).findOne(req.params.id);
+        const driver = await getRepository(Driver).findOne(req.params.id); // tìm kiềm theo id;
         if(!driver){
             res.status(404).send({ message: "Not Found" });
         }
@@ -99,7 +99,7 @@ export const deleteDriver = async (req: Request, res: Response, next: NextFuncti
 
 export const restoreDriver = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
+        
         const restoreOrder = await getRepository(Driver).restore(req.params.id);
         res.status(200).json({ message: "success" });
     }

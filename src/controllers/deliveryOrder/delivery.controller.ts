@@ -1,6 +1,6 @@
 
 import { Request, Response, NextFunction } from "express";
-import { getRepository } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { Status } from "../../entity/Status";
@@ -51,6 +51,34 @@ export const getHistoryDelivery = async (req: Request, res: Response, next: Next
         res.status(200).json(delivery);
     }
     catch(err) {
+        console.log(err);
+    }
+}
+
+export const deleteDelivery = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { idList } = req.body;
+        const deleteDelivery = await createQueryBuilder()
+            .softDelete()
+            .from(DeliveryOrder)
+            .where("id IN(:...ids)", { ids: idList })
+            .execute();
+        res.status(200).json({ message: "success" });
+    }
+
+    catch (err) {
+        console.error(err);
+    }
+}
+
+export const restoreDelivery = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        
+        const restoreOrder = await getRepository(DeliveryOrder).restore(req.params.id);
+        res.status(200).json({ message: "success" });
+    }
+    catch (err) {
         console.log(err);
     }
 }
