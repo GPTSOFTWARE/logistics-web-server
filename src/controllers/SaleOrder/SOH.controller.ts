@@ -36,16 +36,11 @@ const createOrder = async (
     try {
         const data = req.body;
         const { products, typeShip, ...order } = data;
-<<<<<<< HEAD
-        if (order.customerPhone.length < 10 || order.receiverPhone.length < 10) {
-            res.status(400).json({ message: "Số điện thoại không hợp lê" });
-=======
-        if(order.customerPhone.length <10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
-            res.status(400).json({ message:"invalid phone number"});
+        if (order.customerPhone.length < 10 || order.receiverPhone.length < 10 || order.customerPhone.length > 11 || order.receiverPhone.length > 11) {
+            res.status(400).json({ message: "invalid phone number" });
         }
-        else if(order.totalPrice < 0 || order.quantity < 0 ){
-            res.status(400).json({ message:"invalid number"});
->>>>>>> 1bb2154581c53a89073bafa001070f781cc8aa88
+        else if (order.totalPrice < 0 || order.quantity < 0) {
+            res.status(400).json({ message: "invalid number" });
         }
         const result = await getRepository(SaleOrder)
             .createQueryBuilder('order')
@@ -80,7 +75,7 @@ const createOrder = async (
             .execute();
 
         // //add delivery order -- after create a order, we set it's delivery equals 1 (LK); 
-        const delivery =   await createQueryBuilder()
+        const delivery = await createQueryBuilder()
             .insert()
             .into(DeliveryOrder)
             .values({
@@ -334,31 +329,11 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
 export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-<<<<<<< HEAD
-        if (statusid == 1) { // if status equal 1(LK), find saleOrder loop once
-            const order = await getRepository(DeliveryOrder)
-                .createQueryBuilder('order')
-                .select('order.saleOrderId')
-                .groupBy('order.saleOrderId')
-                .having("COUNT(order.saleOrderId) = :number", { number: 1 })
-                .getRawMany();
-            res.status(200).json({ order: order, total: order.length });
-
-        }
-        else if (statusid == 3) { // if status equal 3(DG), find delivery which has status equal 3
-            const order = await getRepository(DeliveryOrder)
-                .createQueryBuilder('order')
-                .where('order.statusId = :id', { id: 3 })
-                .getManyAndCount();// muon hien them order thi dung getManyAndCount()
-            res.status(200).json({ order: order, total: order.length });
-        }
-=======
         const order = await getRepository(DeliveryOrder)
-                                        .createQueryBuilder('deli')
-                                        .where('deli.statusId = :id', {id : req.params.id})
-                                        .getManyAndCount();
-        res.status(200).json({order: order});
->>>>>>> 1bb2154581c53a89073bafa001070f781cc8aa88
+            .createQueryBuilder('deli')
+            .where('deli.statusId = :id', { id: req.params.id })
+            .getManyAndCount();
+        res.status(200).json({ order: order });
     }
     catch (err) {
         console.log(err);
