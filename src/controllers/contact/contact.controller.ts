@@ -26,7 +26,20 @@ export const createContact = async (
     res: Response,
     next: NextFunction) => {
     try {
+        const mailFormat =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; //email format chuẩn
+        const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
         const data = req.body;
+        
+        if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+            res.status(400).json({message:"Invalid Phone number"});
+        }
+        else if(!mailFormat.test(data.email)){
+           res.status(400).json({message:"Invalid Email"})
+       }
+       else if(data.fullname ==""||data.fullname==null){
+        res.status(400).json({message:"Please not empty your name"});
+
+       }
         const newContact = await createQueryBuilder()
             .insert()
             .into(Contact)

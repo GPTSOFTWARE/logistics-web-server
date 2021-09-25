@@ -29,6 +29,15 @@ const createDriver = async (
     next: NextFunction) => {
     try {
         const data = req.body;
+        const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
+        if(data.name ==null || data.name==""){
+            res.status(400).json({ message: "Name is not empty" });
+        }
+        else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+            res.status(400).json({message:"Invalid Phone number"});
+        }else if(isNaN(data.age)||data.age > 60||data.age <18){
+            res.status(400).json({message:"invalid age"});
+        }
 
         const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
         if (findDriver) {
@@ -46,6 +55,7 @@ const createDriver = async (
 
 export const getDriverById = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        
         const driver = await getRepository(Driver).findOne(req.params.id);
         if (driver) {
             res.status(200).json(driver);
@@ -67,6 +77,16 @@ export const updateDriver = async (req: Request<any, any, any, any>, res: Respon
             res.status(404).send({ message: "Not Found" });
         }
         const data = req.body;
+        const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
+        if(data.name ==null || data.name==""){
+            res.status(400).json({ message: "update fail Name is not empty" });
+        }
+        else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+            res.status(400).json({message:"update fail Invalid Phone number"});
+        }else if(isNaN(data.age)||data.age > 60||data.age <18){
+            res.status(400).json({message:"update fail invalid age"});
+        }
+
         const updateDriver = await createQueryBuilder('driver')
             .update(Driver)
             .set(data)

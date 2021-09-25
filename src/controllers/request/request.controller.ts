@@ -27,6 +27,16 @@ export const createRequest = async (
     next: NextFunction) => {
     try {
         const data = req.body;
+        const mailFormat =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; //email format chuẩn
+        const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
+
+        if (data.fullname== null || data.fullname==""){
+            res.status(400).json({ message: "name is not empty"});
+        }else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+            res.status(400).json({message:"Invalid Phone number"});
+        }else if(!mailFormat.test(data.email)){
+            res.status(400).json({message:"Invalid Email"});
+        }
         const newRequestOrder = await createQueryBuilder()
             .insert()
             .into(RequestOrder)
