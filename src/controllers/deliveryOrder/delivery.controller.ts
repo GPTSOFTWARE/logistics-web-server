@@ -23,34 +23,34 @@ export const getDeliveryById = async (req: Request, res: Response, next: NextFun
     try {
         const id = req.params.id;
         const delivery = await getRepository(Status).findOne(id);
-        if(delivery){
+        if (delivery) {
             res.json(delivery);
         }
-        else{
+        else {
             res.status(404).send("Not Found");
         }
-       
+
     }
     catch (err) {
         console.error(err);
     }
 }
 
-export const getHistoryDelivery = async (req: Request, res: Response, next: NextFunction) =>{ //see history delivery
-    try{
+export const getHistoryDelivery = async (req: Request, res: Response, next: NextFunction) => { //see history delivery
+    try {
         const delivery = await getRepository(DeliveryOrder)
-                                            .createQueryBuilder('deli')
-                                            .leftJoinAndSelect('deli.driver','driver')
-                                            .leftJoinAndSelect('deli.deliveryHistory', 'delivery')
-                                            .where('deli.id = :id ', {id : req.params.id})
-                                            .getMany();
-        if(!delivery){
-            res.status(404).json({message: "NOT FOUND"})
+            .createQueryBuilder('deli')
+            .leftJoinAndSelect('deli.driver', 'driver')
+            .leftJoinAndSelect('deli.deliveryHistory', 'delivery')
+            .where('deli.id = :id ', { id: req.params.id })
+            .getMany();
+        if (!delivery) {
+            res.status(404).json({ message: "NOT FOUND" })
         }
 
         res.status(200).json(delivery);
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
     }
 }
@@ -74,7 +74,7 @@ export const deleteDelivery = async (req: Request, res: Response, next: NextFunc
 
 export const restoreDelivery = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        
+
         const restoreOrder = await getRepository(DeliveryOrder).restore(req.params.id);
         res.status(200).json({ message: "success" });
     }

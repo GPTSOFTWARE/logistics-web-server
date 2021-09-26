@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import moment from "moment";
-import { createQueryBuilder,  getRepository } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
 import { Driver } from "../../entity/Driver";
@@ -11,6 +11,7 @@ export const switchDelivery = async (
     next: NextFunction) => {
     try {
         const data = req.body;
+        console.log({ data });
 
         const findSaleOrder = await getRepository(DeliveryOrder)
             .createQueryBuilder('delivery')
@@ -21,35 +22,36 @@ export const switchDelivery = async (
         var newDate = new Date();
         var date = moment(newDate);
         if (findSaleOrder) {
-            return res.json({ message: 'Đơn hàng đang ở trong trạng thái này' }); //  delivery exists !
+            return res.status(409).json({ message: 'Đơn hàng đang ở trong trạng thái này' }); //  delivery exists !
         }
         //check driverexist ;
-        const checkDriver = await getRepository(Driver).findOne(data.driverid);
-        if(!checkDriver){
-            res.status(404).json({message: 'Driver Not Found'});
+        const checkDriver = await getRepository(Driver).findOne(data.driverId);
+        if (!checkDriver) {
+            res.status(404).json({ message: 'Driver Not Found' });
         }
-        else{
+        else {
             //update status delivery
-                const updateStatusDelivery = await createQueryBuilder()
+            const updateStatusDelivery = await createQueryBuilder()
                 .update(DeliveryOrder)
                 .set({
                     statusId: data.statusId,
                     plannedTime: date.add(8, 'h'),
                     typeShip: data.typeShip,
-                    driver: data.driverid,
+                    driver: data.driverId,
                 })
                 .where("id = :id", { id: req.params.id })
                 .execute();
-                //after update new status, add new status of delivery into delivery history.
-                await createQueryBuilder()
-                            .insert()
-                            .into(DeliveryHistory)
-                            .values({
-                                    deliveryOrderId: req.params.id,
-                                    status: data.statusId
-                                    })
-                            .execute();
-                res.status(200).json({ message: 'Cập nhật tình trạng đơn hàng thành công' });
+            //after update new status, add new status of delivery into delivery history.
+
+            await createQueryBuilder()
+                .insert()
+                .into(DeliveryHistory)
+                .values({
+                    deliveryOrderId: req.params.id,
+                    status: data?.status?.name
+                })
+                .execute();
+            res.status(200).json({ message: 'Cập nhật tình trạng đơn hàng thành công' });
 
         }
     }
@@ -65,6 +67,7 @@ export const getDeliveryOrder = async (req: Request, res: Response, next: NextFu
             .leftJoinAndSelect('DO.driver', 'driver')
             .leftJoinAndSelect('DO.saleOrder', 'Orders')
             .leftJoinAndSelect('DO.status', 'status')
+            .leftJoinAndSelect('DO.deliveryHistory', 'delivery')
             .getManyAndCount();
 
         return res.json({ total, data });
