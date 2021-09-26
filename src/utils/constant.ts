@@ -1,7 +1,7 @@
 import * as env from "dotenv";
 import { getEnv } from "./helpers";
 env.config()
-export const IDFORMAT = '1000000000';
+export const IDFORMAT = 1000000000;
 export const PORT = getEnv('PORT') || 3000;
 export const DB_HOST = getEnv('DB_HOST');
 export const DB_NAME = getEnv('DB_NAME');
