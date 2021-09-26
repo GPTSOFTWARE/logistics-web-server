@@ -10,6 +10,7 @@ export const generatorToken = async (user: any) => {
     subject: `${user.id}`,
     expiresIn: '7d',
   });
+  token = `Bearer ${token}`;
   return token;
 };
 
