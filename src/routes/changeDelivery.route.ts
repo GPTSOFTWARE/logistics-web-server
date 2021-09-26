@@ -4,10 +4,10 @@ import { switchDelivery, getDeliveryOrder, getDeliveryOrderById } from "../contr
 
 const router = Router();
 
-router.get('/deliveryorder', getDeliveryOrder);
-router.get('/deliveryorder/:id', getDeliveryOrderById);
-router.get('/delivery', getDelivery);
-router.get('/delivery/:id', getDeliveryById);
+router.get('/delivery', getDeliveryOrder);
+router.get('/delivery/:id', getDeliveryOrderById);
+router.get('/status', getDelivery);
+router.get('/status/:id', getDeliveryById);
 router.get('/delivery/history/:id', getHistoryDelivery);
 router.put('/delivery/update/:id', switchDelivery);
 router.patch("/delivery/restore/:id", restoreDelivery);

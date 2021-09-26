@@ -71,6 +71,13 @@ export class Job extends BaseEntity implements IJob {
     })
     createdAt: Date;
 
+    @Column({
+        type: "timestamp with time zone",
+        nullable: true,
+        default: () => "CURRENT_TIMESTAMP"
+    })
+    expirationDate: Date;
+
     @BeforeUpdate()
     public setUpdatedAt() {
         this.updatedAt = new Date();
