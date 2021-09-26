@@ -28,28 +28,28 @@ const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
-  try{
+  try {
     const user = await getRepository(Account).findOne(req.params.id);
     return res.status(200).json(user);
   }
-  catch(err){
+  catch (err) {
     console.log(err);
     res.status(400).send("Not Found");
   }
 };
 
 const updateUser = async (req: Request, res: Response): Promise<Response> => {
-  
-  try{
-        const user = await getRepository(Account).findOne(req.params.id);
-        if (user) {
-        getRepository(Account).merge(user, req.body); //get body request
-        const result = await getRepository(Account).save(user);
-        return res.json(result);
-        }
-        else{
-          res.status(400).send("Not Found");
-        }
+
+  try {
+    const user = await getRepository(Account).findOne(req.params.id);
+    if (user) {
+      getRepository(Account).merge(user, req.body); //get body request
+      const result = await getRepository(Account).save(user);
+      return res.json(result);
+    }
+    else {
+      res.status(400).send("Not Found");
+    }
   }
   catch (err) {
     console.log(err);
@@ -106,14 +106,14 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     return res.status(404).json({ code: 404, message: 'login false' });
   }
   const token = await generatorToken(user);
-  res.status(200).json({ code: 200, token: token, message: 'login successful', name: user.fullname });
+  res.status(200).json({ code: 200, token: token, user, message: 'login successful', name: user.fullname });
 
 }
 
 
 const register = async (req: Request, res: Response): Promise<Response> => {
 
-  try{
+  try {
     const userData = req.body;
     var checkPhone = await getRepository(Account).findOne({ phone: userData.phone });
 
@@ -152,7 +152,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
   if (user.role.valueOf() === 'admin') {
 
     const token = await generatorToken(user);
-    res.status(200).json({ code: 200, token: token, message: 'Login successful' });
+    res.status(200).json({ code: 200, token: token, user, message: 'Login successful' });
 
   }
   else {
