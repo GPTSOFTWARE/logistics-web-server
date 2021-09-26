@@ -4,6 +4,7 @@ import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
 import { Driver } from "../../entity/Driver";
+import { Status } from "../../entity/Status";
 
 export const switchDelivery = async (
     req: Request<any, any, any, any>,
@@ -18,7 +19,10 @@ export const switchDelivery = async (
             .where('delivery.saleOrderId = :deliId', { deliId: data.saleOrderId })
             .andWhere('delivery.statusId = :statusId', { statusId: data.statusId })
             .getOne();
-        // console.log(findSaleOrder);
+        const findStatus = await getRepository(Status)
+            .createQueryBuilder('status')
+            .andWhere('status.id = :id', { id: data.statusId })
+            .getOne();
         var newDate = new Date();
         var date = moment(newDate);
         if (findSaleOrder) {
@@ -48,7 +52,7 @@ export const switchDelivery = async (
                 .into(DeliveryHistory)
                 .values({
                     deliveryOrderId: req.params.id,
-                    status: data?.status?.name
+                    status: findStatus?.name
                 })
                 .execute();
             res.status(200).json({ message: 'Cập nhật tình trạng đơn hàng thành công' });
