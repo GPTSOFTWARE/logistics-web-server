@@ -12,9 +12,9 @@ export const searchingOrder = async (req: Request, res: Response, next: NextFunc
         const {customerPhone , name, date} = req.body;
         console.log(customerPhone, name, date);
 
-        const reqName = name.toString().toLowerCase();
+        const reqName = name.toLowerCase();
         const parseDate = Date.parse(date.toString());
-        const date2 = moment(parseDate).format("MMM Do YY"); 
+        const date2 = moment(date).format("MMM Do YY"); 
 
         console.log(date2);
       
