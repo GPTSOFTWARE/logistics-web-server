@@ -334,11 +334,11 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
 export const getOrderByStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-        const order = await getRepository(DeliveryOrder)
+        const [data, total] = await getRepository(DeliveryOrder)
             .createQueryBuilder('deli')
             .where('deli.statusId = :id', { id: req.params.id })
             .getManyAndCount();
-        res.status(200).json(order);
+        res.status(200).json({ total, data });
     }
     catch (err) {
         console.log(err);

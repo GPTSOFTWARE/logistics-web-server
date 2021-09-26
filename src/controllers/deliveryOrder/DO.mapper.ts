@@ -1,4 +1,3 @@
-import { ISaleOrder, SaleOrder } from './../../entity/SaleOrder';
 import { IDFORMAT } from './../../utils/constant';
 import { DeliveryOrder } from './../../entity/DeliveryOrder';
 
