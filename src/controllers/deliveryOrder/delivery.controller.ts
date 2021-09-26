@@ -4,6 +4,7 @@ import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder } from "../../entity/DeliveryOrder";
 import { Status } from "../../entity/Status";
+import { mappingEntityToDTO } from './DO.mapper';
 
 export const getDelivery = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -48,7 +49,7 @@ export const getHistoryDelivery = async (req: Request, res: Response, next: Next
             res.status(404).json({ message: "NOT FOUND" })
         }
 
-        res.status(200).json(delivery);
+        res.status(200).json({ delivery: delivery.map(item => mappingEntityToDTO(item)) });
     }
     catch (err) {
         console.log(err);

@@ -6,6 +6,9 @@ import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
 import { Driver } from "../../entity/Driver";
 import { Status } from "../../entity/Status";
 import { createOrder } from "../SaleOrder/SOH.controller";
+import { mappingIdDown } from "../SaleOrder/SOH.mapper";
+import { mappingEntityToDTO } from './DO.mapper';
+
 
 export const switchDelivery = async (
     req: Request<any, any, any, any>,
@@ -13,11 +16,10 @@ export const switchDelivery = async (
     next: NextFunction) => {
     try {
         const data = req.body;
-        console.log({ data });
-
         const findSaleOrder = await getRepository(DeliveryOrder)
-            .createQueryBuilder('delivery') 
-            .where('delivery.id = :id', {id: req.params.id})
+            .createQueryBuilder('delivery')
+            .where('delivery.saleOrderId = :deliId', { deliId: mappingIdDown(data.saleOrderId) })
+            .andWhere('delivery.statusId = :statusId', { statusId: data.statusId })
             .getOne();
         const findStatus = await getRepository(Status)
             .createQueryBuilder('status')
@@ -132,7 +134,7 @@ export const getDeliveryOrder = async (req: Request, res: Response, next: NextFu
             .leftJoinAndSelect('DO.deliveryHistory', 'delivery')
             .getManyAndCount();
 
-        return res.json({ total, data });
+        return res.json({ total, data: data.map(item => mappingEntityToDTO(item)) });
     }
     catch (err) {
         console.error(err);

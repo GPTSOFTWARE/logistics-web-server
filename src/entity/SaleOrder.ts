@@ -39,25 +39,25 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     id: number;
 
     // sender information
-    @Column({ 
-        type:"varchar", 
-        length:"100"
+    @Column({
+        type: "varchar",
+        length: "100"
     })
     customerName: string;
 
     @Column()
     customerAddress: string;
 
-    @Column({ 
-        type:"varchar", 
-        length:"11"
+    @Column({
+        type: "varchar",
+        length: "11"
     })
     customerPhone: string;
 
     // receiver information
-    @Column({ 
-        "type":"varchar", 
-        length:"100"
+    @Column({
+        "type": "varchar",
+        length: "100"
     })
     receiverName: string;
 
@@ -65,15 +65,15 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     receiverAddress: string;
 
     @Column({
-        "type":"varchar", 
-        length:"11"
+        "type": "varchar",
+        length: "11"
     })
     receiverPhone: string;
 
-    @Column({ 
-        type:"varchar", 
-        length:"100",
-        nullable:true
+    @Column({
+        type: "varchar",
+        length: "100",
+        nullable: true
     })
     orderName: string;
 
@@ -93,9 +93,9 @@ export class SaleOrder extends AbstractBase implements ISaleOrder {
     @Column("float")
     totalPrice: number;
 
-    @Column({ 
-        type:"text",
-        nullable:true
+    @Column({
+        type: "text",
+        nullable: true
     })
     notes: string;
 

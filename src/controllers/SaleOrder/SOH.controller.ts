@@ -8,8 +8,8 @@ import { SaleOrder } from "../../entity/SaleOrder";
 import { Unit } from "../../entity/Unit";
 import { Account } from "../../entity/Users";
 import { ICreateOrderDTO, IUpdateOrderDTO } from "./SOH.interface";
-import { IDFORMAT } from "../../utils/constant";
 import { Status } from "../../entity/Status";
+import { mappingDTOToEntity, mappingEntityToDTO, mappingIdDown } from './SOH.mapper';
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await
         getRepository(SaleOrder)
@@ -25,8 +25,7 @@ const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
             .orderBy('saleOrder.createdAt', 'DESC')
             .getManyAndCount();
 
-
-    return res.json({ total, data });
+    return res.json({ total, data: data.map(item => mappingEntityToDTO(item)) });
 };
 
 
@@ -112,7 +111,7 @@ const createOrder = async (
 }
 const getOrderById = async (req: Request, res: Response): Promise<Response> => {
 
-    const id = req.params.id;
+    const id = mappingIdDown(req.params.id);
     const order = await getRepository(SaleOrder)
         .createQueryBuilder('saleOrder')
         .leftJoinAndSelect('saleOrder.products', 'product')
@@ -123,7 +122,7 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
         .where('saleOrder.id = :id', { id: id })
         .getOne();
     if (order) {
-        return res.status(200).json(order);
+        return res.status(200).json(mappingEntityToDTO(order));
     }
     else {
         return res.status(404).send('Order Not Found');
@@ -131,7 +130,6 @@ const getOrderById = async (req: Request, res: Response): Promise<Response> => {
 }
 
 const getOrderByUserId = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-
     const userId = await getRepository(Account).findOne(req.params.id);
     console.log(userId.phone);
 
@@ -146,7 +144,8 @@ const getOrderByUserId = async (req: Request, res: Response, next: NextFunction)
     }
 
     if (listOrder.length > 0) {
-        return res.json(listOrder);
+        const dataFormat = listOrder.map(item => mappingEntityToDTO(item));
+        return res.json({ listOrder: dataFormat });
     }
     return res.status(200).send("User have no order");
 
@@ -157,10 +156,10 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
     try {
         const data = req.body;
         const { products, ...order } = data;
-        console.log({ data });
 
         const state = {
             ...order,
+            id: mappingIdDown(order.id),
             unit: order.unit_id,
             categories: order.orderType,
             paymentMethod: order.payment_id
@@ -176,12 +175,12 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
             .leftJoinAndSelect('saleOrder.unit', 'unit')
             .leftJoinAndSelect('saleOrder.deliveryOrders', 'deliveryOrder')
             .leftJoinAndSelect('deliveryOrder.status', 'status')
-            .where('saleOrder.id = :id', { id: req.params.id })
+            .where('saleOrder.id = :id', { id: mappingIdDown(req.params.id) })
             .getOne();
         const updateProduct = await createQueryBuilder()
             .update(SaleOrder)
             .set(state)
-            .where("id = :id", { id: req.params.id })
+            .where("id = :id", { id: mappingIdDown(req.params.id) })
             .execute();
 
         for (let item of products) {
@@ -214,7 +213,7 @@ const updateOrder = async (req: Request<any, any, IUpdateOrderDTO, any>, res: Re
                 }
             }
             else {
-                const product = { ...item, saleOrder: req.params.id, unit };
+                const product = { ...item, saleOrder: () => mappingIdDown(req.params.id).toString(), unit };
                 await createQueryBuilder()
                     .insert()
                     .into(Product)
@@ -248,7 +247,7 @@ const restoreOrder = async (req: Request, res: Response, next: NextFunction) => 
         const restoreDelivery = await createQueryBuilder()
             .restore()
             .from(DeliveryOrder)
-            .where('saleOrderId = :id', { id: req.params.id })
+            .where('saleOrderId = :id', { id: mappingIdDown(req.params.id) })
             .execute();
         res.json({ message: "success" });
     }
@@ -263,7 +262,7 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
         const deleteOrder = await createQueryBuilder()
             .delete()
             .from(SaleOrder)
-            .where("id = :id", { id: req.params.id })
+            .where("id = :id", { id: mappingIdDown(req.params.id) })
             .execute();
         res.json({ message: "success" });
     }
@@ -276,17 +275,18 @@ const removeOrder = async (req: Request, res: Response, next: NextFunction) => {
 const deleteMulti = async (req: Request, res: Response) => {
     try {
         const { idList } = req.body;
+        let listFormat = idList?.map(item => mappingIdDown(item));
         const deleteSaleOrder = await
             createQueryBuilder()
                 .softDelete()
                 .from(SaleOrder)
-                .where("id IN(:...ids)", { ids: idList })
+                .where("id IN(:...ids)", { ids: listFormat })
                 .execute();
 
         const deleteDeli = await createQueryBuilder()
             .softDelete()
             .from(DeliveryOrder)
-            .where('saleOrderId IN(:...ids)', { ids: idList })
+            .where('saleOrderId IN(:...ids)', { ids: listFormat })
             .execute();
         res.status(200).json({ message: "success" });
     }
@@ -305,7 +305,7 @@ export const getSaleOrderByOrderByTotalPrice = async (req: Request, res: Respons
             .limit(5)
             .getMany();
 
-        res.status(200).json(order);
+        res.status(200).json(order.map(item => mappingEntityToDTO(item)));
     }
     catch (err) {
         console.error(err);
@@ -323,7 +323,7 @@ export const getOrderByPhone = async (req: Request, res: Response, next: NextFun
             .orderBy("count", "DESC")
             .limit(5)
             .getRawMany();
-        res.status(200).json(order);
+        res.status(200).json(order.map(item => mappingEntityToDTO(item)));
 
     }
     catch (err) {
@@ -338,7 +338,7 @@ export const getOrderByStatus = async (req: Request, res: Response, next: NextFu
             .createQueryBuilder('deli')
             .where('deli.statusId = :id', { id: req.params.id })
             .getManyAndCount();
-        res.status(200).json({ order: order });
+        res.status(200).json(order);
     }
     catch (err) {
         console.log(err);
