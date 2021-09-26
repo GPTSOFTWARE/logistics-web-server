@@ -9,6 +9,7 @@ import { Unit } from "../../entity/Unit";
 import { Account } from "../../entity/Users";
 import { ICreateOrderDTO, IUpdateOrderDTO } from "./SOH.interface";
 import { IDFORMAT } from "../../utils/constant";
+import { Status } from "../../entity/Status";
 const getSaleOrder = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await
         getRepository(SaleOrder)
@@ -89,16 +90,18 @@ const createOrder = async (
 
         const deliveryId: number = delivery.identifiers[0].id; // take deliveryid just created
 
-        const findDeli = await getRepository(DeliveryOrder).findOne(deliveryId);
-
+        // const findDeli = await getRepository(DeliveryOrder).findOne(deliveryId);
         // add delivery just created into history
-
+        const findStatus = await getRepository(Status)
+            .createQueryBuilder('status')
+            .andWhere('status.id = :id', { id: 1 })
+            .getOne();
         await createQueryBuilder()
             .insert()
             .into(DeliveryHistory)
             .values({
                 deliveryOrderId: deliveryId,
-                status: findDeli.statusId.toString()
+                status: findStatus.name
             })
             .execute();
         res.status(201).json({ message: 'created' });
