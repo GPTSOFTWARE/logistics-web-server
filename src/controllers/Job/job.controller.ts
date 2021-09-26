@@ -51,7 +51,21 @@ export const createJob = async (
     res: Response,
     next: NextFunction) => {
     try {
+        
         const data = req.body;
+
+        const salaryB = Number(data.salaryBefore);
+        const salaryA = Number(data.salaryAfter);
+
+        if(data.nameJob == null||data.nameJob=="") {
+            res.status(400).json({ message: " please not empty name job"}); 
+
+        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA))
+        {
+            res.status(400).json({ message: "salary before & after  must be a number or not empty"});  
+        }
+        
+
         const newJob = await createQueryBuilder()
             .insert()
             .into(Job)
@@ -71,6 +85,17 @@ export const updateJob = async (
     next: NextFunction) => {
     try {
         const data = req.body;
+        const salaryB = Number(data.salaryBefore);
+        const salaryA = Number(data.salaryAfter);
+     
+
+        if(data.nameJob == null||data.nameJob=="") {
+            res.status(400).json({ message: "update fail please not empty name job"}); 
+
+        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA))
+        {
+            res.status(400).json({ message: "update fail salary before & after  must be a number or not empty "}); 
+        }
         const updateJob = await getRepository(Job)
             .createQueryBuilder('job')
             .update(Job)
