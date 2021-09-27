@@ -1,16 +1,17 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AbstractBase } from './Base';
 
 export interface IContact {
     id: number;
     fullname: string;
     email: string;
     phone: string;
-    title:string;
+    title: string;
     text: string;
 }
 
 @Entity()
-export class Contact extends BaseEntity implements IContact {
+export class Contact extends AbstractBase implements IContact {
 
     @PrimaryGeneratedColumn()
     id: number;
