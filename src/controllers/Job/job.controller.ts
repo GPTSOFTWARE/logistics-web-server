@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import moment from "moment";
 import { createQueryBuilder, getRepository } from "typeorm";
 import { IJob, Job } from "../../entity/job";
 import { IGetJobQuery } from "../query.interface";
@@ -53,25 +54,30 @@ export const createJob = async (
     try {
         
         const data = req.body;
-
         const salaryB = Number(data.salaryBefore);
         const salaryA = Number(data.salaryAfter);
-
+        const date1 = new Date();
+        const date2 = new Date(data.expirationDate);
         if(data.nameJob == null||data.nameJob=="") {
             res.status(400).json({ message: " please not empty name job"}); 
 
-        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA))
+        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<=0||salaryA<=0)
         {
             res.status(400).json({ message: "salary before & after  must be a number or not empty"});  
-        }
-        
-
+        }else if(date1 >= date2) {
+            res.status(400).json({ message: "Invalid Date"});
+            
+        }else {
+            
         const newJob = await createQueryBuilder()
             .insert()
             .into(Job)
             .values(data)
             .execute();
         res.status(201).json({ message: "created" });
+        }
+        
+
     }
     catch (err) {
         console.log(err);
@@ -87,16 +93,22 @@ export const updateJob = async (
         const data = req.body;
         const salaryB = Number(data.salaryBefore);
         const salaryA = Number(data.salaryAfter);
+        const date1 = new Date();//ngày tạo
+        const date2 = new Date(data.expirationDate);//ngày hạn
      
 
         if(data.nameJob == null||data.nameJob=="") {
             res.status(400).json({ message: "update fail please not empty name job"}); 
 
-        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA))
+        }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<=0||salaryA<=0)
         {
             res.status(400).json({ message: "update fail salary before & after  must be a number or not empty "}); 
         }
-        const updateJob = await getRepository(Job)
+        else if(date1 >= date2) {
+            res.status(400).json({ message: "Invalid Date"});
+            
+        }else {
+            const updateJob = await getRepository(Job)
             .createQueryBuilder('job')
             .update(Job)
             .set(data)
@@ -104,6 +116,8 @@ export const updateJob = async (
             .execute();
 
         res.status(200).json({ message: "update success" });
+        }
+        
     }
     catch (err) {
         console.log(err);

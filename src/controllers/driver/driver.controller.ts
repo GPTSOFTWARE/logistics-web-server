@@ -37,16 +37,18 @@ const createDriver = async (
             res.status(400).json({message:"Invalid Phone number"});
         }else if(isNaN(data.age)||data.age > 60||data.age <18){
             res.status(400).json({message:"invalid age"});
+        } else{
+
+            const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
+            if (findDriver) {
+                return res.send('Tài xế đã tồn tại');
+            }
+            const createDriver = await getRepository(Driver).create(data);
+            const saveDriver = await getRepository(Driver).save(createDriver);
+    
+            res.status(201).json({ message: 'created' });
         }
 
-        const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
-        if (findDriver) {
-            return res.send('Tài xế đã tồn tại');
-        }
-        const createDriver = await getRepository(Driver).create(data);
-        const saveDriver = await getRepository(Driver).save(createDriver);
-
-        res.status(201).json({ message: 'created' });
     }
     catch (err) {
         console.error(err);
@@ -81,18 +83,20 @@ export const updateDriver = async (req: Request<any, any, any, any>, res: Respon
         if(data.name ==null || data.name==""){
             res.status(400).json({ message: "update fail Name is not empty" });
         }
-        else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+        else if(!vnf_regex.test(data.phone)){
             res.status(400).json({message:"update fail Invalid Phone number"});
-        }else if(isNaN(data.age)||data.age > 60||data.age <18){
+        }else if(isNaN(data.age)){
             res.status(400).json({message:"update fail invalid age"});
-        }
-
-        const updateDriver = await createQueryBuilder('driver')
+        }else {
+            const updateDriver = await createQueryBuilder('driver')
             .update(Driver)
             .set(data)
             .where('driver.id = :id', { id: req.params.id })
             .execute();
             res.status(200).json({ message: "update successful!" });
+        }
+
+      
     }
     catch (err) {
         console.error(err);

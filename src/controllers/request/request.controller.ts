@@ -33,17 +33,19 @@ export const createRequest = async (
 
         if (data.fullname== null || data.fullname==""){
             res.status(400).json({ message: "name is not empty"});
-        }else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+        }else if( !vnf_regex.test(data.phone)){
             res.status(400).json({message:"Invalid Phone number"});
         }else if(!mailFormat.test(data.email)){
             res.status(400).json({message:"Invalid Email"});
-        }
-        const newRequestOrder = await createQueryBuilder()
+        }else {
+            const newRequestOrder = await createQueryBuilder()
             .insert()
             .into(RequestOrder)
             .values(data)
             .execute();
         res.status(201).json({ message: "created" });
+        }
+        
     }
     catch (err) {
         console.log(err);

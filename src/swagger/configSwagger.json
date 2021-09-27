@@ -379,7 +379,8 @@
                                 "position": "Nhân Viên",
                                 "quantity": 50,
                                 "require": "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
-                                "thumbnails": "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên"
+                                "thumbnails": "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên",
+                                "expirationDate" : "2022-09-27"
                             }
                         }
                     }
