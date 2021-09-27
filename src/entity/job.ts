@@ -11,7 +11,8 @@ export interface IJob {
     require: string;
     thumbnails: string;
     quantity: number;
-}
+    expirationDate: Date;
+ }
 
 
 @Entity()
@@ -89,6 +90,7 @@ export class Job extends BaseEntity implements IJob {
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
+
 
     @DeleteDateColumn()
     deletedAt?: Date;
