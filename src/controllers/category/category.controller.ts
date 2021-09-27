@@ -6,7 +6,7 @@ import { Category } from "../../entity/Category";
 export const getCategory = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(Category)
       .createQueryBuilder("category")
-      .orderBy('user.name', 'DESC')
+      .orderBy('category.name', 'DESC')
       .getManyAndCount();
     return res.json({ total, data });
 };
