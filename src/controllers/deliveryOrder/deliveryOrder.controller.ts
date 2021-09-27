@@ -31,6 +31,9 @@ export const switchDelivery = async (
             if (findSaleOrder.statusId === -1) {
                 res.status(409).json({ code: "409", message: "Delivery canceled !" });
             }
+            if(findSaleOrder.statusId === 3){
+                res.status(400).json({ code: "400", message: "Đơn hàng đã được giao"})
+            }
 
             const findDelivery = await getRepository(DeliveryHistory)
                 .createQueryBuilder('deli')
