@@ -17,6 +17,7 @@ export const getRequest = async (req: Request, res: Response): Promise<Response>
 export const getAllRequest = async (req: Request, res: Response): Promise<Response> => {
     const [data, total] = await getRepository(RequestOrder)
         .createQueryBuilder("request")
+        .orderBy('request.createdAt', 'DESC')
         .getManyAndCount();
     return res.json({ total, data });
 };
