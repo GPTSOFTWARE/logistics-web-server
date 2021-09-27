@@ -57,25 +57,38 @@ export const switchDelivery = async (
                 }
 
             }
-            else {
-                const updateStatusDelivery = await createQueryBuilder()
+            else{
+                if(data.statusId === 2){
+                    const updateStatusDelivery = await createQueryBuilder()
+                        .update(DeliveryOrder)
+                        .set({
+                            statusId: data.statusId,
+                            plannedTime: date.add(8, 'h'),
+                            driver: data.driverId,
+                        })
+                        .where("id = :id", { id: req.params.id })
+                        .execute();
+                }
+                else{
+                    const updateStatusDelivery = await createQueryBuilder()
                     .update(DeliveryOrder)
                     .set({
                         statusId: data.statusId,
-                        plannedTime: date.add(8, 'h'),
-                        driver: data.driverId,
                     })
                     .where("id = :id", { id: req.params.id })
                     .execute();
-                await createQueryBuilder()
-                    .insert()
-                    .into(DeliveryHistory)
-                    .values({
-                        deliveryOrderId: req.params.id,
-                        status: findStatus?.name
-                    })
-                    .execute();
+                }
+               
+                    await createQueryBuilder()
+                        .insert()
+                        .into(DeliveryHistory)
+                        .values({
+                            deliveryOrderId: req.params.id,
+                            status: findStatus?.name
+                        })
+                        .execute();
                 res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
+
             }
         }
         else {

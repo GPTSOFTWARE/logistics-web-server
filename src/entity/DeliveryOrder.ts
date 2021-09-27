@@ -73,8 +73,7 @@ export class DeliveryOrder extends BaseEntity implements IDeliveryOrder {
     @Column(
         {
             type: "timestamp with time zone",
-            nullable: true,
-            default: () => "CURRENT_TIMESTAMP" // Pass prop datatype require is String Boolean Number
+            nullable: true
         }
     )
     plannedTime: Date;
