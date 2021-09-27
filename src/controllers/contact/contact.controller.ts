@@ -30,7 +30,7 @@ export const createContact = async (
         const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
         const data = req.body;
         
-        if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
+        if(!vnf_regex.test(data.phone)){
             res.status(400).json({message:"Invalid Phone number"});
         }
         else if(!mailFormat.test(data.email)){
@@ -39,13 +39,15 @@ export const createContact = async (
        else if(data.fullname ==""||data.fullname==null){
         res.status(400).json({message:"Please not empty your name"});
 
-       }
+       }else{
         const newContact = await createQueryBuilder()
-            .insert()
-            .into(Contact)
-            .values(data)
-            .execute();
-        res.status(201).json({ message: "Created" });
+        .insert()
+        .into(Contact)
+        .values(data)
+        .execute();
+    res.status(201).json({ message: "Created" });
+       }
+        
     }
     catch (err) {
         console.log(err);

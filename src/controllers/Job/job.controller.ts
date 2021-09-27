@@ -67,15 +67,17 @@ export const createJob = async (
         }else if(date1 >= date2) {
             res.status(400).json({ message: "Invalid Date"});
             
-        }
-        
-
+        }else {
+            
         const newJob = await createQueryBuilder()
             .insert()
             .into(Job)
             .values(data)
             .execute();
         res.status(201).json({ message: "created" });
+        }
+        
+
     }
     catch (err) {
         console.log(err);
@@ -91,8 +93,8 @@ export const updateJob = async (
         const data = req.body;
         const salaryB = Number(data.salaryBefore);
         const salaryA = Number(data.salaryAfter);
-        const date1 = new Date();
-        const date2 = new Date(data.expirationDate);
+        const date1 = new Date();//ngày tạo
+        const date2 = new Date(data.expirationDate);//ngày hạn
      
 
         if(data.nameJob == null||data.nameJob=="") {
@@ -105,8 +107,8 @@ export const updateJob = async (
         else if(date1 >= date2) {
             res.status(400).json({ message: "Invalid Date"});
             
-        }
-        const updateJob = await getRepository(Job)
+        }else {
+            const updateJob = await getRepository(Job)
             .createQueryBuilder('job')
             .update(Job)
             .set(data)
@@ -114,6 +116,8 @@ export const updateJob = async (
             .execute();
 
         res.status(200).json({ message: "update success" });
+        }
+        
     }
     catch (err) {
         console.log(err);
