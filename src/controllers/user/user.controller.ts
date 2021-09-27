@@ -172,18 +172,16 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     if (!(oldPassword && newPassword)) {
       res.status(400).send();
     }
-
     //find user by id
     const user = await getRepository(Account).findOneOrFail(id);
-    console.log(user.password);
-
+    const hashNewPassword = await hashPassword(newPassword);
     if (user) {
       const validPassword = await comparePassword(user.password, oldPassword);
       if (validPassword) {
         const updateUser = await createQueryBuilder()
           .update(Account)
           .set({
-            password: hashPassword(newPassword)
+            password:hashNewPassword
           })
           .where('id = :id', { id: id })
           .execute();
