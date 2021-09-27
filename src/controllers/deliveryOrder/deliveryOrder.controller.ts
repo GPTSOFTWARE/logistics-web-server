@@ -61,15 +61,27 @@ export const switchDelivery = async (
                
             }
             else{
-                const updateStatusDelivery = await createQueryBuilder()
-                                                        .update(DeliveryOrder)
-                                                        .set({
-                                                            statusId: data.statusId,
-                                                            plannedTime: date.add(8, 'h'),
-                                                            driver: data.driverId,
-                                                        })
-                                                        .where("id = :id", { id: req.params.id })
-                                                        .execute();
+                if(data.statusId === 2){
+                    const updateStatusDelivery = await createQueryBuilder()
+                    .update(DeliveryOrder)
+                    .set({
+                        statusId: data.statusId,
+                        plannedTime: date.add(8, 'h'),
+                        driver: data.driverId,
+                    })
+                    .where("id = :id", { id: req.params.id })
+                    .execute();
+                }
+                else{
+                    const updateStatusDelivery = await createQueryBuilder()
+                    .update(DeliveryOrder)
+                    .set({
+                        statusId: data.statusId
+                    })
+                    .where("id = :id", { id: req.params.id })
+                    .execute();
+                }
+               
                                 await createQueryBuilder()
                                             .insert()
                                             .into(DeliveryHistory)
