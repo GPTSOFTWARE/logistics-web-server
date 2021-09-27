@@ -13,6 +13,7 @@ import status from "./routes/status.route";
 import city from "./routes/city.route";
 import job from "./routes/job.route";
 import auth from "./routes/auth.route";
+import category from "./routes/category.route";
 import contact from "./routes/contact.route";
 import request from "./routes/request.route";
 import search from "./routes/search.route";
@@ -45,8 +46,7 @@ app.use(request);
 app.use(search);
 app.use(driver);
 app.use(auth);
-
-
+app.use(category);
 
 
 
