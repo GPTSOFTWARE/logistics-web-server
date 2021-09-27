@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 export interface IRequestOrder{
@@ -56,5 +56,13 @@ export class RequestOrder extends BaseEntity implements IRequestOrder {
     @Column('text')
     note:string;
 
+    @Column({
+        type: "timestamp with time zone",
+        nullable: true,
+        default: () => "CURRENT_TIMESTAMP" 
+    })
+    public createdAt: Date;
 
+    @DeleteDateColumn()
+    deletedAt?: Date;
 }
