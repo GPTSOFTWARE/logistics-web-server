@@ -149,7 +149,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
     return res.status(400).json({ code: 400, message: 'Password not match' });
   }
 
-  if (user.role.valueOf() === 'admin') {
+  if (user.role.valueOf() === 'admin' || user.role.valueOf() === 'manage') {
 
     const token = await generatorToken(user);
     res.status(200).json({ code: 200, token: token, user, message: 'Login successful' });
@@ -181,7 +181,7 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
         const updateUser = await createQueryBuilder()
           .update(Account)
           .set({
-            password:hashNewPassword
+            password: hashNewPassword
           })
           .where('id = :id', { id: id })
           .execute();
