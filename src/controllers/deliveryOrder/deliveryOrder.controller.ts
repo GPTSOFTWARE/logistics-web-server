@@ -3,10 +3,7 @@ import moment from "moment";
 import { createQueryBuilder, getRepository } from "typeorm";
 import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
-import { Driver } from "../../entity/Driver";
 import { Status } from "../../entity/Status";
-import { createOrder } from "../SaleOrder/SOH.controller";
-import { mappingIdDown } from "../SaleOrder/SOH.mapper";
 import { mappingEntityToDTO } from './DO.mapper';
 
 
@@ -20,9 +17,9 @@ export const switchDelivery = async (
             .createQueryBuilder('delivery')
             // .where('delivery.saleOrderId = :deliId', { deliId: mappingIdDown(data.saleOrderId) })
             // .andWhere('delivery.statusId = :statusId', { statusId: data.statusId })
-            .where('delivery.id = :id ', {id : req.params.id})
+            .where('delivery.id = :id ', { id: req.params.id })
             .getOne();
-            const findStatus = await getRepository(Status)
+        const findStatus = await getRepository(Status)
             .createQueryBuilder('status')
             .andWhere('status.id = :id', { id: data.statusId })
             .getOne();
@@ -31,59 +28,72 @@ export const switchDelivery = async (
         var date = moment(newDate);
         if (findSaleOrder) { // nếu tìm thấy đơn hàng
             //check status exitst in history
-            if(findSaleOrder.statusId === -1){
-                res.status(409).json({ code: "409" , message: "Delivery canceled !"});
+            if (findSaleOrder.statusId === -1) {
+                res.status(409).json({ code: "409", message: "Delivery canceled !" });
             }
 
             const findDelivery = await getRepository(DeliveryHistory)
-                                        .createQueryBuilder('deli')
-                                        .where('deli.deliveryOrderId = :id', {id : req.params.id})
-                                        .andWhere('deli.status = :status ', {status : findStatus.name})
-                                        .getOne();
+                .createQueryBuilder('deli')
+                .where('deli.deliveryOrderId = :id', { id: req.params.id })
+                .andWhere('deli.status = :status ', { status: findStatus.name })
+                .getOne();
             const findHistory = await getRepository(DeliveryHistory)
-                                         .createQueryBuilder('deli')
-                                         .where('deli.deliveryOrderId = :id', {id : req.params.id})
-                                         .getMany();
-            if(findDelivery){
-                if(findHistory.length == 1){
+                .createQueryBuilder('deli')
+                .where('deli.deliveryOrderId = :id', { id: req.params.id })
+                .getMany();
+            if (findDelivery) {
+                if (findHistory.length == 1) {
                     await createQueryBuilder()
-                            .update(DeliveryOrder)
-                            .set({
-                                typeShip: data.typeShip,
-                            })
-                            .where("id = :id", { id: req.params.id })
-                            .execute();
-                            res.status(200).json({ code: "200" , message: "Cập nhật hình thức giao hàng thành công"});
+                        .update(DeliveryOrder)
+                        .set({
+                            typeShip: data.typeShip,
+                        })
+                        .where("id = :id", { id: req.params.id })
+                        .execute();
+                    res.status(200).json({ code: "200", message: "Cập nhật hình thức giao hàng thành công" });
                 }
-                else{
-                    return  res.status(400).json({ code: "400" , message: "NOT ALLOWED!"});
+                else {
+                    return res.status(400).json({ code: "400", message: "NOT ALLOWED!" });
                 }
-               
+
             }
             else{
-                const updateStatusDelivery = await createQueryBuilder()
-                                                        .update(DeliveryOrder)
-                                                        .set({
-                                                            statusId: data.statusId,
-                                                            plannedTime: date.add(8, 'h'),
-                                                            driver: data.driverId,
-                                                        })
-                                                        .where("id = :id", { id: req.params.id })
-                                                        .execute();
-                                await createQueryBuilder()
-                                            .insert()
-                                            .into(DeliveryHistory)
-                                            .values({
-                                                deliveryOrderId: req.params.id,
-                                                status: findStatus?.name
-                                            })
-                                            .execute();
-                            res.status(200).json({ code: "200" , message: "cập nhật tình trạng đơn hàng thành công"});    
+                if(data.statusId === 2){
+                    const updateStatusDelivery = await createQueryBuilder()
+                        .update(DeliveryOrder)
+                        .set({
+                            statusId: data.statusId,
+                            plannedTime: date.add(8, 'h'),
+                            driver: data.driverId,
+                        })
+                        .where("id = :id", { id: req.params.id })
+                        .execute();
+                }
+                else{
+                    const updateStatusDelivery = await createQueryBuilder()
+                    .update(DeliveryOrder)
+                    .set({
+                        statusId: data.statusId,
+                    })
+                    .where("id = :id", { id: req.params.id })
+                    .execute();
+                }
+               
+                    await createQueryBuilder()
+                        .insert()
+                        .into(DeliveryHistory)
+                        .values({
+                            deliveryOrderId: req.params.id,
+                            status: findStatus?.name
+                        })
+                        .execute();
+                res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
+
             }
         }
-        else{
-            res.status(404).json({ code:"404", message: "NOT FOUND"})
-        }       
+        else {
+            res.status(404).json({ code: "404", message: "NOT FOUND" })
+        }
     }
     catch (error) {
         console.log(error);

@@ -8,7 +8,7 @@ export const generatorToken = async (user: any) => {
   let token = await jwt.sign({ userId: user.id }, USER_SECRET, {
     algorithm: 'HS256',
     subject: `${user.id}`,
-    expiresIn: '7d',
+    expiresIn: '365d',
   });
   return token;
 };
@@ -27,5 +27,5 @@ export async function comparePassword(
 }
 
 export const getEnv = (key: string) => {
-    return process.env[key] || ''
+  return process.env[key] || ''
 }

@@ -74,8 +74,7 @@ export class Job extends BaseEntity implements IJob {
 
     @Column({
         type: "timestamp with time zone",
-        nullable: true,
-        default: () => "CURRENT_TIMESTAMP"
+        nullable: true
     })
     expirationDate: Date;
 

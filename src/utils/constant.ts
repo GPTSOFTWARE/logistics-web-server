@@ -9,4 +9,4 @@ export const DB_USER = getEnv('DB_USER');
 export const DB_PASSWORD = getEnv('DB_PASSWORD');
 export const DB_PORT = getEnv('DB_PORT');
 
-export const USER_SECRET = getEnv('USER_SECRET') || 'long1234';
+export const USER_SECRET = getEnv('USER_SECRET') || 'gptdev';

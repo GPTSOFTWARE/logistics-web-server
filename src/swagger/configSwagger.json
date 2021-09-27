@@ -323,6 +323,7 @@
                 }
             }
         },
+
         "/jobs?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
@@ -1287,8 +1288,7 @@
                     }
                 }
             }
-        }
-    },
+        },
     "definitions": {
         "id": {
             "properties": {
@@ -1398,6 +1398,25 @@
                     "type": "object",
                     "additionalProperties": {
                         "$ref": "#/definitions/Job"
+                    }
+                }
+            }
+        },
+        "category": {
+            "type": "object",
+            "properties": {
+                "nameJob": {
+                    "type": "string"
+                }
+            }
+        },
+        "categories": {
+            "type": "array",
+            "properties": {
+                "Jobs": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/category"
                     }
                 }
             }
@@ -1541,5 +1560,6 @@
             }
         }
     }
+}
 }
 
