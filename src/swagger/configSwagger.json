@@ -40,6 +40,13 @@
                 "summary": "GET tất các các order",
                 "parameters": [
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "description": "Access Token",
+                        "type": "string"
+                    },
+                    {
                         "name": "PAGE",
                         "in": "path",
                         "required": true,
@@ -323,7 +330,6 @@
                 }
             }
         },
-
         "/jobs?page={PAGE}&page_size={PAGE_SIZE}": {
             "get": {
                 "tags": [
@@ -380,7 +386,7 @@
                                 "quantity": 50,
                                 "require": "Nhanh nhẹn, hoạt bát, làm được việc nặng, sức khỏe ổn định",
                                 "thumbnails": "Làm việc giờ hành chánh, hỗ trợ lượng tháng 13, có bảo hiểm nhân viên",
-                                "expirationDate" : "2022-09-27"
+                                "expirationDate": "2022-09-27"
                             }
                         }
                     }
@@ -736,9 +742,9 @@
                                 "$ref": "#/definitions/SaleOrder"
                             },
                             "example": {
-                                "customerPhone":"0123444444",
-                                "name":"anh tony",
-                                "date":"2021-09-21 13:22:21.714138+00"
+                                "customerPhone": "0123444444",
+                                "name": "anh tony",
+                                "date": "2021-09-21 13:22:21.714138+00"
                             }
                         }
                     }
@@ -831,28 +837,27 @@
                                 "$ref": "#/definitions/Driver"
                             },
                             "example": {
-                                        "name":"Nguyen hoai nho",
-                                        "phone":"02123322333",
-                                        "age":21,
-                                        "idenityCard": "212122235"
-                                        
-                                    }
+                                "name": "Nguyen hoai nho",
+                                "phone": "02123322333",
+                                "age": 21,
+                                "idenityCard": "212122235"
                             }
                         }
                     }
-                },
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "400": {
-                        "description": "Failed. Bad post data."
-                    }
                 }
             },
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                    "description": "Success"
+                },
+                "400": {
+                    "description": "Failed. Bad post data."
+                }
+            }
+        },
         "/driver/{id}": {
             "parameters": [
                 {
@@ -905,9 +910,9 @@
                                 "$ref": "#/definitions/Driver"
                             },
                             "example": {
-                                "name":"Nguyen hoai nho",
-                                "phone":"02123322333",
-                                "age":21,
+                                "name": "Nguyen hoai nho",
+                                "phone": "02123322333",
+                                "age": 21,
                                 "idenityCard": "212122235"
                             }
                         }
@@ -1002,7 +1007,6 @@
                 }
             }
         },
-
         "/register": {
             "post": {
                 "tags": [
@@ -1254,7 +1258,6 @@
                 }
             }
         },
-
         "/admin/dashboard": {
             "post": {
                 "tags": [
@@ -1289,277 +1292,276 @@
                 }
             }
         },
-    "definitions": {
-        "id": {
-            "properties": {
-                "uuid": {
-                    "type": "string"
-                }
-            }
-        },
-        "Order": {
-            "type": "object",
-            "properties": {
-                "customerName": {
-                    "type": "string"
-                },
-                "customerAddress": {
-                    "type": "string"
-                },
-                "customerPhone": {
-                    "type": "number"
-                },
-                "receiverName": {
-                    "type": "string"
-                },
-                "receiverAddress": {
-                    "type": "string"
-                },
-                "receiverPhone": {
-                    "type": "number"
-                },
-                "isFreeShip": {
-                    "type": "boolean"
-                },
-                "totalPrice": {
-                    "type": "number"
-                },
-                "notes": {
-                    "type": "string"
-                },
-                "orderType": {
-                    "type": "number"
-                },
-                "quantity": {
-                    "type": "number"
-                },
-                "unit_id": {
-                    "type": "number"
-                },
-                "payment_id": {
-                    "type": "number"
-                },
-                "products": {
-                    "items": {
-                        "$ref": "#/definitions/product"
+        "definitions": {
+            "id": {
+                "properties": {
+                    "uuid": {
+                        "type": "string"
                     }
                 }
-            }
-        },
-        "Orders": {
-            "type": "array",
-            "properties": {
-                "orders": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Order"
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "customerName": {
+                        "type": "string"
+                    },
+                    "customerAddress": {
+                        "type": "string"
+                    },
+                    "customerPhone": {
+                        "type": "number"
+                    },
+                    "receiverName": {
+                        "type": "string"
+                    },
+                    "receiverAddress": {
+                        "type": "string"
+                    },
+                    "receiverPhone": {
+                        "type": "number"
+                    },
+                    "isFreeShip": {
+                        "type": "boolean"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "notes": {
+                        "type": "string"
+                    },
+                    "orderType": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "unit_id": {
+                        "type": "number"
+                    },
+                    "payment_id": {
+                        "type": "number"
+                    },
+                    "products": {
+                        "items": {
+                            "$ref": "#/definitions/product"
+                        }
                     }
                 }
-            }
-        },
-        "product": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "quantity": {
-                    "type": "number"
-                },
-                "unit": {
-                    "type": "number"
-                }
-            }
-        },
-        "Job": {
-            "type": "object",
-            "properties": {
-                "nameJob": {
-                    "type": "string"
-                },
-                "salaryBefore": {
-                    "type": "number"
-                },
-                "salaryAfter": {
-                    "type": "number"
-                },
-                "degree": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
-                }
-            }
-        },
-        "Jobs": {
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Job"
+            },
+            "Orders": {
+                "type": "array",
+                "properties": {
+                    "orders": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Order"
+                        }
                     }
                 }
-            }
-        },
-        "category": {
-            "type": "object",
-            "properties": {
-                "nameJob": {
-                    "type": "string"
-                }
-            }
-        },
-        "categories": {
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/category"
+            },
+            "product": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "unit": {
+                        "type": "number"
                     }
                 }
-            }
-        },
-        "Driver":{
-            "type": "object",
-            "properties": {
-                "name":{
-                    "type": "string"
-                },
-                "phone":{
-                    "type": "string"
-                },
-                "age":{
-                    "type": "number"
-                },
-                "idenityCard":{
-                    "type": "string"
-                }
-            }
-        },
-        "Drivers":{
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Driver"
+            },
+            "Job": {
+                "type": "object",
+                "properties": {
+                    "nameJob": {
+                        "type": "string"
+                    },
+                    "salaryBefore": {
+                        "type": "number"
+                    },
+                    "salaryAfter": {
+                        "type": "number"
+                    },
+                    "degree": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
                     }
                 }
-            }
-        },
-        "Contact":{
-            "type": "object",
-            "properties": {
-                "fullname":{
-                    "type": "string"
-                },
-                "phone":{
-                    "type": "string"
-                },
-                "email":{
-                    "type": "string"
-                },
-                "title":{
-                    "type": "string"
-                },
-                "text":{
-                    "type": "string"
-                }
-            }
-        },
-        "Contacts":{
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Contact"
+            },
+            "Jobs": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Job"
+                        }
                     }
                 }
-            }
-        },
-        "Request": {
-            "type": "object",
-            "properties": {
-                "fullname": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "number"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
-                },
-                "typeProduct": {
-                    "type": "string"
-                },
-                "weight": {
-                    "type": "number"
-                },
-                "fastShip": {
-                    "type": "boolean"
-                },
-                "note": {
-                    "type": "string"
-                }
-            }
-        },
-        "Requests": {
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Request"
+            },
+            "category": {
+                "type": "object",
+                "properties": {
+                    "nameJob": {
+                        "type": "string"
                     }
                 }
-            }
-        },
-        "Account": {
-            "type": "object",
-            "properties": {
-                "fullname": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "number"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "Accounts": {
-            "type": "array",
-            "properties": {
-                "Jobs": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "$ref": "#/definitions/Account"
+            },
+            "categories": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/category"
+                        }
                     }
                 }
-            }
-        },
-        "Login": {
-            "type": "object",
-            "properties": {
-                "phone": {
-                    "type": "number"
-                },
-                "password": {
-                    "type": "string"
+            },
+            "Driver": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    },
+                    "idenityCard": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Drivers": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Driver"
+                        }
+                    }
+                }
+            },
+            "Contact": {
+                "type": "object",
+                "properties": {
+                    "fullname": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Contacts": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Contact"
+                        }
+                    }
+                }
+            },
+            "Request": {
+                "type": "object",
+                "properties": {
+                    "fullname": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "number"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "typeProduct": {
+                        "type": "string"
+                    },
+                    "weight": {
+                        "type": "number"
+                    },
+                    "fastShip": {
+                        "type": "boolean"
+                    },
+                    "note": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Requests": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Request"
+                        }
+                    }
+                }
+            },
+            "Account": {
+                "type": "object",
+                "properties": {
+                    "fullname": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "number"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Accounts": {
+                "type": "array",
+                "properties": {
+                    "Jobs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    }
+                }
+            },
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "phone": {
+                        "type": "number"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
                 }
             }
         }
     }
 }
-}
-
