@@ -14,16 +14,17 @@ import {
 }
     from "../controllers/SaleOrder/SOH.controller"
 import auth from "../middleware/auth.middleware";
+import checkAdmin from "../middleware/role.middleware";
 
-router.get("/orders", getSaleOrder)
-router.get("/order/:id", getOrderById)
-router.get("/order/user/:id", getOrderByUserId);
-router.get('/survey/totalprice', getSaleOrderByOrderByTotalPrice);
-router.get('/survey/phone', getOrderByPhone);
-router.get('/survey/status/:id', getOrderByStatus);
-router.post("/order", createOrder);
-router.put("/order/:id", updateOrder);
-router.patch("/order/restore/:id", restoreOrder);
-router.delete("/order/delete", deleteMulti);
+router.get("/orders", auth,  getSaleOrder)
+router.get("/order/:id", auth,getOrderById)
+router.get("/order/user/:id", auth,getOrderByUserId);
+router.get('/survey/totalprice',auth,  getSaleOrderByOrderByTotalPrice);
+router.get('/survey/phone', auth, getOrderByPhone);
+router.get('/survey/status/:id', auth, getOrderByStatus);
+router.post("/order",auth, createOrder);
+router.put("/order/:id",auth, updateOrder);
+router.patch("/order/restore/:id", auth,restoreOrder);
+router.delete("/order/delete", auth,deleteMulti);
 
 export default router;
