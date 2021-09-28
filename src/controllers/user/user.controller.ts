@@ -161,7 +161,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
 
 };
 
-export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+export const changePassword = async  (req: Request, res: Response, next: NextFunction) => {
 
   try {
 
