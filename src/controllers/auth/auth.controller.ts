@@ -2,15 +2,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Account } from "../../entity/Users";
 import { USER_SECRET } from '../../utils/constant';
-const jwt = require('jsonwebtoken');
-
 import { getRepository } from 'typeorm';
-import {
-  comparePassword,
-  generatorToken,
-  hashPassword,
-} from "../../utils/helpers";
-
+const jwt = require('jsonwebtoken');
 
 export const checkJWT = async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.body;
