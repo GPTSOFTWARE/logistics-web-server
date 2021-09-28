@@ -8,7 +8,7 @@ router.post('/login', login);
 router.post('/admin/dashboard', adminLogin);
 router.post('/register', register);
 router.get("/users", auth, getUsers);
-router.get("/users/all", getAllUsers);
+router.get("/users/all", auth, getAllUsers);
 router.get('/user/:id', getUserById);
 router.put('/user/:id', updateUser);
 router.delete('/user/delete', deleteMultiUser);

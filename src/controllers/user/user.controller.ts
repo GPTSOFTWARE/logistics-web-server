@@ -30,11 +30,17 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
 
 };
 const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
-  const [data, total] = await getRepository(Account)
-    .createQueryBuilder("user")
-    .orderBy('user.createdAt', 'DESC')
-    .getManyAndCount();
-  return res.json({ total, data });
+  const check = await checkRoles(req);
+  if (check) {
+    const [data, total] = await getRepository(Account)
+      .createQueryBuilder("user")
+      .orderBy('user.createdAt', 'DESC')
+      .getManyAndCount();
+    return res.json({ total, data });
+  } else {
+    return res.json({ message: "Bạn không có quyền sử dụng chức năng này" }).status(401);
+  }
+
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
