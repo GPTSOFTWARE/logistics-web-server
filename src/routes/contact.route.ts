@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { createContact, getContact, getAllContact } from "../controllers/contact/contact.controller";
+import auth from "../middleware/auth.middleware";
+import checkAdmin from "../middleware/role.middleware";
 const router = Router();
 
-router.get('/contact', getContact);
-router.get('/contact/all', getAllContact);
-router.post('/contact', createContact);
+router.get('/contact', auth, checkAdmin,getContact);
+router.get('/contact/all',auth, checkAdmin ,getAllContact);
+router.post('/contact',createContact);
 
 export default router;

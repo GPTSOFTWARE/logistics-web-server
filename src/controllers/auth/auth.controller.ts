@@ -38,17 +38,17 @@ export const checkJWTAdmin = async (req: Request, res: Response, next: NextFunct
   })
 
 }
-export const checkRoles = async (req: Request) => {
-  const { userId } = (req as any).user
-  const findUser = await getRepository(Account).findOne(userId);
-  let token = req.headers['authorization'] || req.query.token;
-  token = (token as any).split(' ')[1];
-  if (findUser) {
-    if (findUser.role === "user") {
-      return false;
-    } else {
-      return true;
-    }
-  }
+// export const checkRoles = async (req: Request) => {
+//   const { userId } = (req as any).user
+//   const findUser = await getRepository(Account).findOne(userId);
+//   let token = req.headers['authorization'] || req.query.token;
+//   token = (token as any).split(' ')[1];
+//   if (findUser) {
+//     if (findUser.role === "user") {
+//       return false;
+//     } else {
+//       return true;
+//     }
+//   }
 
-}
+// }

@@ -2,24 +2,42 @@
 import { Request, Response, NextFunction } from "express";
 import { createQueryBuilder, getRepository, TreeRepositoryNotSupportedError } from "typeorm";
 import { Category } from "../../entity/Category";
+import checkRoles from "../../middleware/role.middleware";
 
 export const getCategory = async (req: Request, res: Response): Promise<Response> => {
+
+
+  const check = await checkRoles(req, res);
+  if(check){
     const [data, total] = await getRepository(Category)
-      .createQueryBuilder("category")
-      .orderBy('category.name', 'DESC')
-      .getManyAndCount();
+              .createQueryBuilder("category")
+              .orderBy('category.name', 'DESC')
+              .getManyAndCount();
     return res.json({ total, data });
+  }
+  else{
+    return res.status(403).json({ message: "NOT PERMISTION" });
+
+  }
 };
 
 export const createCategory = async (req: Request, res: Response) => {
     try{
-        const data = req.body;
-        const newCategory = await getRepository(Category).create(data);
-                            await   getRepository(Category).save(newCategory);
+        const check = await checkRoles(req, res);
+        if(check){
+          const data = req.body;
+          const newCategory = await getRepository(Category).create(data);
+                              await   getRepository(Category).save(newCategory);
+  
+          res.status(201).json({message : "created"});
 
-        res.status(201).json({message : "created"});
+        }
+        else{
+          return res.status(403).json({ message: "NOT PERMISTION" });
+        }
     } 
     catch(err){
-      console.log(err);
+      return res.status(500).json({message: "Internal Server Error"});
+
     }
 }
