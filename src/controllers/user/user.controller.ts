@@ -31,11 +31,11 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
 };
 const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
   const check = await checkRoles(req, res);
-  if(check){
+  if (check) {
     const [data, total] = await getRepository(Account)
-    .createQueryBuilder("user")
-    .orderBy('user.createdAt', 'DESC')
-    .getManyAndCount();
+      .createQueryBuilder("user")
+      .orderBy('user.createdAt', 'DESC')
+      .getManyAndCount();
     return res.json({ total, data });
   }
   else {
@@ -74,13 +74,13 @@ const updateUser = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
-  
+
   const check = await checkRoles(req, res);
-  if(check){
+  if (check) {
     const results = await getRepository(Account).delete(req.params.id);
-    return res.status(200).json({message: "delete success"});
+    return res.status(200).json({ message: "delete success" });
   }
-  else{
+  else {
     return res.json({ message: "NOT PERMISTION" }).status(403);
   }
 
@@ -89,7 +89,7 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
 export const deleteMultiUser = async (req: Request, res: Response) => {
   try {
     const check = await checkRoles(req, res);
-    if(check){
+    if (check) {
       const { idList } = req.body;
       const deleteUser = await createQueryBuilder()
         .softDelete()
@@ -98,7 +98,7 @@ export const deleteMultiUser = async (req: Request, res: Response) => {
         .execute();
       res.status(200).json({ message: "success" });
     }
-    else{
+    else {
       return res.json({ message: "NOT PERMISTION" }).status(403);
     }
   }
@@ -110,11 +110,11 @@ export const deleteMultiUser = async (req: Request, res: Response) => {
 export const restoreUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const check = await checkRoles(req, res);
-    if(check){
+    if (check) {
       const restoreOrder = await getRepository(Account).restore(req.params.id);
       res.status(200).json({ message: "success" });
     }
-    else{
+    else {
       return res.json({ message: "NOT PERMISTION" }).status(403);
     }
   }
@@ -196,7 +196,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
 
 };
 
-export const changePassword = async  (req: Request, res: Response, next: NextFunction) => {
+export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
 
