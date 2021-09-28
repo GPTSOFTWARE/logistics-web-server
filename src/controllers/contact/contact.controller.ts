@@ -40,7 +40,9 @@ export const createContact = async (
     res: Response,
     next: NextFunction) => {
     try {
-       
+
+            
+            //
             const mailFormat =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; //email format chuẩn
             const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
             const data = req.body;
