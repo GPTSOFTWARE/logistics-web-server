@@ -4,8 +4,8 @@ import auth from "../middleware/auth.middleware";
 import checkAdmin from "../middleware/role.middleware";
 const router = Router();
 
-router.get('/contact', auth, checkAdmin,getContact);
-router.get('/contact/all',auth, checkAdmin ,getAllContact);
+router.get('/contact', auth, getContact);
+router.get('/contact/all',auth, getAllContact);
 router.post('/contact',createContact);
 
 export default router;
