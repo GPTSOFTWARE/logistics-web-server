@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createQueryBuilder, getRepository, Not } from "typeorm";
 import { Account } from "../../entity/Users";
+import checkRoles from "../../middleware/role.middleware";
 import {
   comparePassword,
   generatorToken,
@@ -11,20 +12,36 @@ import {
 const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const page = +req?.query?.page || 1;
   const page_size = +req?.query?.page_size || 10;
-  const [data, total] = await getRepository(Account)
-    .createQueryBuilder("user")
-    .orderBy('user.createdAt', 'DESC')
-    .take(page_size)
-    .skip((page - 1) * page_size)
-    .getManyAndCount();
-  return res.json({ total, data });
+
+  const check = await checkRoles(req, res);
+  console.log({ check });
+  if (check) {
+    const [data, total] = await getRepository(Account)
+      .createQueryBuilder("user")
+      .orderBy('user.createdAt', 'DESC')
+      .take(page_size)
+      .skip((page - 1) * page_size)
+      .getManyAndCount();
+    return res.json({ total, data });
+  } else {
+    return res.json({ message: "NOT PERMISTION" }).status(403);
+  }
+
+
 };
 const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
-  const [data, total] = await getRepository(Account)
+  const check = await checkRoles(req, res);
+  if(check){
+    const [data, total] = await getRepository(Account)
     .createQueryBuilder("user")
     .orderBy('user.createdAt', 'DESC')
     .getManyAndCount();
-  return res.json({ total, data });
+    return res.json({ total, data });
+  }
+  else {
+    return res.json({ message: "NOT PERMISTION" }).status(403);
+  }
+
 };
 
 const getUserById = async (req: Request, res: Response): Promise<Response> => {
@@ -57,20 +74,33 @@ const updateUser = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const deleteUser = async (req: Request, res: Response): Promise<Response> => {
-  const results = await getRepository(Account).delete(req.params.id);
-  return res.json(results);
+  
+  const check = await checkRoles(req, res);
+  if(check){
+    const results = await getRepository(Account).delete(req.params.id);
+    return res.status(200).json({message: "delete success"});
+  }
+  else{
+    return res.json({ message: "NOT PERMISTION" }).status(403);
+  }
+
 };
 
 export const deleteMultiUser = async (req: Request, res: Response) => {
   try {
-
-    const { idList } = req.body;
-    const deleteUser = await createQueryBuilder()
-      .softDelete()
-      .from(Account)
-      .where("id IN(:...ids)", { ids: idList })
-      .execute();
-    res.status(200).json({ message: "success" });
+    const check = await checkRoles(req, res);
+    if(check){
+      const { idList } = req.body;
+      const deleteUser = await createQueryBuilder()
+        .softDelete()
+        .from(Account)
+        .where("id IN(:...ids)", { ids: idList })
+        .execute();
+      res.status(200).json({ message: "success" });
+    }
+    else{
+      return res.json({ message: "NOT PERMISTION" }).status(403);
+    }
   }
   catch (err) {
     console.error(err);
@@ -79,9 +109,14 @@ export const deleteMultiUser = async (req: Request, res: Response) => {
 
 export const restoreUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
-    const restoreOrder = await getRepository(Account).restore(req.params.id);
-    res.json({ message: "success" });
+    const check = await checkRoles(req, res);
+    if(check){
+      const restoreOrder = await getRepository(Account).restore(req.params.id);
+      res.status(200).json({ message: "success" });
+    }
+    else{
+      return res.json({ message: "NOT PERMISTION" }).status(403);
+    }
   }
   catch (err) {
     console.log(err);
@@ -156,7 +191,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
 
   }
   else {
-    res.send("You are not allowed");
+    res.status(403).send("You are not allowed");
   }
 
 };
@@ -166,7 +201,6 @@ export const changePassword = async  (req: Request, res: Response, next: NextFun
   try {
 
     const id = req.params.id;
-
     //get parameters from body
     const { oldPassword, newPassword } = req.body;
     if (!(oldPassword && newPassword)) {

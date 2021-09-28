@@ -6,6 +6,6 @@ const router = Router();
 
 router.get('/contact', auth, checkAdmin,getContact);
 router.get('/contact/all',auth, checkAdmin ,getAllContact);
-router.post('/contact',auth, checkAdmin ,createContact);
+router.post('/contact',createContact);
 
 export default router;

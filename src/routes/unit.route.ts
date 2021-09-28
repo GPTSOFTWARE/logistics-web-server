@@ -4,6 +4,6 @@ import auth from "../middleware/auth.middleware";
 import checkAdmin from "../middleware/role.middleware";
 const router = Router();
 
-router.get('/unit', auth , checkAdmin,getUnit);
+router.get('/unit', auth ,getUnit);
 
 export default router;

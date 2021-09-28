@@ -9,13 +9,15 @@ import auth from './../middleware/auth.middleware';
 router.post('/login', login);
 router.post('/admin/dashboard', adminLogin);
 router.post('/register', register);
-router.get("/users",checkAdmin,getUsers);
-router.get("/users/all",auth,checkAdmin,getAllUsers);
-router.get('/user/:id', auth,getUserById);
-router.put('/user/:id',auth,updateUser);
-router.delete('/user/delete',auth, checkAdmin ,deleteMultiUser);
-router.patch("/user/restore/:id", auth, checkAdmin,restoreUser);
-router.post('/user/changepassword/:id', auth,changePassword);
+
+router.get("/users", auth, getUsers);
+router.get("/users/all",auth,  getAllUsers);
+router.get('/user/:id',auth, getUserById);
+router.put('/user/:id', auth,updateUser);
+router.delete('/user/delete', auth, deleteMultiUser);
+router.patch("/user/restore/:id", auth,restoreUser);
+router.post('/user/changepassword/:id', auth,  changePassword);
+
 
 export default router;
 

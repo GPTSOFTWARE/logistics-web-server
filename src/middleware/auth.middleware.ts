@@ -23,5 +23,4 @@ const auth = async (req: any, res: any, next: any) => {
     return res.status(401).send({ code: 401, message: 'Unauthorized' });
   }
 };
-
 export default auth;

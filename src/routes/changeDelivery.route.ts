@@ -7,14 +7,14 @@ import checkAdmin from "../middleware/role.middleware";
 
 const router = Router();
 
-router.get('/delivery' ,getDeliveryOrder);
-router.get('/delivery/:id',getDeliveryOrderById);
-router.get('/status', getDelivery);
-router.get('/status/:id', getDeliveryById);
-router.get('/delivery/history/:id', getHistoryDelivery);
-router.post('/delivery', auth, checkAdmin,createDelivery);
-router.put('/delivery/update/:id', auth, checkAdmin,switchDelivery);
-router.patch("/delivery/restore/:id", auth, checkAdmin,restoreDelivery);
-router.delete("/delivery/delete", auth, checkAdmin,deleteDelivery);
+router.get('/delivery',auth,getDeliveryOrder);
+router.get('/delivery/:id',auth,getDeliveryOrderById);
+router.get('/status',auth, getDelivery);
+router.get('/status/:id', auth,getDeliveryById);
+router.get('/delivery/history/:id',auth, getHistoryDelivery);
+router.post('/delivery', auth,createDelivery);
+router.put('/delivery/update/:id', auth, switchDelivery);
+router.patch("/delivery/restore/:id", auth,restoreDelivery);
+router.delete("/delivery/delete", auth,deleteDelivery);
 
 export default router;

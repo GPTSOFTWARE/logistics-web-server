@@ -16,15 +16,15 @@ import {
 import auth from "../middleware/auth.middleware";
 import checkAdmin from "../middleware/role.middleware";
 
-router.get("/orders", auth, checkAdmin, getSaleOrder)
+router.get("/orders", auth,  getSaleOrder)
 router.get("/order/:id", auth,getOrderById)
 router.get("/order/user/:id", auth,getOrderByUserId);
-router.get('/survey/totalprice',auth, checkAdmin,  getSaleOrderByOrderByTotalPrice);
-router.get('/survey/phone', auth,checkAdmin,getOrderByPhone);
-router.get('/survey/status/:id', auth, checkAdmin,getOrderByStatus);
-router.post("/order",auth, checkAdmin ,createOrder);
-router.put("/order/:id",auth, checkAdmin ,updateOrder);
-router.patch("/order/restore/:id", auth,checkAdmin,restoreOrder);
-router.delete("/order/delete", auth, checkAdmin,deleteMulti);
+router.get('/survey/totalprice',auth,  getSaleOrderByOrderByTotalPrice);
+router.get('/survey/phone', auth, getOrderByPhone);
+router.get('/survey/status/:id', auth, getOrderByStatus);
+router.post("/order",auth, createOrder);
+router.put("/order/:id",auth, updateOrder);
+router.patch("/order/restore/:id", auth,restoreOrder);
+router.delete("/order/delete", auth,deleteMulti);
 
 export default router;

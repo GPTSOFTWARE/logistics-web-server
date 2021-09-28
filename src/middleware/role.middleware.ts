@@ -4,16 +4,19 @@ import { Account } from "../entity/Users";
 import { USER_SECRET } from "../utils/constant";
 const jwt = require('jsonwebtoken');
 
-const checkAdmin = async (req: any, res: Response, next: NextFunction) => {
+const checkRoles = async (req: Request, res: Response) => {
 
-    if (!req.user) return res.status(403).json({ message: `Unauthorization` });
+    if(!(req as any).user) return res.status(403).json({message : "Unauthorized"});
     const { userId } =(req as any).user;
     const findUser = await getRepository(Account).findOne(userId);
     console.log(findUser)
-    if (findUser.role === "user")
-        return res.status(400).json({ message: `doesn't have permession` });
-    next();
-   
+    if (findUser.role === "user"){
+        return false;
+    }
+    else{
+        return true;
+    }
+
 };
 
-export default checkAdmin;
+export default checkRoles;
