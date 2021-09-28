@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createQueryBuilder, getRepository, Not } from "typeorm";
 import { Account } from "../../entity/Users";
+import { checkRoles } from "../auth/auth.controller";
 import {
   comparePassword,
   generatorToken,
@@ -11,13 +12,22 @@ import {
 const getUsers = async (req: Request, res: Response): Promise<Response> => {
   const page = +req?.query?.page || 1;
   const page_size = +req?.query?.page_size || 10;
-  const [data, total] = await getRepository(Account)
-    .createQueryBuilder("user")
-    .orderBy('user.createdAt', 'DESC')
-    .take(page_size)
-    .skip((page - 1) * page_size)
-    .getManyAndCount();
-  return res.json({ total, data });
+
+  const check = await checkRoles(req);
+  console.log({ check });
+  if (check) {
+    const [data, total] = await getRepository(Account)
+      .createQueryBuilder("user")
+      .orderBy('user.createdAt', 'DESC')
+      .take(page_size)
+      .skip((page - 1) * page_size)
+      .getManyAndCount();
+    return res.json({ total, data });
+  } else {
+    return res.json({ message: "Bạn không có quyền sử dụng chức năng này" }).status(401);
+  }
+
+
 };
 const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
   const [data, total] = await getRepository(Account)
@@ -156,7 +166,7 @@ export const adminLogin = async (req: Request, res: Response, next: NextFunction
 
   }
   else {
-    res.send("You are not allowed");
+    res.status(403).send("You are not allowed");
   }
 
 };
