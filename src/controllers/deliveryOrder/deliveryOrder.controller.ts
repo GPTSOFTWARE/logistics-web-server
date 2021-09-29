@@ -15,16 +15,16 @@ export const switchDelivery = async (
     next: NextFunction) => {
     try {
         const data = req.body;
-        const check = await checkRoles(req, res);   
-        if(check){
+        const check = await checkRoles(req, res);
+        if (check) {
             const findSaleOrder = await getRepository(DeliveryOrder)
-                                        .createQueryBuilder('delivery')
-                                        .where('delivery.id = :id ', { id: req.params.id })
-                                        .getOne();
+                .createQueryBuilder('delivery')
+                .where('delivery.id = :id ', { id: req.params.id })
+                .getOne();
             const findStatus = await getRepository(Status)
-                                    .createQueryBuilder('status')
-                                    .andWhere('status.id = :id', { id: data.statusId })
-                                    .getOne();
+                .createQueryBuilder('status')
+                .andWhere('status.id = :id', { id: data.statusId })
+                .getOne();
 
             var newDate = new Date();
             var date = moment(newDate);
@@ -33,8 +33,8 @@ export const switchDelivery = async (
                 if (findSaleOrder.statusId === -1) {
                     res.status(409).json({ code: "409", message: "Delivery canceled !" });
                 }
-                else if(findSaleOrder.statusId === 3){
-                    res.status(400).json({ code: "400", message: "Đơn hàng đã được giao"})
+                else if (findSaleOrder.statusId === 3) {
+                    res.status(400).json({ code: "400", message: "Đơn hàng đã được giao" })
                 }
                 // else if(findSaleOrder.statusId === 1){
                 //     if(data.statusId === 3 || data.statusId === -1){
@@ -43,16 +43,16 @@ export const switchDelivery = async (
                 //         for(of)
                 //     }
                 // }
-                else{         
+                else {
                     const findDelivery = await getRepository(DeliveryHistory)
-                                        .createQueryBuilder('deli')
-                                        .where('deli.deliveryOrderId = :id', { id: req.params.id })
-                                        .andWhere('deli.status = :status ', { status: findStatus.name })
-                                        .getOne();
+                        .createQueryBuilder('deli')
+                        .where('deli.deliveryOrderId = :id', { id: req.params.id })
+                        .andWhere('deli.status = :status ', { status: findStatus.name })
+                        .getOne();
                     const findHistory = await getRepository(DeliveryHistory)
-                                        .createQueryBuilder('deli')
-                                        .where('deli.deliveryOrderId = :id', { id: req.params.id })
-                                        .getMany();
+                        .createQueryBuilder('deli')
+                        .where('deli.deliveryOrderId = :id', { id: req.params.id })
+                        .getMany();
                     if (findDelivery) {
                         if (findHistory.length == 1) {
                             await createQueryBuilder()
@@ -69,8 +69,8 @@ export const switchDelivery = async (
                         }
 
                     }
-                    else{
-                        if(data.statusId === 2){
+                    else {
+                        if (data.statusId === 2) {
                             const updateStatusDelivery = await createQueryBuilder()
                                 .update(DeliveryOrder)
                                 .set({
@@ -81,44 +81,46 @@ export const switchDelivery = async (
                                 .where("id = :id", { id: req.params.id })
                                 .execute();
                         }
-                        else{
+                        else {
                             const updateStatusDelivery = await createQueryBuilder()
-                            .update(DeliveryOrder)
-                            .set({
-                                statusId: data.statusId,
-                            })
-                            .where("id = :id", { id: req.params.id })
-                            .execute();
+                                .update(DeliveryOrder)
+                                .set({
+                                    statusId: data.statusId,
+                                })
+                                .where("id = :id", { id: req.params.id })
+                                .execute();
                         }
-                        
-                        if(findSaleOrder.statusId === 1 && (data.statusId === 3 ||data.statusId === -1)){
+
+                        if (findSaleOrder.statusId === 1 && (data.statusId === 3 || data.statusId === -1)) {
                             let array = [2];
                             array.push(data.statusId);
-                            for(let item of array){
+                            console.log({ array });
+
+                            for (let item of array) {
                                 const findStatus = await findStatusName(item);
                                 await createQueryBuilder()
-                                            .insert()
-                                            .into(DeliveryHistory)
-                                            .values({
-                                                deliveryOrderId: req.params.id,
-                                                status: findStatus?.name
-                                            })
-                                            .execute();
+                                    .insert()
+                                    .into(DeliveryHistory)
+                                    .values({
+                                        deliveryOrderId: req.params.id,
+                                        status: findStatus?.name
+                                    })
+                                    .execute();
                                 res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
 
                             }
 
                         }
-                        else{
-                                await createQueryBuilder()
-                                            .insert()
-                                            .into(DeliveryHistory)
-                                            .values({
-                                                deliveryOrderId: req.params.id,
-                                                status: findStatus?.name
-                                            })
-                                            .execute();
-                                res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
+                        else {
+                            await createQueryBuilder()
+                                .insert()
+                                .into(DeliveryHistory)
+                                .values({
+                                    deliveryOrderId: req.params.id,
+                                    status: findStatus?.name
+                                })
+                                .execute();
+                            res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
 
                         }
                     }
@@ -129,53 +131,53 @@ export const switchDelivery = async (
                 res.status(404).json({ code: "404", message: "NOT FOUND" })
             }
         }
-        else{
+        else {
             return res.status(403).json({ message: "NOT PERMISTION" });
         }
     }
     catch (error) {
-        return res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 export const getDeliveryOrder = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const check = await checkRoles(req, res);   
-        if(check){
+        const check = await checkRoles(req, res);
+        if (check) {
             const [data, total] = await getRepository(DeliveryOrder)
-                                        .createQueryBuilder('DO')
-                                        .leftJoinAndSelect('DO.driver', 'driver')
-                                        .leftJoinAndSelect('DO.saleOrder', 'Orders')
-                                        .leftJoinAndSelect('DO.status', 'status')
-                                        .leftJoinAndSelect('DO.deliveryHistory', 'delivery')
-                                        .getManyAndCount();
+                .createQueryBuilder('DO')
+                .leftJoinAndSelect('DO.driver', 'driver')
+                .leftJoinAndSelect('DO.saleOrder', 'Orders')
+                .leftJoinAndSelect('DO.status', 'status')
+                .leftJoinAndSelect('DO.deliveryHistory', 'delivery')
+                .getManyAndCount();
 
             return res.json({ total, data: data.map(item => mappingEntityToDTO(item)) });
         }
-        else{
+        else {
             return res.status(403).json({ message: "NOT PERMISTION" });
         }
     }
     catch (err) {
-        return res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({ message: "Internal Server Error" });
 
     }
 }
 
 export const getDeliveryOrderById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const check = await checkRoles(req, res);   
-        if(check){
+        const check = await checkRoles(req, res);
+        if (check) {
             const id = req.params.id;
             const delivery = await getRepository(DeliveryOrder).findOne(id);
             res.json(delivery);
         }
-        else{
+        else {
             return res.status(403).json({ message: "NOT PERMISTION" });
         }
     }
     catch (err) {
-        return res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({ message: "Internal Server Error" });
 
     }
 }
