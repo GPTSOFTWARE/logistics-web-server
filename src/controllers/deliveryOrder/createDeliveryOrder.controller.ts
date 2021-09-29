@@ -48,8 +48,13 @@ export const createDelivery  = async (req: Request, res:Response, next: NextFunc
                         })
                         .execute();
                     }
-                }else if (statusId === 3){
-                    arrayStatus.push(2,3);
+                }else if (statusId === 3 || statusId === -1){
+                    if(statusId === 3){
+                        arrayStatus.push(2,3);
+                    }
+                    else if(statusId === -1){
+                        arrayStatus.push(2,-1);
+                    }
                     for(let item of arrayStatus){
                         const findStatus = await findStatusName(item);
                         await createQueryBuilder()
@@ -75,6 +80,8 @@ export const createDelivery  = async (req: Request, res:Response, next: NextFunc
                 }
                                         
                     res.status(201).json({code:"201", message:"created"});
+                
+               
             }
             else{
                 res.status(404).json({code:"404", message:"NOT FOUND"});
