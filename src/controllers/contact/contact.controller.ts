@@ -43,9 +43,10 @@ export const createContact = async (
 
             
             //
-            const mailFormat =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; //email format chuẩn
+            const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;     //email format chuẩn    
             const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
             const data = req.body;
+            
             
             if(!vnf_regex.test(data.phone)){
                 res.status(400).json({message:"Invalid Phone number"});
