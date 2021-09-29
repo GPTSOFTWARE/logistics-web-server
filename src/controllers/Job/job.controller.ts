@@ -64,11 +64,11 @@ export const createJob = async (
             const date1 = new Date();
             const date2 = new Date(data.expirationDate);
             if(data.nameJob == null||data.nameJob=="") {
-                res.status(400).json({ message: " please not empty name job"}); 
+                res.status(400).json({ message: " Please not empty name job"}); 
 
-            }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<=0||salaryA<=0)
+            }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<0||salaryA<0)
             {
-                res.status(400).json({ message: "salary before & after  must be a number or not empty"});  
+                res.status(400).json({ message: "Salary before & after  must be a number or not empty"});  
             }else if(date1 >= date2) {
                 res.status(400).json({ message: "Invalid Date"});
                 
@@ -108,11 +108,11 @@ export const updateJob = async (
      
 
             if(data.nameJob == null||data.nameJob=="") {
-                res.status(400).json({ message: "update fail please not empty name job"}); 
+                res.status(400).json({ message: "Update fail please not empty name job"}); 
 
-            }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<=0||salaryA<=0)
+            }else if(isNaN(salaryB)||salaryB ==null||salaryA==null||isNaN(salaryA)||salaryB<0||salaryA<0)
             {
-                res.status(400).json({ message: "update fail salary before & after  must be a number or not empty "}); 
+                res.status(400).json({ message: "Update fail salary before & after  must be a number or not empty "}); 
             }
             else if(date1 >= date2) {
                 res.status(400).json({ message: "Invalid Date"});
@@ -125,7 +125,7 @@ export const updateJob = async (
                                         .where('job.id = :id', { id: req.params.id })
                                         .execute();
 
-                res.status(200).json({ message: "update success" });
+                res.status(200).json({ message: "Update success" });
             }
         }
         else{
