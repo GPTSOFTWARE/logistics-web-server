@@ -49,20 +49,46 @@ export const getDeliveryById = async (req: Request, res: Response, next: NextFun
     }
 };
 
+// export const getHistoryDelivery = async (req: Request, res: Response, next: NextFunction) => { //see history delivery
+//     try {
+//         const check = await checkRoles(req, res);
+//         if(check){
+//             const delivery = await getRepository(DeliveryOrder)
+//                         .createQueryBuilder('deli')
+//                         .leftJoinAndSelect('deli.driver', 'driver')
+//                         .leftJoinAndSelect('deli.deliveryHistory', 'delivery')
+//                         .where('deli.id = :id ', { id: req.params.id })
+//                         .getMany();
+//             if (!delivery) {
+//                 res.status(404).json({ message: "NOT FOUND" })
+//             }
+//             res.status(200).json({ delivery: delivery.map(item => mappingEntityToDTO(item)) });
+//         }
+//         else{
+//             return res.status(403).json({ message: "NOT PERMISTION" });
+//         }
+//     }
+//     catch (err) {
+//         return res.status(500).json({message: "Internal Server Error"});
+
+//     }
+// };
+
 export const getHistoryDelivery = async (req: Request, res: Response, next: NextFunction) => { //see history delivery
     try {
         const check = await checkRoles(req, res);
         if(check){
-            const delivery = await getRepository(DeliveryOrder)
+            const delivery = await getRepository(DeliveryHistory)
                         .createQueryBuilder('deli')
-                        .leftJoinAndSelect('deli.driver', 'driver')
-                        .leftJoinAndSelect('deli.deliveryHistory', 'delivery')
-                        .where('deli.id = :id ', { id: req.params.id })
+                        .where('deli.deliveryOrderId = :deliveryId ', { deliveryId: req.params.id })
+                        // .groupBy('deli.deliveryOrderId')
+                        // .orderBy('deli.id')
                         .getMany();
             if (!delivery) {
                 res.status(404).json({ message: "NOT FOUND" })
             }
-            res.status(200).json({ delivery: delivery.map(item => mappingEntityToDTO(item)) });
+            res.status(200).json(delivery);
+            // res.status(200).json({ delivery: delivery.map(item => mappingEntityToDTO(item)) });
         }
         else{
             return res.status(403).json({ message: "NOT PERMISTION" });
