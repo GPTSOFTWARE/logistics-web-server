@@ -37,38 +37,51 @@ export const createDelivery  = async (req: Request, res:Response, next: NextFunc
     
                 if(statusId === 2){
                     arrayStatus.push(2);
-                    
-                }else if (statusId === 3){
-                    arrayStatus.push(2,3);
-                }
-                else if(statusId === -1){
-                    arrayStatus.push(2,-1);
-                }
-                console.log(arrayStatus);
-                for(let item of arrayStatus){
-                    const findStatus = await findStatusName(item);
-                     await createQueryBuilder()
+                    for(let item of arrayStatus){
+                        const findStatus = await findStatusName(item);
+                        await createQueryBuilder()
                         .insert()
                         .into(DeliveryHistory)
                         .values({
                             deliveryOrderId: deliveryId ,
                             status: findStatus?.name
                         })
-                     .execute();
-                     res.status(201).json({code:"201", message:"created"});
+                        .execute();
+                    }
+                }else if (statusId === 3 || statusId === -1){
+                    if(statusId === 3){
+                        arrayStatus.push(2,3);
+                    }
+                    else if(statusId === -1){
+                        arrayStatus.push(2,-1);
+                    }
+                    for(let item of arrayStatus){
+                        const findStatus = await findStatusName(item);
+                        await createQueryBuilder()
+                        .insert()
+                        .into(DeliveryHistory)
+                        .values({
+                            deliveryOrderId: deliveryId ,
+                            status: findStatus?.name
+                        })
+                        .execute();
+                    }
                 }
+                else if(statusId === 1){
+                    const findStatus = await findStatusName(1);
+                     await createQueryBuilder()
+                     .insert()
+                     .into(DeliveryHistory)
+                     .values({
+                         deliveryOrderId: deliveryId ,
+                         status: findStatus?.name
+                     })
+                     .execute();
+                }
+                                        
+                    res.status(201).json({code:"201", message:"created"});
                 
-                // else if(statusId === 1){
-                //     const findStatus = await findStatusName(1);
-                //      await createQueryBuilder()
-                //      .insert()
-                //      .into(DeliveryHistory)
-                //      .values({
-                //          deliveryOrderId: deliveryId ,
-                //          status: findStatus?.name
-                //      })
-                //      .execute();
-                // }
+               
             }
             else{
                 res.status(404).json({code:"404", message:"NOT FOUND"});
