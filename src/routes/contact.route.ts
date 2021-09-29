@@ -4,7 +4,7 @@ import auth from "../middleware/auth.middleware";
 const router = Router();
 
 router.get('/contact', auth, getContact);
-router.get('/contact/all', auth, getAllContact);
-router.post('/contact', createContact);
+router.get('/contact/all',auth, getAllContact);
+router.post('/contact',createContact);
 
 export default router;

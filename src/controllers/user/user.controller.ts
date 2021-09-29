@@ -24,7 +24,7 @@ const getUsers = async (req: Request, res: Response): Promise<Response> => {
       .getManyAndCount();
     return res.json({ total, data });
   } else {
-    return res.json({ message: "NOT PERMISTION" }).status(403);
+    return res.status(403).json({ message: "NOT PERMISTION" });
   }
 
 
@@ -39,7 +39,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     return res.json({ total, data });
   }
   else {
-    return res.json({ message: "NOT PERMISTION" }).status(403);
+    return res.status(403).json({ message: "NOT PERMISTION" });
   }
 
 };
@@ -80,8 +80,10 @@ const deleteUser = async (req: Request, res: Response): Promise<Response> => {
     const results = await getRepository(Account).delete(req.params.id);
     return res.status(200).json({ message: "delete success" });
   }
+
   else {
     return res.json({ message: "NOT PERMISTION" }).status(403);
+
   }
 
 };
@@ -98,8 +100,10 @@ export const deleteMultiUser = async (req: Request, res: Response) => {
         .execute();
       res.status(200).json({ message: "success" });
     }
+
     else {
       return res.json({ message: "NOT PERMISTION" }).status(403);
+
     }
   }
   catch (err) {
@@ -114,8 +118,10 @@ export const restoreUser = async (req: Request, res: Response, next: NextFunctio
       const restoreOrder = await getRepository(Account).restore(req.params.id);
       res.status(200).json({ message: "success" });
     }
+
     else {
       return res.json({ message: "NOT PERMISTION" }).status(403);
+
     }
   }
   catch (err) {
