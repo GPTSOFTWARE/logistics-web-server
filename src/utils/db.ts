@@ -10,7 +10,7 @@ export const dbConfig: ConnectionOptions = {
   password: DB_PASSWORD,
   port: Number(DB_PORT) || 5432,
   ssl: { rejectUnauthorized: false },
-  entities: ['src/entity/*.ts'],
+  entities: [__dirname + "entities/**/*.entity.ts"],
   migrations: ['src/migration/*.ts'],
   cli: {
     "entitiesDir": "src/entity",
