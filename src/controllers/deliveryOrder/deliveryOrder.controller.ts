@@ -94,6 +94,7 @@ export const switchDelivery = async (
                         if(findSaleOrder.statusId === 1 && (data.statusId === 3 ||data.statusId === -1)){
                             let array = [2];
                             array.push(data.statusId);
+                            console.log(array);
                             for(let item of array){
                                 const findStatus = await findStatusName(item);
                                 await createQueryBuilder()
