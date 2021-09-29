@@ -46,13 +46,17 @@ const createDriver = async (
         const check = await checkRoles(req, res);
         if(check){
             const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
+            
             if(data.name ==null || data.name==""){
                 res.status(400).json({ message: "Name is not empty" });
             }
-            else if(data.phone.length <10 || data.phone.length >10 || !vnf_regex.test(data.phone)){
-                res.status(400).json({message:"Invalid Phone number"});
-            }else if(isNaN(data.age)||data.age > 60||data.age <18){
-                res.status(400).json({message:"invalid age"});
+            else if(!vnf_regex.test(data.phone)){
+                res.status(400).json({message:"Invalid phone number"});
+            }else if(isNaN(data.age)){
+                res.status(400).json({message:"Invalid age"});
+            }else if(data.idenityCard>9||data.idenityCard<9||data.idenityCard==null){
+                res.status(400).json({message:"Invalid idenityCard"});
+
             } else{
     
                 const findDriver = await getRepository(Driver).findOne({ idenityCard: data.idenityCard });
