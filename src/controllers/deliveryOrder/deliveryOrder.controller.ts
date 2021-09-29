@@ -5,6 +5,7 @@ import { DeliveryHistory } from "../../entity/DeliveryHistory";
 import { DeliveryOrder, IDeliveryOrder } from "../../entity/DeliveryOrder";
 import { Status } from "../../entity/Status";
 import checkRoles from "../../middleware/role.middleware";
+import { findStatusName } from "./createDeliveryOrder.controller";
 import { mappingEntityToDTO } from './DO.mapper';
 
 
@@ -35,6 +36,13 @@ export const switchDelivery = async (
                 else if(findSaleOrder.statusId === 3){
                     res.status(400).json({ code: "400", message: "Đơn hàng đã được giao"})
                 }
+                // else if(findSaleOrder.statusId === 1){
+                //     if(data.statusId === 3 || data.statusId === -1){
+                //         let array = [1, 2];
+                //         array.push(data.statusId);
+                //         for(of)
+                //     }
+                // }
                 else{         
                     const findDelivery = await getRepository(DeliveryHistory)
                                         .createQueryBuilder('deli')
@@ -82,17 +90,37 @@ export const switchDelivery = async (
                             .where("id = :id", { id: req.params.id })
                             .execute();
                         }
-                    
-                            await createQueryBuilder()
-                                .insert()
-                                .into(DeliveryHistory)
-                                .values({
-                                    deliveryOrderId: req.params.id,
-                                    status: findStatus?.name
-                                })
-                                .execute();
-                        res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
+                        
+                        if(findSaleOrder.statusId === 1 && (data.statusId === 3 ||data.statusId === -1)){
+                            let array = [2];
+                            array.push(data.statusId);
+                            for(let item of array){
+                                const findStatus = await findStatusName(item);
+                                await createQueryBuilder()
+                                            .insert()
+                                            .into(DeliveryHistory)
+                                            .values({
+                                                deliveryOrderId: req.params.id,
+                                                status: findStatus?.name
+                                            })
+                                            .execute();
+                                res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
 
+                            }
+
+                        }
+                        else{
+                                await createQueryBuilder()
+                                            .insert()
+                                            .into(DeliveryHistory)
+                                            .values({
+                                                deliveryOrderId: req.params.id,
+                                                status: findStatus?.name
+                                            })
+                                            .execute();
+                                res.status(200).json({ code: "200", message: "cập nhật tình trạng đơn hàng thành công" });
+
+                        }
                     }
                 }
 
