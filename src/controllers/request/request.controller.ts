@@ -47,8 +47,6 @@ export const createRequest = async (
         const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g; //phone number chuẩn
 
 
-        const check = await checkRoles(req, res);
-        if(check){
             if (data.fullname== null || data.fullname==""){
                 res.status(400).json({ message: "Name is not empty"});
             }else if(!vnf_regex.test(data.phone)){
@@ -64,12 +62,8 @@ export const createRequest = async (
                     res.status(201).json({ message: "created" });
             }
         }
-        else{
-            return res.status(403).json({ message: "NOT PERMISTION" });
-
-        }
         
-    }
+    
     catch (err) {
         console.log(err);
     }

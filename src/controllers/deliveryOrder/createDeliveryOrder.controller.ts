@@ -88,7 +88,7 @@ export const createDelivery  = async (req: Request, res:Response, next: NextFunc
         return res.status(500).json({message: "Internal Server Error"});
     }
 }
-const findStatusName = (id:any) =>{
+export const findStatusName = (id:any) =>{
     const findStatus =  getRepository(Status)
     .createQueryBuilder('status')
     .andWhere('status.id = :id', { id: id })

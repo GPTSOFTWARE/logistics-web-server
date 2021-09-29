@@ -6,19 +6,12 @@ import checkRoles from "../../middleware/role.middleware";
 
 export const getCategory = async (req: Request, res: Response): Promise<Response> => {
 
-
-  const check = await checkRoles(req, res);
-  if(check){
     const [data, total] = await getRepository(Category)
               .createQueryBuilder("category")
               .orderBy('category.name', 'DESC')
               .getManyAndCount();
     return res.json({ total, data });
-  }
-  else{
-    return res.status(403).json({ message: "NOT PERMISTION" });
 
-  }
 };
 
 export const createCategory = async (req: Request, res: Response) => {
