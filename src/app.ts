@@ -72,7 +72,7 @@ app.use("/swagger", swagger.serve, swagger.setup(swaggerConfig));
 
 createConnection(dbConfig)
   .then(() => {
-    app.listen(PORT, () => console.log(`app listen on http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`Welcome to Logistics Web Site`));
   })
   .catch((err) => {
     console.log(err);
